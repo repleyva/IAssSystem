@@ -875,60 +875,63 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void accionCrearClase(View view) {
+        
+        if (compruebaConexion(this)) {
+            String nClase = editTextNombreClase.getText().toString().toUpperCase();
+            String nCodigo = editTextcodigoClase.getText().toString().toUpperCase();
+            nombreCorto = validaNombre(nombreUsuario);
 
-        String nClase = editTextNombreClase.getText().toString();
-        String nCodigo = editTextcodigoClase.getText().toString();
-        nombreCorto = validaNombre(nombreUsuario);
+            if ((nClase.isEmpty()) || (nCodigo.isEmpty())) {
+                Toast.makeText(this, "Debe ingresar los parámetros requeridos", Toast.LENGTH_SHORT).show();
+            } else {
+                // --------------------------- se crea la clase -------------------------
+                showProgressBar("Creando clase, espere ...");
+                // Get the data from an ImageView as bytes
+                fotoClase.setImageResource(R.drawable.ic_register_hero);
+                fotoClase.buildDrawingCache();
+                Bitmap bmap = fotoClase.getDrawingCache();
+                fotoClase.setImageBitmap(bmap);
+                fotoClase.buildDrawingCache();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                byte[] data = baos.toByteArray();
 
-        if ((nClase.isEmpty()) || (nCodigo.isEmpty())){
-            Toast.makeText(this, "Debe ingresar los parámetros requeridos", Toast.LENGTH_SHORT).show();
+                UploadTask uploadTask = storageReference.child("DOCENTE/" + idUsuario + "/" + idUsuario + "_" + nombreCorto + "_" + nClase + "." + nCodigo + "/" + "clase.png").putBytes(data);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        finishProgressBar();
+                        Toast.makeText(MainActivity.this, "Hubo un error intentando crear clase", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                        finishProgressBar();
+                        tvNClase.setText(nClase);
+                        tvNCodigo.setText(nCodigo);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                datosClaseCreada.setVisibility(View.VISIBLE);
+                            }
+                        }, 900);
+
+                        datosClaseCreada.setAnimation(animation_down);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                editTextNombreClase.setText("");
+                                editTextcodigoClase.setText("");
+                            }
+                        }, 900);
+                    }
+                });
+                // ----------------------------------------------------------------------
+            }
         } else {
-
-            // --------------------------- se crea la clase -------------------------
-            showProgressBar("Creando clase, espere ...");
-            // Get the data from an ImageView as bytes
-            fotoClase.setImageResource(R.drawable.ic_register_hero);
-            fotoClase.buildDrawingCache();
-            Bitmap bmap = fotoClase.getDrawingCache();
-            fotoClase.setImageBitmap(bmap);
-            fotoClase.buildDrawingCache();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] data = baos.toByteArray();
-
-            UploadTask uploadTask = storageReference.child("DOCENTE/" + idUsuario + "/" + idUsuario + "_" + nombreCorto + "_" + nClase + "." + nCodigo + "/"  + "clase.png").putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                    finishProgressBar();
-                    Toast.makeText(MainActivity.this, "Hubo un error intentando crear clase", Toast.LENGTH_SHORT).show();
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    finishProgressBar();
-                    tvNClase.setText(nClase);
-                    tvNCodigo.setText(nCodigo);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            datosClaseCreada.setVisibility(View.VISIBLE);
-                        }
-                    }, 900);
-
-                    datosClaseCreada.setAnimation(animation_down);
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            editTextNombreClase.setText("");
-                            editTextcodigoClase.setText("");
-                        }
-                    }, 900);
-                }
-            });
-            // ----------------------------------------------------------------------
+            Toast.makeText(this, "Debe tener acceso a Internet", Toast.LENGTH_SHORT).show();
         }
     }
 
