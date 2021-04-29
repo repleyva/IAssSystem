@@ -719,6 +719,13 @@
                             android:layout_height="250dp"
                             android:src="@drawable/ic_register_hero" />
 
+                        <ImageView
+                            android:visibility="gone"
+                            android:id="@+id/fotoClase"
+                            android:layout_width="250dp"
+                            android:layout_height="250dp"
+                            android:src="@drawable/ic_register_hero" />
+
                     </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
@@ -859,6 +866,7 @@
                                 </TextView>
 
                                 <TextView
+                                    android:id="@+id/tvNClase"
                                     style="@style/viewParent.headerText.NoMode"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -879,6 +887,7 @@
                                 </TextView>
 
                                 <TextView
+                                    android:id="@+id/tvNCodigo"
                                     style="@style/viewParent.headerText.NoMode"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"

@@ -27,6 +27,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -56,6 +57,7 @@ import com.google.firebase.storage.UploadTask;
 
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesDocente;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesEstudiante;
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -187,6 +189,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private StorageReference storageReference;
     private ProgressDialog mProgress;
 
+    // -------------------------------- variables para los docente --------------------------------
+    private EditText editTextNombreClase;
+    private EditText editTextcodigoClase;
+
+    private ImageView fotoClase;
+    private TextView tvNClase;
+    private TextView tvNCodigo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -297,13 +307,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         tarjetaUsuario.setAnimation(animation_rigth);
 
         // ------------------------------ Casting variables backend -------------------------------------------
-
         fotoTomada = (ImageView) findViewById(R.id.photoBBDD);
 
         // subir foto
         storageReference = FirebaseStorage.getInstance().getReference();
-
         mProgress = new ProgressDialog(this);
+
+        // ------------------------------- Variables para crear clase -----------------------------------------
+        editTextcodigoClase = (EditText) findViewById(R.id.editTextcodigoClase);
+        editTextNombreClase = (EditText) findViewById(R.id.editTextNombreClase);
+        fotoClase = (ImageView) findViewById(R.id.fotoClase);
+        tvNClase = (TextView) findViewById(R.id.tvNClase);
+        tvNCodigo = (TextView) findViewById(R.id.tvNCodigo);
 
         padre.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -793,6 +808,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }, 900);
 
         datosClase.setAnimation(animation_down);
+
     }
 
     // ****************************** métodos de docentes ******************************
@@ -860,14 +876,60 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     public void accionCrearClase(View view) {
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                datosClaseCreada.setVisibility(View.VISIBLE);
-            }
-        }, 900);
+        String nClase = editTextNombreClase.getText().toString();
+        String nCodigo = editTextcodigoClase.getText().toString();
+        nombreCorto = validaNombre(nombreUsuario);
 
-        datosClaseCreada.setAnimation(animation_down);
+        if ((nClase.isEmpty()) || (nCodigo.isEmpty())){
+            Toast.makeText(this, "Debe ingresar los parámetros requeridos", Toast.LENGTH_SHORT).show();
+        } else {
+
+            // --------------------------- se crea la clase -------------------------
+            showProgressBar("Creando clase, espere ...");
+            // Get the data from an ImageView as bytes
+            fotoClase.setImageResource(R.drawable.ic_register_hero);
+            fotoClase.buildDrawingCache();
+            Bitmap bmap = fotoClase.getDrawingCache();
+            fotoClase.setImageBitmap(bmap);
+            fotoClase.buildDrawingCache();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = storageReference.child("DOCENTE/" + idUsuario + "/" + idUsuario + "_" + nombreCorto + "_" + nClase + "." + nCodigo + "/"  + "clase.png").putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    finishProgressBar();
+                    Toast.makeText(MainActivity.this, "Hubo un error intentando crear clase", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    finishProgressBar();
+                    tvNClase.setText(nClase);
+                    tvNCodigo.setText(nCodigo);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            datosClaseCreada.setVisibility(View.VISIBLE);
+                        }
+                    }, 900);
+
+                    datosClaseCreada.setAnimation(animation_down);
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            editTextNombreClase.setText("");
+                            editTextcodigoClase.setText("");
+                        }
+                    }, 900);
+                }
+            });
+            // ----------------------------------------------------------------------
+        }
     }
 
     public void verListaClases(View view) {
