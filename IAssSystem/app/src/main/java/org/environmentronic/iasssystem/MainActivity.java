@@ -355,18 +355,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        if (result.isSuccess()) {
-            GoogleSignInAccount cuenta = result.getSignInAccount();
-            nombreUsuario = cuenta.getDisplayName();
-            correoUsuario = cuenta.getEmail();
-            idUsuario = cuenta.getId();
-            fotoPerfilUsuario = cuenta.getPhotoUrl().toString();
-            tvNombre.setText("Bienvenido\na IAssSystem\n" + nombreUsuario);
-            tvCorreo.setText(correoUsuario);
-            Glide.with(this).load(cuenta.getPhotoUrl()).into(photoPerfil);
-        } else {
+        if (!result.isSuccess()) {
             goToScreenLogin();
+        } else {
+            if (compruebaConexion(this)) {
+                GoogleSignInAccount cuenta = result.getSignInAccount();
+                nombreUsuario = cuenta.getDisplayName();
+                correoUsuario = cuenta.getEmail();
+                idUsuario = cuenta.getId();
+                fotoPerfilUsuario = cuenta.getPhotoUrl().toString();
+                tvNombre.setText("Bienvenido\na IAssSystem\n" + nombreUsuario);
+                tvCorreo.setText(correoUsuario);
+                Glide.with(this).load(cuenta.getPhotoUrl()).into(photoPerfil);
+            } else {
+                Toast.makeText(getApplicationContext(), "Debe tener acceso a internet", Toast.LENGTH_SHORT).show();
+                goToScreenLogin();
+            }
         }
+
     }
 
     private void goToScreenLogin() {
@@ -503,12 +509,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
-    public void subirFotoFirebase(View view){
+    public void subirFotoFirebase(View view) {
 
         boolean coneccion = compruebaConexion(this);
         nombreCorto = validaNombre(nombreUsuario);
 
-        if (imageBitmap != null){
+        if (imageBitmap != null) {
             if (coneccion) {
                 showProgressBar("Subiendo foto, espere ...");
                 // Get the data from an ImageView as bytes
@@ -545,7 +551,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
-    public void setBtnBorrarFoto(View view){
+    public void setBtnBorrarFoto(View view) {
 
         if (imageBitmap != null) {
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
@@ -569,7 +575,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
     }
 
-    public void setBtnEliminarFotobbdd(View view){
+    public void setBtnEliminarFotobbdd(View view) {
 
         nombreCorto = validaNombre(nombreUsuario);
         if (compruebaConexion(this)) {
@@ -611,7 +617,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 }
             });
             dialogo1.show();
-        }else {
+        } else {
             Toast.makeText(this, "No tiene acceso a internet", Toast.LENGTH_SHORT).show();
         }
     }
@@ -1016,14 +1022,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         return connected;
     }
 
-    public void showProgressBar(String mensaje){
+    public void showProgressBar(String mensaje) {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         mProgress.setMessage(mensaje);
         mProgress.show();
         mProgress.setCanceledOnTouchOutside(false);
     }
 
-    public void finishProgressBar(){
+    public void finishProgressBar() {
         mProgress.dismiss();
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         mProgress.setCanceledOnTouchOutside(true);
