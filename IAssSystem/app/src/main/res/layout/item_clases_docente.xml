@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    android:id="@+id/cv_2"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:backgroundTint="@color/colorAccent"
+    app:cardCornerRadius="15dp"
+    app:cardUseCompatPadding="true"
+    android:animateLayoutChanges="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/foto_docenteD"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_register_hero">
+        </ImageView>
+
+        <LinearLayout
+            android:paddingLeft="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvnombreMateriaD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre de la Materia"
+                android:textSize="14sp"
+                style="@style/viewParent.headerText.NoMode"
+                android:textColor="@color/colorPrimary">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvNombreCodigoD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre del codigo"
+                android:textSize="12sp"
+                style="@style/viewParent.headerText.NoMode"
+                android:textColor="@color/colorPrimary">
+            </TextView>
+
+            <TextView
+                android:id="@+id/tvNumeroEstudiantesD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Numero de estudiantes"
+                android:textSize="12sp"
+                style="@style/viewParent.headerText.NoMode"
+                android:textColor="@color/colorPrimary">
+            </TextView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

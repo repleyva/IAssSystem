@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity"
+    android:background="@color/register_bk_color"
+    android:focusableInTouchMode="true"
+    android:gravity="center"
+    android:layout_gravity="center">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:layout_marginTop="30dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/texto"
+                    style="@style/viewParent.headerText.NoMode"
+                    android:layout_alignParentLeft="true"
+                    android:text="¡Este es tu\nprimer paso\npara comenzar \ncon nosotros!,\nConócenos. "
+                    android:textColor="@color/colorPrimary" />
+
+                <ImageView
+                    android:id="@+id/imagen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/texto"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:src="@drawable/ic_login_hero" />
+            </RelativeLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/tarjetaApp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="#ffff"
+                app:cardCornerRadius="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="10dp">
+
+                    <TextView
+                        style="@style/viewParent.headerText.NoMode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Intelligent Assistance System"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorAccent">
+                    </TextView>
+
+                    <TextView
+                        style="@style/viewParent.headerText.NoMode"
+                        android:textSize="20dp"
+                        android:textStyle="normal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Versión 1.1.3"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorAccent">
+                    </TextView>
+
+                    <ImageView
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:src="@mipmap/ic_launcher">
+                    </ImageView>
+
+                    <TextView
+                        android:layout_marginTop="10dp"
+                        style="@style/viewParent.headerText.NoMode"
+                        android:textSize="15dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="IAssSystem es un sistema de toma de asistencia por reconocimiento facial desarrollado por los estudiantes de pregrado en Ingeniería Electrónica en la Universidad Popular del Cesar Rusvel Enrique Pasos Leyva y Carlos Andrés Bermúdes Arango bajo la modalidad de Tesis o Proyecto de grado. Este sistema permitirá tomar la asistencia estudiantil solo tomando una foto a los presentes y de manera inmediata recibir la informacion de los asistentes en el correo electrónico del docente. Además cuenta con una plataforma web en donde se hace uso de las estadisticas para estudiar el indice de desempeño de los estudiantes con respecto a su asistencia a clases."
+                        android:textColor="@color/colorAccent"
+                        android:gravity="center"
+                        android:textStyle="normal">
+
+                    </TextView>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <LinearLayout
+                android:id="@+id/linea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="12"
+                android:gravity="center"
+                android:layout_marginTop="30dp">
+
+                <View
+                    android:layout_gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/colorPrimary"
+                    android:layout_weight="3"/>
+
+                <TextView
+                    style="@style/viewParent.headerText.NoMode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    android:text="@string/o_inicia_sesi_n_con_google"
+                    android:layout_weight="4"
+                    android:textSize="15sp"
+                    android:textAlignment="center"
+                    android:gravity="center"/>
+
+                <View
+                    android:layout_gravity="center"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="@color/colorPrimary"
+                    android:layout_weight="3"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/redes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp">
+
+                <ImageView
+                    android:id="@+id/signInButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/google" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+    <ImageView
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back_img"
+        android:layout_marginRight="11dp"
+        android:layout_marginBottom="30dp"
+        android:onClick="onLoginClick"
+        android:adjustViewBounds="false"/>
+</RelativeLayout>

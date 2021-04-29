@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">IAssSystem</string>
+    <string name="login_email_hint">Correo Electrónico</string>
+    <string name="login_password_hint">Contraseña</string>
+    <string name="o_inicia_sesi_n_con_google">Inicia sesión con Google</string>
+    <!--for facebook login-->
+
+    <!--facebook login ends-->
+
+    <!--error messages-->
+</resources>

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UsActivity"
+    android:background="@color/register_bk_color"
+    android:focusableInTouchMode="true"
+    android:gravity="center"
+    android:layout_gravity="center">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp">
+
+            <TextView
+                android:layout_marginTop="20dp"
+                style="@style/viewParent.headerText.NoMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Información de los desarrolladores"
+                android:textAlignment="center"
+                android:textColor="@color/whiteTextColor">
+            </TextView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/tarjetaRusvel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvNombre"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tvNombre"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="10dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="5dp"
+                        app:cardUseCompatPadding="true">
+
+                        <ImageView
+                            android:id="@+id/photoPerfil"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:src="@drawable/rusvel" />
+
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rusvel Enrique\nPasos Leyva"
+                        android:textColor="@color/colorPrimary"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tarjetaCarlos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvNombre"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardFoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tvNombre"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="10dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="5dp"
+                        app:cardUseCompatPadding="true">
+
+                        <ImageView
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:src="@drawable/ic_register_hero" />
+
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Carlos Andrés\nBermúdez Arango"
+                        android:textColor="@color/colorPrimary"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/infoRusvel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_marginTop="20dp"
+                        style="@style/viewParent.headerText.NoMode"
+                        android:textSize="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Rusvel Enrique Pasos leyva"
+                        android:textColor="@color/whiteTextColor"
+                        android:textStyle="bold">
+                    </TextView>
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/whiteTextColor"
+                        android:text="👋 Hola, soy Rusvel,\n\n 👀 Me interesa la programación web y el desarrollo de softwares. Soy un amante del desarrollo de aplicaciones móviles. Actualmente desarrollo en dispositivos móviles Android usando Android Studio en lenguaje Java. \n\n🌱 Soy un desarrollador junior de Java y Python. \n\n🌱 Actualmente estoy aprendiendo javaScript, luego de tomar cursos en HTML y CSS. Mi camino de aprendizaje después de terminar con javaScript es NodeJs, Progressive Web Apps, Webpack, ReactJs y finalmente React Native. \n\n💞️ Busco colaborar en proyectos que me animen a aprender un poco más en estos perfiles a los que me inclino. \n\n📫 Cuento con una cuenta en Twitter @EnvironTronic en la que he mostrado algunos desarrollos en diferentes areas de mi carrera que si es de su agrado pueden ir a chequear. Esta cuenta es el emprendimiento que quiero realizar como meta a largo plazo.\n\nPuedes contactarme en rusvelpassos@gmail.com o por mis redes sociales las cuales te dejaré a continuación.">
+                    </TextView>
+                    <LinearLayout
+                        android:layout_marginTop="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="30dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <ImageView
+                            android:id="@+id/btnFacebookRusvel"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/facebook" />
+
+                        <ImageView
+                            android:id="@+id/btnTwitterRusvel"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/twitter" />
+
+                        <ImageView
+                            android:id="@+id/btnInstaRusvel"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/instagram" />
+
+                        <ImageView
+                            android:id="@+id/btnLinkedinRusvel"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/linkedin" />
+
+                        <ImageView
+                            android:id="@+id/btnGitRusvel"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/github" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/infoCarlos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_marginTop="20dp"
+                        style="@style/viewParent.headerText.NoMode"
+                        android:textSize="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Carlos Andrés Bermúdez Arango"
+                        android:textColor="@color/whiteTextColor"
+                        android:textStyle="bold">
+                    </TextView>
+                    <TextView
+                        android:paddingTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/whiteTextColor"
+                        android:text="👋 Hola, soy Carlos,\n\n 👀 Me interesa la programación web y el desarrollo de softwares. Soy un amante del desarrollo de aplicaciones móviles. Actualmente desarrollo en dispositivos móviles Android usando Android Studio en lenguaje Java. \n\n🌱 Soy un desarrollador junior de Java y Python. \n\n🌱 Actualmente estoy aprendiendo javaScript, luego de tomar cursos en HTML y CSS. Mi camino de aprendizaje después de terminar con javaScript es NodeJs, Progressive Web Apps, Webpack, ReactJs y finalmente React Native. \n\n💞️ Busco colaborar en proyectos que me animen a aprender un poco más en estos perfiles a los que me inclino. \n\n📫 Cuento con una cuenta en Twitter @EnvironTronic en la que he mostrado algunos desarrollos en diferentes areas de mi carrera que si es de su agrado pueden ir a chequear. Esta cuenta es el emprendimiento que quiero realizar como meta a largo plazo.\n\nPuedes contactarme en rusvelpassos@gmail.com o por mis redes sociales las cuales te dejaré a continuación.">
+                    </TextView>
+
+                    <LinearLayout
+                        android:layout_marginTop="20dp"
+                        android:id="@+id/redesCarlos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="30dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <ImageView
+                            android:id="@+id/btnFacebookCarlos"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/facebook" />
+
+                        <ImageView
+                            android:id="@+id/btnTwitterCarlos"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/twitter" />
+
+                        <ImageView
+                            android:id="@+id/btnInstaCarlos"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/instagram" />
+
+                        <ImageView
+                            android:id="@+id/btnLinkedinCarlos"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/linkedin" />
+
+                        <ImageView
+                            android:id="@+id/btnGitCarlos"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:src="@drawable/github" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ImageView
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back_img"
+        android:layout_marginRight="11dp"
+        android:layout_marginBottom="30dp"
+        android:onClick="onLoginClick"
+        android:adjustViewBounds="false"/>
+
+</RelativeLayout>

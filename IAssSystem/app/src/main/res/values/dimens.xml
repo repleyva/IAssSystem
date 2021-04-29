@@ -1,0 +1,13 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="headerTextSize">25sp</dimen>
+    <dimen name="newsMoreTextSize">15sp</dimen>
+    <dimen name="loginViewsMargin">20dp</dimen>
+    <integer name="largo">3000</integer>
+    <integer name="normal">1500</integer>
+
+    <!--start activity-->
+
+    <!--shimmer dimes-->
+
+</resources>

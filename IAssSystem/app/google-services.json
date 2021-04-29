@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "279204958241",
+    "project_id": "iasssystem",
+    "storage_bucket": "iasssystem.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279204958241:android:358fb90403b89b6fa71360",
+        "android_client_info": {
+          "package_name": "org.environmentronic.iasssystem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279204958241-nqtf71i0kiti8jqtgshe9besitelvs6n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.environmentronic.iasssystem",
+            "certificate_hash": "ed995c4eeada17f2afcd17eb4dca505d0648ac22"
+          }
+        },
+        {
+          "client_id": "279204958241-0n1q5cjbjc46o2nbi3if84ohd11ot0jj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8g98gs3s0u0dGgKETIqC-c-X5NQnzhpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279204958241-0n1q5cjbjc46o2nbi3if84ohd11ot0jj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
