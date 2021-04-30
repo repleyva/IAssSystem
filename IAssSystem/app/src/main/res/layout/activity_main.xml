@@ -542,6 +542,14 @@
                                 android:onClick="accionIngresarClase">
                             </Button>
 
+                            <TextView
+                                android:id="@+id/prueba"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="aqui texto">
+
+                            </TextView>
+
                         </LinearLayout>
 
                         <androidx.cardview.widget.CardView

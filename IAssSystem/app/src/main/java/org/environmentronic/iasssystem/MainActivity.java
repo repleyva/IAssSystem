@@ -52,8 +52,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -71,8 +74,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -213,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private ImageView fotoClase;
     private TextView tvNClase;
     private TextView tvNCodigo;
+    private TextView prueba;
 
     private FirebaseDatabase database;
 
@@ -339,6 +345,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         tvNClase = (TextView) findViewById(R.id.tvNClase);
         tvNCodigo = (TextView) findViewById(R.id.tvNCodigo);
         database = FirebaseDatabase.getInstance();
+
+        prueba = (TextView) findViewById(R.id.prueba);
 
         padre.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -820,14 +828,89 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     public void accionIngresarClase(View view) {
 
-        new Handler().postDelayed(new Runnable() {
+        showProgressBar("Buscando clase, espere ...");
+        DatabaseReference myRef = database.getReference().child("DOCENTES");
+        List idDocentes = new ArrayList();
+        List clasesDocentes = new ArrayList();
+        List claves = new ArrayList();
+        Set codigos = new HashSet();
+        idDocentes.clear();
+        clasesDocentes.clear();
+        claves.clear();
+        codigos.clear();
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+
+                // identifico los id de los docentes
+                for (DataSnapshot idDocente:
+                     dataSnapshot.getChildren()) {
+                    idDocentes.add(idDocente.getKey());
+                }
+
+                // busco las clases de cada docente
+                for (int i = 0; i < idDocentes.size(); i++) {
+                    // Read from the database
+                    int finalI = i;
+                    myRef.child((String)idDocentes.get(i)).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // identifico los campos de los docentes
+                            for (DataSnapshot clase:
+                                    dataSnapshot.getChildren()) {
+                                clasesDocentes.add(clase.getKey());
+                            }
+
+                            for (int j = 0; j < clasesDocentes.size(); j++) {
+                                myRef.child((String)idDocentes.get(finalI)).child((String) clasesDocentes.get(j)).addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        // This method is called once with the initial value and again
+                                        // whenever data at this location is updated.
+                                        finishProgressBar();
+                                        // identifico los dodigos de los docentes
+                                        for (DataSnapshot clase:
+                                                dataSnapshot.getChildren()) {
+                                            codigos.add(clase.getValue());
+                                        }
+
+                                        
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError error) {
+                                        // Failed to read value
+                                        finishProgressBar();
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError error) {
+                            finishProgressBar();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                //Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        });
+
+        /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 datosClase.setVisibility(View.VISIBLE);
+                datosClase.setAnimation(animation_down);
             }
-        }, 900);
-
-        datosClase.setAnimation(animation_down);
+        }, acond1);*/
 
     }
 
@@ -915,7 +998,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 byte[] data = baos.toByteArray();
 
-                UploadTask uploadTask = storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreCorto + "_" + nClase + "." + nCodigo + "/" + "clase.png").putBytes(data);
+                UploadTask uploadTask = storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + nClase + "." + nCodigo + "/" + "clase.png").putBytes(data);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
@@ -933,13 +1016,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                         DatabaseReference myRef = database.getReference().child("DOCENTES");
 
-                        myRef.child("CLASES")
+                        myRef.child(idUsuario)
+                                .child("CLASES")
                                 .child(nCodigo)
-                                .setValue( idUsuario + "/" + idUsuario + "_" + nombreCorto + "_" + nClase + "." + nCodigo);
-
-                        myRef.child("DATOS")
-                                .child("FOTO")
-                                .setValue(fotoPerfilUsuario);
+                                .setValue(idUsuario + "_" + nombreUsuario + "_" + nClase + "." + nCodigo);
 
                         finishProgressBar();
                         new Handler().postDelayed(new Runnable() {
@@ -949,7 +1029,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                                 datosClaseCreada.setAnimation(animation_down);
                             }
                         }, acond2);
-                        
+
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
