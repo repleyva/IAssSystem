@@ -543,10 +543,13 @@
                             </Button>
 
                             <TextView
+                                android:layout_marginTop="10dp"
+                                android:textColor="@color/colorAccent"
+                                style="@style/viewParent.headerText.NoMode"
                                 android:id="@+id/prueba"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="aqui texto">
+                                android:text="">
 
                             </TextView>
 
@@ -606,6 +609,7 @@
                                 </TextView>
 
                                 <TextView
+                                    android:id="@+id/clase"
                                     android:textStyle="italic"
                                     style="@style/viewParent.headerText.NoMode"
                                     android:textColor="@color/colorPrimary"
@@ -624,6 +628,7 @@
                                 </TextView>
 
                                 <TextView
+                                    android:id="@+id/docente"
                                     android:textStyle="italic"
                                     android:textColor="@color/colorPrimary"
                                     style="@style/viewParent.headerText.NoMode"

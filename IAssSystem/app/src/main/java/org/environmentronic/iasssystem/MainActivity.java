@@ -75,6 +75,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -222,6 +223,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private FirebaseDatabase database;
 
+    // ----------------------------- Variables para ingresar a clases -----------------------------
+    private EditText editTextcodigo;
+    private TextView clase;
+    private TextView docente;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -346,6 +352,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         tvNCodigo = (TextView) findViewById(R.id.tvNCodigo);
         database = FirebaseDatabase.getInstance();
 
+        // ----------------------------- Variables para ingresar a clases -----------------------------
+        editTextcodigo = (EditText) findViewById(R.id.editTextcodigo);
+        clase = (TextView) findViewById(R.id.clase);
+        docente = (TextView) findViewById(R.id.docente);
         prueba = (TextView) findViewById(R.id.prueba);
 
         padre.setOnClickListener(new View.OnClickListener() {
@@ -834,6 +844,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         List clasesDocentes = new ArrayList();
         List claves = new ArrayList();
         Set codigos = new HashSet();
+        String codigoIng = editTextcodigo.getText().toString().toUpperCase();
         idDocentes.clear();
         clasesDocentes.clear();
         claves.clear();
@@ -877,8 +888,52 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                                             codigos.add(clase.getValue());
                                         }
 
-                                        
-                                    }
+                                        String codigoCompleto = null;
+                                        String cadenaSinCodigo = "";
+                                        String nombreClase = "";
+                                        String cadenaSinCodigoSinClase = "";
+                                        String nombreDocente = "";
+
+                                        Iterator<String> it = codigos.iterator();
+                                        if (!codigoIng.isEmpty()) {
+                                            prueba.setText("");
+                                            while (it.hasNext()) {
+                                                codigoCompleto = it.next();
+                                                if (codigoCompleto.contains(codigoIng)) {
+                                                    cadenaSinCodigo = codigoCompleto.replaceAll("." + codigoIng, "");
+                                                    nombreClase = cadenaSinCodigo.replaceAll(".*_", "");
+                                                    cadenaSinCodigoSinClase = cadenaSinCodigo.replaceAll("_" + nombreClase, "");
+                                                    nombreDocente = cadenaSinCodigoSinClase.replaceAll(".*_", "");
+                                                }
+                                            }
+
+                                            if (nombreClase.isEmpty() || nombreDocente.isEmpty()){
+                                                docente.setText("Docente no encontrado");
+                                                clase.setText("Clase no encontrada");
+                                            } else {
+                                                docente.setText(nombreDocente);
+                                                clase.setText(nombreClase);
+                                            }
+
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    datosClase.setVisibility(View.VISIBLE);
+                                                    datosClase.setAnimation(animation_down);
+                                                }
+                                            }, acond1);
+
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    editTextcodigo.setText("");
+                                                }
+                                            }, acond2);
+
+                                        } else {
+                                            prueba.setText("Debe ingresar in Código");
+                                        }
+                                      }
 
                                     @Override
                                     public void onCancelled(DatabaseError error) {
