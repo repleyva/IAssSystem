@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -51,6 +52,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -65,7 +68,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -207,6 +212,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private TextView tvNClase;
     private TextView tvNCodigo;
 
+    private FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -329,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         fotoClase = (ImageView) findViewById(R.id.fotoClase);
         tvNClase = (TextView) findViewById(R.id.tvNClase);
         tvNCodigo = (TextView) findViewById(R.id.tvNCodigo);
+        db = FirebaseFirestore.getInstance();
 
         padre.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -905,7 +913,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 byte[] data = baos.toByteArray();
 
-                UploadTask uploadTask = storageReference.child("DOCENTE/" + idUsuario + "/" + idUsuario + "_" + nombreCorto + "_" + nClase + "." + nCodigo + "/" + "clase.png").putBytes(data);
+                UploadTask uploadTask = storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreCorto + "_" + nClase + "." + nCodigo + "/" + "clase.png").putBytes(data);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
@@ -917,9 +925,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                        finishProgressBar();
+
                         tvNClase.setText(nClase);
                         tvNCodigo.setText(nCodigo);
+
+                        finishProgressBar();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
