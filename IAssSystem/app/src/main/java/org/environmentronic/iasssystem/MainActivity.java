@@ -47,8 +47,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -212,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private TextView tvNClase;
     private TextView tvNCodigo;
 
-    private FirebaseFirestore db;
+    private FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -336,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         fotoClase = (ImageView) findViewById(R.id.fotoClase);
         tvNClase = (TextView) findViewById(R.id.tvNClase);
         tvNCodigo = (TextView) findViewById(R.id.tvNCodigo);
-        db = FirebaseFirestore.getInstance();
+        database = FirebaseDatabase.getInstance();
 
         padre.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -893,7 +895,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void accionCrearClase(View view) {
-        
+
         if (compruebaConexion(this)) {
             String nClase = editTextNombreClase.getText().toString().toUpperCase();
             String nCodigo = editTextcodigoClase.getText().toString().toUpperCase();
@@ -929,16 +931,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         tvNClase.setText(nClase);
                         tvNCodigo.setText(nCodigo);
 
+                        DatabaseReference myRef = database.getReference().child("DOCENTES");
+
+                        myRef.child("CLASES")
+                                .child(nCodigo)
+                                .setValue( idUsuario + "/" + idUsuario + "_" + nombreCorto + "_" + nClase + "." + nCodigo);
+
+                        myRef.child("DATOS")
+                                .child("FOTO")
+                                .setValue(fotoPerfilUsuario);
+
                         finishProgressBar();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 datosClaseCreada.setVisibility(View.VISIBLE);
+                                datosClaseCreada.setAnimation(animation_down);
                             }
                         }, acond2);
-
-                        datosClaseCreada.setAnimation(animation_down);
-
+                        
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -954,6 +965,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             Toast.makeText(this, "Debe tener acceso a Internet", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     public void verListaClases(View view) {
         // Inicio ocultar main --------------------------------------------------
