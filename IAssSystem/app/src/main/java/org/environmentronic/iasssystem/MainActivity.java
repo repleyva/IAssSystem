@@ -172,9 +172,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private TextView tvCargandoClases_docente;
 
     // constantes timer
-    private Integer largo = 3000;
-    private Integer normal = 1500;
-    private Integer delay = 1000;
+    private Integer largo = 2000;
+    private Integer normal = 1000;
+    private Integer delay = 667;
+    private Integer acond1 = 1340;
+    private Integer acond2 = 600;
+
+    /*
+    3000 = 2000
+    1000 = 667
+    1500 = 1000
+    2000 = 1340
+    900 = 600
+    */
 
     // ---------------------------------- Variables para el backend -------------------------------
     private String nombreUsuario;
@@ -871,7 +881,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             etNombreClase.startAnimation(animation_left);
             etCodigoClase.startAnimation(animation_rigth);
             btnDocenteCrearClase.startAnimation(animation_left);
-        }, 2000);
+        }, acond1);
     }
 
     public void accionCrearClase(View view) {
@@ -915,7 +925,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                             public void run() {
                                 datosClaseCreada.setVisibility(View.VISIBLE);
                             }
-                        }, 900);
+                        }, acond2);
 
                         datosClaseCreada.setAnimation(animation_down);
 
@@ -925,7 +935,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                                 editTextNombreClase.setText("");
                                 editTextcodigoClase.setText("");
                             }
-                        }, 900);
+                        }, acond2);
                     }
                 });
                 // ----------------------------------------------------------------------

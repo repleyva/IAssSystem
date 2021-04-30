@@ -3,8 +3,8 @@
     <dimen name="headerTextSize">25sp</dimen>
     <dimen name="newsMoreTextSize">15sp</dimen>
     <dimen name="loginViewsMargin">20dp</dimen>
-    <integer name="largo">3000</integer>
-    <integer name="normal">1500</integer>
+    <integer name="largo">2000</integer>
+    <integer name="normal">1000</integer>
 
     <!--start activity-->
 
