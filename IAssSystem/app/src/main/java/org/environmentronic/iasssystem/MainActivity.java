@@ -835,136 +835,142 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void accionIngresarClase(View view) {
 
         if (compruebaConexion(this)) {
-            showProgressBar("Buscando clase, espere ...");
-            DatabaseReference myRef = database.getReference().child("DOCENTES");
-            DatabaseReference myRefp = database.getReference();
-            List idDocentes = new ArrayList();
-            List clasesDocentes = new ArrayList();
-            List claves = new ArrayList();
-            Set codigos = new HashSet();
-            String codigoIng = editTextcodigo.getText().toString().toUpperCase();
-            idDocentes.clear();
-            clasesDocentes.clear();
-            claves.clear();
-            codigos.clear();
+            if (!editTextcodigo.getText().toString().isEmpty()) {
+                showProgressBar("Buscando clase, espere ...");
+                DatabaseReference myRef = database.getReference().child("DOCENTES");
+                DatabaseReference myRefp = database.getReference();
+                List idDocentes = new ArrayList();
+                List clasesDocentes = new ArrayList();
+                List claves = new ArrayList();
+                Set codigos = new HashSet();
+                String codigoIng = editTextcodigo.getText().toString().toUpperCase();
+                idDocentes.clear();
+                clasesDocentes.clear();
+                claves.clear();
+                codigos.clear();
 
-            myRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // This method is called once with the initial value and again
-                    // whenever data at this location is updated.
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // This method is called once with the initial value and again
+                        // whenever data at this location is updated.
 
-                    // identifico los id de los docentes
-                    for (DataSnapshot idDocente :
-                            dataSnapshot.getChildren()) {
-                        idDocentes.add(idDocente.getKey());
-                    }
+                        // identifico los id de los docentes
+                        for (DataSnapshot idDocente :
+                                dataSnapshot.getChildren()) {
+                            idDocentes.add(idDocente.getKey());
+                        }
 
-                    // busco las clases de cada docente
-                    for (int i = 0; i < idDocentes.size(); i++) {
-                        // Read from the database
-                        int finalI = i;
-                        myRef.child((String) idDocentes.get(i))
-                                .addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        // identifico los campos de los docentes
-                                        for (DataSnapshot clase :
-                                                dataSnapshot.getChildren()) {
-                                            clasesDocentes.add(clase.getKey());
-                                        }
+                        // busco las clases de cada docente
+                        for (int i = 0; i < idDocentes.size(); i++) {
+                            // Read from the database
+                            int finalI = i;
+                            myRef.child((String) idDocentes.get(i))
+                                    .addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            // identifico los campos de los docentes
+                                            for (DataSnapshot clase :
+                                                    dataSnapshot.getChildren()) {
+                                                clasesDocentes.add(clase.getKey());
+                                            }
 
-                                        for (int j = 0; j < clasesDocentes.size(); j++) {
-                                            myRef.child((String) idDocentes.get(finalI)).child((String) clasesDocentes.get(j)).addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    // This method is called once with the initial value and again
-                                                    // whenever data at this location is updated.
-                                                    // identifico los dodigos de los docentes
-                                                    for (DataSnapshot clase :
-                                                            dataSnapshot.getChildren()) {
-                                                        codigos.add(clase.getValue());
-                                                    }
+                                            for (int j = 0; j < clasesDocentes.size(); j++) {
+                                                myRef.child((String) idDocentes.get(finalI)).child((String) clasesDocentes.get(j)).addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                                        // This method is called once with the initial value and again
+                                                        // whenever data at this location is updated.
+                                                        // identifico los dodigos de los docentes
+                                                        for (DataSnapshot clase :
+                                                                dataSnapshot.getChildren()) {
+                                                            codigos.add(clase.getValue());
+                                                        }
 
-                                                    String codigoCompleto = null;
-                                                    String cadenaSinCodigo = "";
-                                                    String nombreClase = "";
-                                                    String cadenaSinCodigoSinClase = "";
-                                                    String nombreDocente = "";
-                                                    String idDocente = "";
+                                                        String codigoCompleto = null;
+                                                        String cadenaSinCodigo = "";
+                                                        String nombreClase = "";
+                                                        String cadenaSinCodigoSinClase = "";
+                                                        String nombreDocente = "";
+                                                        String idDocente = "";
 
-                                                    Iterator<String> it = codigos.iterator();
-                                                    if (!codigoIng.isEmpty()) {
-                                                        prueba.setText("");
+                                                        Iterator<String> it = codigos.iterator();
+                                                        if (!codigoIng.isEmpty()) {
+                                                            prueba.setText("");
 
-                                                        while (it.hasNext()) {
-                                                            codigoCompleto = it.next();
-                                                            if (codigoCompleto.contains(codigoIng)) {
-                                                                banderaIngClases = true;
-                                                                cadenaSinCodigo = codigoCompleto.replaceAll("." + codigoIng, "");
-                                                                nombreClase = cadenaSinCodigo.replaceAll(".*_", "");
-                                                                cadenaSinCodigoSinClase = cadenaSinCodigo.replaceAll("_" + nombreClase, "");
-                                                                nombreDocente = cadenaSinCodigoSinClase.replaceAll(".*_", "");
-                                                                idDocente = cadenaSinCodigoSinClase.replaceAll("_" + nombreDocente, "");
+                                                            while (it.hasNext()) {
+                                                                codigoCompleto = it.next();
+                                                                if (codigoCompleto.contains(codigoIng)) {
+                                                                    banderaIngClases = true;
+                                                                    cadenaSinCodigo = codigoCompleto.replaceAll("." + codigoIng, "");
+                                                                    nombreClase = cadenaSinCodigo.replaceAll(".*_", "");
+                                                                    cadenaSinCodigoSinClase = cadenaSinCodigo.replaceAll("_" + nombreClase, "");
+                                                                    nombreDocente = cadenaSinCodigoSinClase.replaceAll(".*_", "");
+                                                                    idDocente = cadenaSinCodigoSinClase.replaceAll("_" + nombreDocente, "");
+                                                                }
                                                             }
-                                                        }
 
-                                                        if (nombreClase.isEmpty() || nombreDocente.isEmpty()) {
-                                                            docente.setText("Docente no encontrado");
-                                                            clase.setText("Clase no encontrada");
-                                                        } else {
-                                                            docente.setText(nombreDocente);
-                                                            clase.setText(nombreClase);
-                                                        }
+                                                            if (nombreClase.isEmpty() || nombreDocente.isEmpty()) {
+                                                                docente.setText("Docente no encontrado");
+                                                                clase.setText("Clase no encontrada");
+                                                            } else {
+                                                                docente.setText(nombreDocente);
+                                                                clase.setText(nombreClase);
+                                                            }
 
-                                                        if (banderaIngClases) {
-                                                            buscarFotoExistente(nombreDocente, nombreClase, codigoIng, idDocente);
+                                                            if (banderaIngClases) {
+                                                                buscarFotoExistente(nombreDocente, nombreClase, codigoIng, idDocente);
+                                                            } else {
+                                                                finishProgressBar();
+                                                                new Handler().postDelayed(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        datosClase.setVisibility(View.VISIBLE);
+                                                                        datosClase.setAnimation(animation_down);
+                                                                    }
+                                                                }, acond1);
+
+                                                                new Handler().postDelayed(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        editTextcodigo.setText("");
+                                                                    }
+                                                                }, acond2);
+                                                            }
                                                         } else {
                                                             finishProgressBar();
-                                                            new Handler().postDelayed(new Runnable() {
-                                                                @Override
-                                                                public void run() {
-                                                                    datosClase.setVisibility(View.VISIBLE);
-                                                                    datosClase.setAnimation(animation_down);
-                                                                }
-                                                            }, acond1);
-
-                                                            new Handler().postDelayed(new Runnable() {
-                                                                @Override
-                                                                public void run() {
-                                                                    editTextcodigo.setText("");
-                                                                }
-                                                            }, acond2);
+                                                            prueba.setText("Debe ingresar un Código");
                                                         }
-
-                                                    } else {
-                                                        prueba.setText("Debe ingresar in Código");
                                                     }
-                                                }
 
-                                                @Override
-                                                public void onCancelled(DatabaseError error) {
-                                                    // Failed to read value
-                                                    finishProgressBar();
-                                                }
-                                            });
+                                                    @Override
+                                                    public void onCancelled(DatabaseError error) {
+                                                        // Failed to read value
+                                                        finishProgressBar();
+                                                    }
+                                                });
+                                            }
                                         }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError error) {
-                                        finishProgressBar();
-                                    }
-                                });
+                                        @Override
+                                        public void onCancelled(DatabaseError error) {
+                                            finishProgressBar();
+                                        }
+                                    });
+                        }
                     }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    // Failed to read value
-                    prueba.setText("Ha ocurrido un error, revise su conexión a internet o intentelo de nuevo mas tarde");
-                }
-            });
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                        // Failed to read value
+                        prueba.setText("Ha ocurrido un error, revise su conexión a internet o intentelo de nuevo mas tarde");
+                    }
+                });
+            } else {
+                Toast.makeText(this, "Debe ingresar un código", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Para ingresar a una clase debe tener acceso a internet", Toast.LENGTH_SHORT).show();
         }
     }
 
