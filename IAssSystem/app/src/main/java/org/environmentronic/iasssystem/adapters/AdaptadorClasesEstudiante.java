@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ListAdapter;
@@ -39,7 +40,20 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
 
     @Override
     public void onBindViewHolder(@NonNull AdaptadorClasesEstudiante.ViewHolder holder, int position) {
-        holder.bindData(clasesEstudiantes.get(position));
+        final ClasesEstudiante clase = clasesEstudiantes.get(position);
+
+        holder.tvNombreDocente.setText(clase.getDocente());
+        holder.tvnombreMateria.setText(clase.getMateria());
+        holder.tvNombreCodigo.setText(clase.getCodigo());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "clase: " + clase.getMateria(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //holder.bindData(clasesEstudiantes.get(position));
     }
 
     @Override

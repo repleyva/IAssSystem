@@ -223,6 +223,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private ImageView photoBBDDIngClases;
     private Boolean banderaIngClases = false;
 
+    // ---------------------------------- variables ver mis clases --------------------------------
+    private TextView pruebaClases;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -353,6 +356,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         docente = (TextView) findViewById(R.id.docente);
         prueba = (TextView) findViewById(R.id.prueba);
         photoBBDDIngClases = (ImageView) findViewById(R.id.photoBBDDIngClases);
+
+        // ---------------------------------- variables ver mis clases --------------------------------
+        pruebaClases = (TextView) findViewById(R.id.pruebaClases);
 
         padre.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -724,9 +730,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             tvCargandoClases = (TextView) findViewById(R.id.tvCargandoClases);
             cprogress = (ProgressBar) findViewById(R.id.cprogress);
 
-            new Handler().postDelayed(() -> {
+            /*new Handler().postDelayed(() -> {
                 lyprogreso.setVisibility(View.GONE);
-            }, normal);
+            }, normal);*/
 
             new Handler().postDelayed(() -> {
                 rvClasesEstudiante.setVisibility(View.VISIBLE);
@@ -734,47 +740,52 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 ponerDatos();
 
             }, normal);
-
         }, normal);
     }
 
     private void ponerDatos() {
+
+        buscarClasesDataBase();
         // mostramos las clases
-        clasesEstudiantes.clear();
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
+        /*clasesEstudiantes.clear();
+        // asi debo meter las clases
         clasesEstudiantes.add(new ClasesEstudiante(
                 "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
 
         rvClasesEstudiante.setHasFixedSize(true);
         rvClasesEstudiante.setLayoutManager(new LinearLayoutManager(this));
-        rvClasesEstudiante.setAdapter(listaClases);
+        rvClasesEstudiante.setAdapter(listaClases);*/
+    }
+
+    private void buscarClasesDataBase() {
+        List clases = new ArrayList();
+        clases.clear();
+        DatabaseReference myRef = database.getReference().child("ESTUDIANTES").child(idUsuario).child("CLASES");
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot clase:
+                     dataSnapshot.getChildren()) {
+                    clases.add(clase.getValue());
+                }
+
+                lyprogreso.setVisibility(View.GONE);
+
+                /**PENDIENTE:
+                hay que hacer el algoritmo que debe separar los datos regresados de las clases
+                en los requerimientos para crear cada carpeta*/
+
+                pruebaClases.setText(clases.toString());
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });
     }
 
     public void ingresarClase(View view) {
