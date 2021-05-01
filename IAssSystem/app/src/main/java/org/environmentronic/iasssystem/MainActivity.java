@@ -19,10 +19,8 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -47,25 +45,20 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesDocente;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesEstudiante;
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -227,6 +220,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private EditText editTextcodigo;
     private TextView clase;
     private TextView docente;
+    private ImageView photoBBDDIngClases;
+    private Boolean banderaIngClases = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -357,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         clase = (TextView) findViewById(R.id.clase);
         docente = (TextView) findViewById(R.id.docente);
         prueba = (TextView) findViewById(R.id.prueba);
+        photoBBDDIngClases = (ImageView) findViewById(R.id.photoBBDDIngClases);
 
         padre.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -636,7 +632,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             // ------------------------------- borramos la foto -----------------------------
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
             dialogo1.setTitle("Importante");
-            dialogo1.setMessage("¿Realmente deseas eliminar la foto de la base de datos?");
+            dialogo1.setMessage("Si eliminas la foto de la base de datos tendrás que acceder a tus clases nuevamente para actualizarla en cada una, ¿Realmente deseas eliminarla?");
             dialogo1.setCancelable(false);
             dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
@@ -838,135 +834,221 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     public void accionIngresarClase(View view) {
 
-        showProgressBar("Buscando clase, espere ...");
-        DatabaseReference myRef = database.getReference().child("DOCENTES");
-        List idDocentes = new ArrayList();
-        List clasesDocentes = new ArrayList();
-        List claves = new ArrayList();
-        Set codigos = new HashSet();
-        String codigoIng = editTextcodigo.getText().toString().toUpperCase();
-        idDocentes.clear();
-        clasesDocentes.clear();
-        claves.clear();
-        codigos.clear();
+        if (compruebaConexion(this)) {
+            showProgressBar("Buscando clase, espere ...");
+            DatabaseReference myRef = database.getReference().child("DOCENTES");
+            DatabaseReference myRefp = database.getReference();
+            List idDocentes = new ArrayList();
+            List clasesDocentes = new ArrayList();
+            List claves = new ArrayList();
+            Set codigos = new HashSet();
+            String codigoIng = editTextcodigo.getText().toString().toUpperCase();
+            idDocentes.clear();
+            clasesDocentes.clear();
+            claves.clear();
+            codigos.clear();
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
 
-                // identifico los id de los docentes
-                for (DataSnapshot idDocente:
-                     dataSnapshot.getChildren()) {
-                    idDocentes.add(idDocente.getKey());
-                }
+                    // identifico los id de los docentes
+                    for (DataSnapshot idDocente :
+                            dataSnapshot.getChildren()) {
+                        idDocentes.add(idDocente.getKey());
+                    }
 
-                // busco las clases de cada docente
-                for (int i = 0; i < idDocentes.size(); i++) {
-                    // Read from the database
-                    int finalI = i;
-                    myRef.child((String)idDocentes.get(i)).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            // identifico los campos de los docentes
-                            for (DataSnapshot clase:
-                                    dataSnapshot.getChildren()) {
-                                clasesDocentes.add(clase.getKey());
-                            }
-
-                            for (int j = 0; j < clasesDocentes.size(); j++) {
-                                myRef.child((String)idDocentes.get(finalI)).child((String) clasesDocentes.get(j)).addValueEventListener(new ValueEventListener() {
+                    // busco las clases de cada docente
+                    for (int i = 0; i < idDocentes.size(); i++) {
+                        // Read from the database
+                        int finalI = i;
+                        myRef.child((String) idDocentes.get(i))
+                                .addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
-                                        // This method is called once with the initial value and again
-                                        // whenever data at this location is updated.
-                                        finishProgressBar();
-                                        // identifico los dodigos de los docentes
-                                        for (DataSnapshot clase:
+                                        // identifico los campos de los docentes
+                                        for (DataSnapshot clase :
                                                 dataSnapshot.getChildren()) {
-                                            codigos.add(clase.getValue());
+                                            clasesDocentes.add(clase.getKey());
                                         }
 
-                                        String codigoCompleto = null;
-                                        String cadenaSinCodigo = "";
-                                        String nombreClase = "";
-                                        String cadenaSinCodigoSinClase = "";
-                                        String nombreDocente = "";
-
-                                        Iterator<String> it = codigos.iterator();
-                                        if (!codigoIng.isEmpty()) {
-                                            prueba.setText("");
-                                            while (it.hasNext()) {
-                                                codigoCompleto = it.next();
-                                                if (codigoCompleto.contains(codigoIng)) {
-                                                    cadenaSinCodigo = codigoCompleto.replaceAll("." + codigoIng, "");
-                                                    nombreClase = cadenaSinCodigo.replaceAll(".*_", "");
-                                                    cadenaSinCodigoSinClase = cadenaSinCodigo.replaceAll("_" + nombreClase, "");
-                                                    nombreDocente = cadenaSinCodigoSinClase.replaceAll(".*_", "");
-                                                }
-                                            }
-
-                                            if (nombreClase.isEmpty() || nombreDocente.isEmpty()){
-                                                docente.setText("Docente no encontrado");
-                                                clase.setText("Clase no encontrada");
-                                            } else {
-                                                docente.setText(nombreDocente);
-                                                clase.setText(nombreClase);
-                                            }
-
-                                            new Handler().postDelayed(new Runnable() {
+                                        for (int j = 0; j < clasesDocentes.size(); j++) {
+                                            myRef.child((String) idDocentes.get(finalI)).child((String) clasesDocentes.get(j)).addValueEventListener(new ValueEventListener() {
                                                 @Override
-                                                public void run() {
-                                                    datosClase.setVisibility(View.VISIBLE);
-                                                    datosClase.setAnimation(animation_down);
-                                                }
-                                            }, acond1);
+                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                    // This method is called once with the initial value and again
+                                                    // whenever data at this location is updated.
+                                                    // identifico los dodigos de los docentes
+                                                    for (DataSnapshot clase :
+                                                            dataSnapshot.getChildren()) {
+                                                        codigos.add(clase.getValue());
+                                                    }
 
-                                            new Handler().postDelayed(new Runnable() {
+                                                    String codigoCompleto = null;
+                                                    String cadenaSinCodigo = "";
+                                                    String nombreClase = "";
+                                                    String cadenaSinCodigoSinClase = "";
+                                                    String nombreDocente = "";
+                                                    String idDocente = "";
+
+                                                    Iterator<String> it = codigos.iterator();
+                                                    if (!codigoIng.isEmpty()) {
+                                                        prueba.setText("");
+
+                                                        while (it.hasNext()) {
+                                                            codigoCompleto = it.next();
+                                                            if (codigoCompleto.contains(codigoIng)) {
+                                                                banderaIngClases = true;
+                                                                cadenaSinCodigo = codigoCompleto.replaceAll("." + codigoIng, "");
+                                                                nombreClase = cadenaSinCodigo.replaceAll(".*_", "");
+                                                                cadenaSinCodigoSinClase = cadenaSinCodigo.replaceAll("_" + nombreClase, "");
+                                                                nombreDocente = cadenaSinCodigoSinClase.replaceAll(".*_", "");
+                                                                idDocente = cadenaSinCodigoSinClase.replaceAll("_" + nombreDocente, "");
+                                                            }
+                                                        }
+
+                                                        if (nombreClase.isEmpty() || nombreDocente.isEmpty()) {
+                                                            docente.setText("Docente no encontrado");
+                                                            clase.setText("Clase no encontrada");
+                                                        } else {
+                                                            docente.setText(nombreDocente);
+                                                            clase.setText(nombreClase);
+                                                        }
+
+                                                        if (banderaIngClases) {
+                                                            buscarFotoExistente(nombreDocente, nombreClase, codigoIng, idDocente);
+                                                        } else {
+                                                            finishProgressBar();
+                                                            new Handler().postDelayed(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    datosClase.setVisibility(View.VISIBLE);
+                                                                    datosClase.setAnimation(animation_down);
+                                                                }
+                                                            }, acond1);
+
+                                                            new Handler().postDelayed(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    editTextcodigo.setText("");
+                                                                }
+                                                            }, acond2);
+                                                        }
+
+                                                    } else {
+                                                        prueba.setText("Debe ingresar in Código");
+                                                    }
+                                                }
+
                                                 @Override
-                                                public void run() {
-                                                    editTextcodigo.setText("");
+                                                public void onCancelled(DatabaseError error) {
+                                                    // Failed to read value
+                                                    finishProgressBar();
                                                 }
-                                            }, acond2);
-
-                                        } else {
-                                            prueba.setText("Debe ingresar in Código");
+                                            });
                                         }
-                                      }
+                                    }
 
                                     @Override
                                     public void onCancelled(DatabaseError error) {
-                                        // Failed to read value
                                         finishProgressBar();
                                     }
                                 });
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError error) {
-                            finishProgressBar();
-                        }
-                    });
+                    }
                 }
-            }
 
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    prueba.setText("Ha ocurrido un error, revise su conexión a internet o intentelo de nuevo mas tarde");
+                }
+            });
+        }
+    }
+
+    private void buscarFotoExistente(String nombreDocente, String nombreClase, String codigoIng, String idDocente) {
+        nombreCorto = validaNombre(nombreUsuario);
+
+        storageReference.child("ESTUDIANTES/" + idUsuario + "/" + nombreCorto + ".png")
+                .getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+
+                        banderaIngClases = false;
+                        Glide.with(getApplicationContext()).load(uri).into(photoBBDDIngClases);
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                subirFotoClase(nombreDocente, nombreClase, codigoIng, idDocente);
+                            }
+                        }, 2000);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                //Log.w(TAG, "Failed to read value.", error.toException());
+            public void onFailure(@NonNull Exception exception) {
+                prueba.setText("Lo sentimos, para ingresar a una clase debes tener una foto para " +
+                        "realizar el reconocimiento facial. Dirígete a la sección de subir foto de " +
+                        "reconocimiento accediendo al boton de ingresar como estudiante.");
             }
         });
 
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                datosClase.setVisibility(View.VISIBLE);
-                datosClase.setAnimation(animation_down);
-            }
-        }, acond1);*/
 
+    }
+
+    private void subirFotoClase(String nombreDocente, String nombreClase, String codigoIng, String idDocente) {
+
+        if (photoBBDDIngClases != null) {
+            // Get the data from an ImageView as bytes
+            photoBBDDIngClases.setDrawingCacheEnabled(true);
+            photoBBDDIngClases.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) photoBBDDIngClases.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            UploadTask uploadTask = storageReference.child("DOCENTES/" + idDocente + "/" + idDocente + "_" + nombreDocente + "_" + nombreClase + "." + codigoIng + "/" + nombreCorto + ".png").putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                    finishProgressBar();
+                    prueba.setText("Ha ocurrido un error, revise su conexión a internet o intentelo de nuevo mas tarde");
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+
+                    DatabaseReference myRef = database.getReference().child("ESTUDIANTES");
+
+                    myRef.child(idUsuario)
+                            .child("CLASES")
+                            .child(codigoIng)
+                            .setValue(idDocente + "_" + nombreDocente + "_" + nombreClase + "." + codigoIng);
+
+                    finishProgressBar();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            datosClase.setVisibility(View.VISIBLE);
+                            datosClase.setAnimation(animation_down);
+                        }
+                    }, acond1);
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            editTextcodigo.setText("");
+                        }
+                    }, acond2);
+                }
+            });
+        }
     }
 
     // ****************************** métodos de docentes ******************************
