@@ -2,14 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.environmentronic.iasssystem">
     <!-- permission -->
-    <uses-feature android:name="android.hardware.camera"
-        android:required="true">
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true"></uses-feature>
 
-    </uses-feature>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="18" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -22,11 +23,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IAssSystem"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activities.estudiantes.InfoClasesEstudianteActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar">
+        </activity>
         <activity
-            android:name=".UsActivity"
-            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
+            android:name=".activities.principales.UsActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.principales.MainActivity"
             android:theme="@style/Theme.IAssSystem.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,11 +39,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RegisterActivity"
-            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
+            android:name=".activities.principales.InfoAppActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
-            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
+            android:name=".activities.principales.LoginActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar" />
     </application>
 
 </manifest>

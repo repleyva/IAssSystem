@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/register_bk_color"
+    tools:context=".activities.estudiantes.InfoClasesEstudianteActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:layout_marginTop="30dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvClase"
+                    style="@style/viewParent.headerText.NoMode"
+                    android:layout_alignParentLeft="true"
+                    android:text="Clase: "
+                    android:textColor="@color/colorPrimary" />
+                <TextView
+                    android:id="@+id/tvDocente"
+                    style="@style/viewParent.headerText.NoMode"
+                    android:layout_alignParentLeft="true"
+                    android:text="Docente: "
+                    android:textColor="@color/colorPrimary"
+                    android:layout_below="@+id/tvClase"/>
+                <TextView
+                    android:id="@+id/tvCodigo"
+                    style="@style/viewParent.headerText.NoMode"
+                    android:layout_alignParentLeft="true"
+                    android:text="Código: "
+                    android:textColor="@color/colorPrimary"
+                    android:layout_below="@+id/tvDocente"/>
+
+                <ImageView
+                    android:id="@+id/imagen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvCodigo"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:src="@drawable/ic_login_hero" />
+
+                <TextView
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/tvEstudiantesReg"
+                    style="@style/viewParent.headerText.NoMode"
+                    android:layout_alignParentLeft="true"
+                    android:text="Estudiantes registrados en la clase:"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_below="@+id/imagen"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:paddingTop="10dp"
+                android:id="@+id/lyprogresoEst"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:paddingTop="10dp"
+                    android:id="@+id/tvCargandoCompaneros"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Buscando compañeros, espere"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:textColor="@color/colorPrimary">
+
+                </TextView>
+
+                <ProgressBar
+                    android:paddingTop="10dp"
+                    android:id="@+id/cprogressEst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:progressDrawable="@drawable/circular_bar_primary"
+                    android:background="@drawable/circular_bar_primary"
+                    android:progress="50">
+
+                </ProgressBar>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:id="@+id/pruebaEstudiantes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/viewParent.headerText.NoMode"
+                android:textColor="@color/colorAccent"
+                android:text="">
+            </TextView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginTop="10dp"
+                android:id="@+id/rvEstudiantesEnClase"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+    </ScrollView>
+    <ImageView
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back_img"
+        android:layout_marginRight="11dp"
+        android:layout_marginBottom="30dp"
+        android:onClick="onMainClick"
+        android:adjustViewBounds="false"/>
+</RelativeLayout>

@@ -1,4 +1,4 @@
-package org.environmentronic.iasssystem;
+package org.environmentronic.iasssystem.activities.principales;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +13,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import org.environmentronic.iasssystem.R;
+import org.environmentronic.iasssystem.activities.principales.MainActivity;
 
 public class UsActivity extends AppCompatActivity {
 
@@ -155,7 +158,7 @@ public class UsActivity extends AppCompatActivity {
     }
 
     public void onLoginClick(View view){
-        startActivity(new Intent(this,MainActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
         overridePendingTransition(R.anim.slide_in_left,R.anim.stay);
         finish();
     }

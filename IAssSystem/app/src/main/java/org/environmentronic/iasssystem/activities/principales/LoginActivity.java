@@ -1,4 +1,4 @@
-package org.environmentronic.iasssystem;
+package org.environmentronic.iasssystem.activities.principales;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -22,6 +22,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import org.environmentronic.iasssystem.R;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -165,7 +167,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void onLoginClick(View View){
-        startActivity(new Intent(this,RegisterActivity.class));
+        startActivity(new Intent(this, InfoAppActivity.class));
         overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
         finish();
     }

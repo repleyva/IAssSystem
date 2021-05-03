@@ -1,4 +1,4 @@
-package org.environmentronic.iasssystem;
+package org.environmentronic.iasssystem.activities.principales;
 
 import android.content.Intent;
 import android.os.Build;
@@ -25,8 +25,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.environmentronic.iasssystem.R;
 
-public class RegisterActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+
+public class InfoAppActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient googleApiClient;
     public static final int SIGN_IN_CODE = 777;
@@ -43,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_info_app_activity);
         changeStatusBarColor();
 
         imagen = (ImageView) findViewById(R.id.imagen);
@@ -88,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     public void onLoginClick(View view){
-        startActivity(new Intent(this,LoginActivity.class));
+        startActivity(new Intent(this, LoginActivity.class));
         overridePendingTransition(R.anim.slide_in_left,R.anim.stay);
         finish();
     }

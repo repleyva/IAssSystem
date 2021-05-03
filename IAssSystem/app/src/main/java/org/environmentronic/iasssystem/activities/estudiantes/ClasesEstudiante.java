@@ -1,4 +1,4 @@
-package org.environmentronic.iasssystem;
+package org.environmentronic.iasssystem.activities.estudiantes;
 
 public class ClasesEstudiante {
 

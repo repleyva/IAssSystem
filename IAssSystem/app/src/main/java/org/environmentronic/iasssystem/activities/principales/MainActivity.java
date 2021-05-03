@@ -1,4 +1,4 @@
-package org.environmentronic.iasssystem;
+package org.environmentronic.iasssystem.activities.principales;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,20 +57,17 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.environmentronic.iasssystem.R;
+import org.environmentronic.iasssystem.activities.docentes.ClasesDocente;
+import org.environmentronic.iasssystem.activities.estudiantes.ClasesEstudiante;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesDocente;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesEstudiante;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -743,7 +740,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void ponerDatos() {
-        buscarClasesDataBase();
+        if (compruebaConexion(this)) {
+            buscarClasesDataBase();
+        } else {
+            lyprogreso.setVisibility(View.GONE);
+            Toast.makeText(this, "Debe tener acceso a internet para ver sus clases. Por favor conectese a internet y vuelva a ingresar a este apartador", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void buscarClasesDataBase() {
@@ -1292,7 +1294,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void ponerDatosClasesDocente() {
-        buscarClasesDataBaseDocente();
+        if (compruebaConexion(this)) {
+            buscarClasesDataBaseDocente();
+        } else {
+            lyprogreso.setVisibility(View.GONE);
+            Toast.makeText(this, "Debe tener acceso a internet para ver sus clases. Por favor conectese a internet y vuelva a ingresar a este apartador", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void buscarClasesDataBaseDocente() {

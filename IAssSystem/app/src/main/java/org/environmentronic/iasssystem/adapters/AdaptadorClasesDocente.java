@@ -11,8 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.environmentronic.iasssystem.ClasesDocente;
-import org.environmentronic.iasssystem.ClasesEstudiante;
+import org.environmentronic.iasssystem.activities.docentes.ClasesDocente;
 import org.environmentronic.iasssystem.R;
 
 import java.util.List;
