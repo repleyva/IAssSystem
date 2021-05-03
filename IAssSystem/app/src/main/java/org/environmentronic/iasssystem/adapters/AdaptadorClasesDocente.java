@@ -6,11 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.environmentronic.iasssystem.ClasesDocente;
+import org.environmentronic.iasssystem.ClasesEstudiante;
 import org.environmentronic.iasssystem.R;
 
 import java.util.List;
@@ -37,7 +39,17 @@ public class AdaptadorClasesDocente extends RecyclerView.Adapter<AdaptadorClases
 
     @Override
     public void onBindViewHolder(@NonNull AdaptadorClasesDocente.ViewHolder holder, int position) {
-        holder.bindData(clasesDocentes.get(position));
+        final ClasesDocente clase = clasesDocentes.get(position);
+
+        holder.tvnombreMateria.setText("Materia: " + clase.getMateria());
+        holder.tvNombreCodigo.setText("Código: " + clase.getCodigo());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "clase: " + clase.getMateria(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -60,14 +72,7 @@ public class AdaptadorClasesDocente extends RecyclerView.Adapter<AdaptadorClases
             super(view);
             foto_docente = view.findViewById(R.id.foto_docenteD);
             tvnombreMateria = view.findViewById(R.id.tvnombreMateriaD);
-            tvNumeroEstudiantes = view.findViewById(R.id.tvNumeroEstudiantesD);
             tvNombreCodigo = view.findViewById(R.id.tvNombreCodigoD);
-        }
-
-        void bindData(ClasesDocente clase){
-            tvnombreMateria.setText("Clase: " + clase.getMateria());
-            tvNombreCodigo.setText("Código: " + clase.getCodigo());
-            tvNumeroEstudiantes.setText("No Estudiantes: " + clase.getNumStudiante());
         }
 
     }

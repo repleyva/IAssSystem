@@ -1063,6 +1063,18 @@
 
             </LinearLayout>
 
+            <TextView
+                android:visibility="gone"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:id="@+id/pruebaClasesDocente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/viewParent.headerText.NoMode"
+                android:textColor="@color/colorAccent"
+                android:text="">
+            </TextView>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:visibility="gone"
                 android:id="@+id/rvClasesDocente"

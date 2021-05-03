@@ -226,6 +226,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     // ---------------------------------- variables ver mis clases --------------------------------
     private TextView pruebaClases;
 
+    // --------------------------- variables ver lista de clases Docente --------------------------------
+    private TextView pruebaClasesDocente;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -359,6 +362,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         // ---------------------------------- variables ver mis clases --------------------------------
         pruebaClases = (TextView) findViewById(R.id.pruebaClases);
+        pruebaClasesDocente = (TextView) findViewById(R.id.pruebaClasesDocente);
 
         padre.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -730,9 +734,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             tvCargandoClases = (TextView) findViewById(R.id.tvCargandoClases);
             cprogress = (ProgressBar) findViewById(R.id.cprogress);
 
-            /*new Handler().postDelayed(() -> {
-                lyprogreso.setVisibility(View.GONE);
-            }, normal);*/
 
             new Handler().postDelayed(() -> {
                 ponerDatos();
@@ -742,17 +743,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void ponerDatos() {
-
         buscarClasesDataBase();
-        // mostramos las clases
-        /*clasesEstudiantes.clear();
-        // asi debo meter las clases
-        clasesEstudiantes.add(new ClasesEstudiante(
-                "Rusvel Enrique Pasos Leyva", "EL447", "Tratamiento de Señales"));
-
-        rvClasesEstudiante.setHasFixedSize(true);
-        rvClasesEstudiante.setLayoutManager(new LinearLayoutManager(this));
-        rvClasesEstudiante.setAdapter(listaClases);*/
     }
 
     private void buscarClasesDataBase() {
@@ -1055,6 +1046,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
+                editTextcodigo.setText("");
+                finishProgressBar();
                 prueba.setText("Lo sentimos, para ingresar a una clase debes tener una foto para " +
                         "realizar el reconocimiento facial. Dirígete a la sección de subir foto de " +
                         "reconocimiento accediendo al boton de ingresar como estudiante.");
@@ -1292,45 +1285,90 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             cprogress_docente = (ProgressBar) findViewById(R.id.cprogress_docente);
 
             new Handler().postDelayed(() -> {
-                lyprogreso_docente.setVisibility(View.GONE);
-            }, normal);
-
-            new Handler().postDelayed(() -> {
-                rvClasesDocente.setVisibility(View.VISIBLE);
-                rvClasesDocente.setAnimation(animation_down);
                 ponerDatosClasesDocente();
-
             }, normal);
 
         }, normal);
     }
 
     private void ponerDatosClasesDocente() {
-        // mostramos las clases
-        clasesDocentes.clear();
-        clasesDocentes.add(new ClasesDocente(
-                "Tratamiento de Imágenes", "EL447", "3"));
-        clasesDocentes.add(new ClasesDocente(
-                "Tratamiento de Imágenes", "EL447", "3"));
-        clasesDocentes.add(new ClasesDocente(
-                "Tratamiento de Imágenes", "EL447", "3"));
-        clasesDocentes.add(new ClasesDocente(
-                "Tratamiento de Imágenes", "EL447", "3"));
-        clasesDocentes.add(new ClasesDocente(
-                "Tratamiento de Imágenes", "EL447", "3"));
-        clasesDocentes.add(new ClasesDocente(
-                "Tratamiento de Imágenes", "EL447", "3"));
-        clasesDocentes.add(new ClasesDocente(
-                "Tratamiento de Imágenes", "EL447", "3"));
-        clasesDocentes.add(new ClasesDocente(
-                "Tratamiento de Imágenes", "EL447", "3"));
-        clasesDocentes.add(new ClasesDocente(
-                "Tratamiento de Imágenes", "EL447", "3"));
+        buscarClasesDataBaseDocente();
+    }
+
+    private void buscarClasesDataBaseDocente() {
+        List<String> clases = new ArrayList<>();
+        List<String> codigos = new ArrayList<>();
+        List<String> nClases = new ArrayList<>();
+
+        clases.clear();
+        codigos.clear();
+        nClases.clear();
+
+        DatabaseReference myRef = database.getReference().child("DOCENTES").child(idUsuario).child("CLASES");
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot clase :
+                        dataSnapshot.getChildren()) {
+                    clases.add(clase.getValue().toString());
+                }
+
+                lyprogreso_docente.setVisibility(View.GONE);
+
+                if (!clases.isEmpty()) {
+
+                    String cadenaSinCodigo = "";
+                    String cadenaSinNombreSinId = "";
+                    String cadenaSinClaseSinCodigo = "";
+                    String nombreDocente = "";
+                    String idDocente = "";
+                    String nombreMateria = "";
+                    String codigo = "";
 
 
-        rvClasesDocente.setHasFixedSize(true);
-        rvClasesDocente.setLayoutManager(new LinearLayoutManager(this));
-        rvClasesDocente.setAdapter(listaClasesDocente);
+                    for (int i = 0; i < clases.size(); i++) {
+                        cadenaSinNombreSinId = clases.get(i).replaceAll(".*_", "");
+                        cadenaSinClaseSinCodigo = clases.get(i).replaceAll("_" + cadenaSinNombreSinId, "");
+                        nombreDocente = cadenaSinClaseSinCodigo.replaceAll(".*_", "");
+                        idDocente = cadenaSinClaseSinCodigo.replaceAll("_" + nombreDocente, "");
+                        cadenaSinCodigo = clases.get(i).substring(0, clases.get(i).indexOf("."));
+                        nombreMateria = cadenaSinCodigo.replaceAll(cadenaSinClaseSinCodigo + "_", "");
+                        codigo = cadenaSinNombreSinId.replaceAll(nombreMateria + ".", "");
+
+                        codigos.add(codigo);
+                        nClases.add(nombreMateria);
+                    }
+
+                    clasesDocentes.clear();
+                    for (int i = 0; i < clases.size(); i++) {
+
+                        clasesDocentes.add(new ClasesDocente(
+                                nClases.get(i), codigos.get(i)));
+                    }
+
+                    rvClasesDocente.setHasFixedSize(true);
+                    rvClasesDocente.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    rvClasesDocente.setAdapter(listaClasesDocente);
+
+                    new Handler().postDelayed(() -> {
+                        rvClasesDocente.setVisibility(View.VISIBLE);
+                        rvClasesDocente.setAnimation(animation_down);
+                    }, normal);
+
+                } else {
+                    pruebaClasesDocente.setVisibility(View.VISIBLE);
+                    pruebaClasesDocente.setText("No has creado ninguna clase");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });
     }
 
     // ****************************** Otras configuraciones ******************************
