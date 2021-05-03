@@ -4,7 +4,7 @@
     <!-- permission -->
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="true"></uses-feature>
+        android:required="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -23,9 +23,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IAssSystem"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.estudiantes.InfoClasesEstudianteActivity"
-            android:theme="@style/Theme.IAssSystem.NoActionBar">
-        </activity>
+        <activity android:name=".activities.docentes.InfoClasesAlumnoActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
+        <activity
+            android:name=".activities.estudiantes.InfoClasesEstudianteActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
         <activity
             android:name=".activities.principales.UsActivity"
             android:theme="@style/Theme.IAssSystem.NoActionBar" />

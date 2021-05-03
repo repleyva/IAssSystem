@@ -1354,10 +1354,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                     }
 
                     clasesDocentes.clear();
+
                     for (int i = 0; i < clases.size(); i++) {
 
                         clasesDocentes.add(new ClasesDocente(
-                                nClases.get(i), codigos.get(i)));
+                                nClases.get(i), codigos.get(i), idUsuario, nombreUsuario));
                     }
 
                     rvClasesDocente.setHasFixedSize(true);

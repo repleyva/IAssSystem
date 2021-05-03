@@ -1,6 +1,7 @@
 package org.environmentronic.iasssystem.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.environmentronic.iasssystem.activities.docentes.ClasesDocente;
 import org.environmentronic.iasssystem.R;
+import org.environmentronic.iasssystem.activities.docentes.InfoClasesAlumnoActivity;
+import org.environmentronic.iasssystem.activities.estudiantes.InfoClasesEstudianteActivity;
 
 import java.util.List;
 
@@ -46,7 +49,14 @@ public class AdaptadorClasesDocente extends RecyclerView.Adapter<AdaptadorClases
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "clase: " + clase.getMateria(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, InfoClasesAlumnoActivity.class);
+                intent.putExtra("materia", clase.getMateria());
+                intent.putExtra("codigo", clase.getCodigo());
+                intent.putExtra("idusuario", clase.getIdusuario());
+                intent.putExtra("nomusuario", clase.getNombreUsuario());
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                //overridePendingTransition(R.anim.slide_in_left, R.anim.stay);
             }
         });
     }
