@@ -54,6 +54,8 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
                 intent.putExtra("docente", clase.getDocente());
                 intent.putExtra("materia", clase.getMateria());
                 intent.putExtra("codigo", clase.getCodigo());
+                intent.putExtra("iddocente", clase.getIdDocente());
+
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
                 //overridePendingTransition(R.anim.slide_in_left, R.anim.stay);

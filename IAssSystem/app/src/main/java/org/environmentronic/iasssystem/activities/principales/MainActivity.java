@@ -749,15 +749,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void buscarClasesDataBase() {
+
         List<String> clases = new ArrayList<>();
         List<String> docentes = new ArrayList<>();
         List<String> codigos = new ArrayList<>();
         List<String> nClases = new ArrayList<>();
+        List<String> idDocentes = new ArrayList<>();
 
         clases.clear();
         docentes.clear();
         codigos.clear();
         nClases.clear();
+        idDocentes.clear();
 
         DatabaseReference myRef = database.getReference().child("ESTUDIANTES").child(idUsuario).child("CLASES");
 
@@ -765,6 +768,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
                 for (DataSnapshot clase :
                         dataSnapshot.getChildren()) {
                     clases.add(clase.getValue().toString());
@@ -795,6 +799,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         codigos.add(codigo);
                         docentes.add(nombreDocente);
                         nClases.add(nombreMateria);
+                        idDocentes.add(idDocente);
                     }
 
                     clasesEstudiantes.clear();
@@ -802,7 +807,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
                         // asi debo meter las clases
                         clasesEstudiantes.add(new ClasesEstudiante(
-                                docentes.get(i), codigos.get(i), nClases.get(i)));
+                                docentes.get(i), codigos.get(i), nClases.get(i), idDocentes.get(i)));
                     }
 
                     rvClasesEstudiante.setHasFixedSize(true);

@@ -5,11 +5,21 @@ public class ClasesEstudiante {
     private String docente;
     private String codigo;
     private String materia;
+    private String idDocente;
 
-    public ClasesEstudiante(String docente, String codigo, String materia) {
+    public ClasesEstudiante(String docente, String codigo, String materia, String idDocente) {
         this.docente = docente;
         this.codigo = codigo;
         this.materia = materia;
+        this.idDocente = idDocente;
+    }
+
+    public String getIdDocente() {
+        return idDocente;
+    }
+
+    public void setIdDocente(String idDocente) {
+        this.idDocente = idDocente;
     }
 
     public String getDocente() {

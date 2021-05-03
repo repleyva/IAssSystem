@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/register_bk_color"
+    android:background="@color/colorPrimary"
     tools:context=".activities.estudiantes.InfoClasesEstudianteActivity">
 
     <ScrollView
@@ -31,20 +31,20 @@
                     style="@style/viewParent.headerText.NoMode"
                     android:layout_alignParentLeft="true"
                     android:text="Clase: "
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="@color/colorAccent" />
                 <TextView
                     android:id="@+id/tvDocente"
                     style="@style/viewParent.headerText.NoMode"
                     android:layout_alignParentLeft="true"
                     android:text="Docente: "
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/colorAccent"
                     android:layout_below="@+id/tvClase"/>
                 <TextView
                     android:id="@+id/tvCodigo"
                     style="@style/viewParent.headerText.NoMode"
                     android:layout_alignParentLeft="true"
                     android:text="Código: "
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/colorAccent"
                     android:layout_below="@+id/tvDocente"/>
 
                 <ImageView
@@ -56,7 +56,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="0dp"
-                    android:src="@drawable/ic_login_hero" />
+                    android:src="@drawable/ic_register_hero" />
 
                 <TextView
                     android:layout_marginTop="10dp"
@@ -64,14 +64,14 @@
                     style="@style/viewParent.headerText.NoMode"
                     android:layout_alignParentLeft="true"
                     android:text="Estudiantes registrados en la clase:"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/colorAccent"
                     android:layout_below="@+id/imagen"/>
             </RelativeLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:paddingTop="10dp"
                 android:id="@+id/lyprogresoEst"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -86,7 +86,7 @@
                     android:text="Buscando compañeros, espere"
                     android:gravity="center"
                     android:layout_gravity="center"
-                    android:textColor="@color/colorPrimary">
+                    android:textColor="@color/colorAccent">
 
                 </TextView>
 
@@ -95,8 +95,7 @@
                     android:id="@+id/cprogressEst"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:progressDrawable="@drawable/circular_bar_primary"
-                    android:background="@drawable/circular_bar_primary"
+                    android:progressDrawable="@drawable/circular_bar"
                     android:progress="50">
 
                 </ProgressBar>
@@ -117,6 +116,7 @@
             </TextView>
 
             <androidx.recyclerview.widget.RecyclerView
+                android:visibility="gone"
                 android:layout_marginTop="10dp"
                 android:id="@+id/rvEstudiantesEnClase"
                 android:layout_width="match_parent"
@@ -129,7 +129,7 @@
         android:layout_alignParentLeft="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_back_img"
+        android:src="@drawable/ic_back_img_verde"
         android:layout_marginRight="11dp"
         android:layout_marginBottom="30dp"
         android:onClick="onMainClick"
