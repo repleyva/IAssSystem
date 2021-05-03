@@ -1028,7 +1028,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="0dp"
                     android:layout_marginTop="0dp"
-                    android:text="En este apartado\npodrás ver las\nclases en las que\nestás registrado."
+                    android:text="En este apartado\npodrás ver las\nclases que haz\ncreado."
                     android:textColor="@color/colorAccent" />
 
             </RelativeLayout>
