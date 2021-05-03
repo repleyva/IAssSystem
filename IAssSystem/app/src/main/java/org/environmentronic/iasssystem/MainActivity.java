@@ -735,11 +735,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }, normal);*/
 
             new Handler().postDelayed(() -> {
-                rvClasesEstudiante.setVisibility(View.VISIBLE);
-                rvClasesEstudiante.setAnimation(animation_down);
                 ponerDatos();
-
             }, normal);
+
         }, normal);
     }
 
@@ -758,26 +756,75 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void buscarClasesDataBase() {
-        List clases = new ArrayList();
+        List<String> clases = new ArrayList<>();
+        List<String> docentes = new ArrayList<>();
+        List<String> codigos = new ArrayList<>();
+        List<String> nClases = new ArrayList<>();
+
         clases.clear();
+        docentes.clear();
+        codigos.clear();
+        nClases.clear();
+
         DatabaseReference myRef = database.getReference().child("ESTUDIANTES").child(idUsuario).child("CLASES");
 
         // Read from the database
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot clase:
-                     dataSnapshot.getChildren()) {
-                    clases.add(clase.getValue());
+                for (DataSnapshot clase :
+                        dataSnapshot.getChildren()) {
+                    clases.add(clase.getValue().toString());
                 }
 
                 lyprogreso.setVisibility(View.GONE);
 
-                /**PENDIENTE:
-                hay que hacer el algoritmo que debe separar los datos regresados de las clases
-                en los requerimientos para crear cada carpeta*/
+                if (!clases.isEmpty()) {
 
-                pruebaClases.setText(clases.toString());
+                    String cadenaSinCodigo = "";
+                    String cadenaSinNombreSinId = "";
+                    String cadenaSinClaseSinCodigo = "";
+                    String nombreDocente = "";
+                    String idDocente = "";
+                    String nombreMateria = "";
+                    String codigo = "";
+
+
+                    for (int i = 0; i < clases.size(); i++) {
+                        cadenaSinNombreSinId = clases.get(i).replaceAll(".*_", "");
+                        cadenaSinClaseSinCodigo = clases.get(i).replaceAll("_" + cadenaSinNombreSinId, "");
+                        nombreDocente = cadenaSinClaseSinCodigo.replaceAll(".*_", "");
+                        idDocente = cadenaSinClaseSinCodigo.replaceAll("_" + nombreDocente, "");
+                        cadenaSinCodigo = clases.get(i).substring(0, clases.get(i).indexOf("."));
+                        nombreMateria = cadenaSinCodigo.replaceAll(cadenaSinClaseSinCodigo + "_", "");
+                        codigo = cadenaSinNombreSinId.replaceAll(nombreMateria + ".", "");
+
+                        codigos.add(codigo);
+                        docentes.add(nombreDocente);
+                        nClases.add(nombreMateria);
+                    }
+
+                    clasesEstudiantes.clear();
+                    for (int i = 0; i < clases.size(); i++) {
+
+                        // asi debo meter las clases
+                        clasesEstudiantes.add(new ClasesEstudiante(
+                                docentes.get(i), codigos.get(i), nClases.get(i)));
+                    }
+
+                    rvClasesEstudiante.setHasFixedSize(true);
+                    rvClasesEstudiante.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    rvClasesEstudiante.setAdapter(listaClases);
+
+                    new Handler().postDelayed(() -> {
+                        rvClasesEstudiante.setVisibility(View.VISIBLE);
+                        rvClasesEstudiante.setAnimation(animation_down);
+                    }, normal);
+
+                } else {
+                    pruebaClases.setVisibility(View.VISIBLE);
+                    pruebaClases.setText("No estás registrado en ninguna clase");
+                }
 
             }
 

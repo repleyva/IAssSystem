@@ -42,9 +42,9 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
     public void onBindViewHolder(@NonNull AdaptadorClasesEstudiante.ViewHolder holder, int position) {
         final ClasesEstudiante clase = clasesEstudiantes.get(position);
 
-        holder.tvNombreDocente.setText(clase.getDocente());
-        holder.tvnombreMateria.setText(clase.getMateria());
-        holder.tvNombreCodigo.setText(clase.getCodigo());
+        holder.tvNombreDocente.setText("Docente: " + clase.getDocente());
+        holder.tvnombreMateria.setText("Materia: " + clase.getMateria());
+        holder.tvNombreCodigo.setText("Código: " + clase.getCodigo());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +53,6 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
             }
         });
 
-        //holder.bindData(clasesEstudiantes.get(position));
     }
 
     @Override
@@ -79,12 +78,5 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
             tvNombreDocente = view.findViewById(R.id.tvNombreDocente);
             tvNombreCodigo = view.findViewById(R.id.tvNombreCodigo);
         }
-
-        void bindData(ClasesEstudiante clase){
-            tvnombreMateria.setText("Clase: " + clase.getMateria());
-            tvNombreCodigo.setText("Código: " + clase.getCodigo());
-            tvNombreDocente.setText("Docente: " + clase.getDocente());
-        }
-
     }
 }
