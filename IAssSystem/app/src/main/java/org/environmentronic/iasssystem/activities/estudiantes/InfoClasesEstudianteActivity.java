@@ -187,6 +187,8 @@ public class InfoClasesEstudianteActivity extends AppCompatActivity {
                             estudiantes.add(item.getName());
                         }
 
+                        estudiantes.remove("clase.png");
+
                         if (!estudiantes.isEmpty()) {
 
                             lyprogresoEst.setVisibility(View.GONE);
@@ -211,7 +213,7 @@ public class InfoClasesEstudianteActivity extends AppCompatActivity {
 
                         } else {
                             pruebaEstudiantes.setVisibility(View.VISIBLE);
-                            pruebaEstudiantes.setText("No existen estudiantes");
+                            pruebaEstudiantes.setText("No existen estudiantes registrados en la clase");
                         }
                     }
                 })
