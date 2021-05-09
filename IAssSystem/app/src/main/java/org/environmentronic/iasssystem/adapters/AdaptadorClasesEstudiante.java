@@ -19,17 +19,19 @@ import org.environmentronic.iasssystem.activities.principales.LoginActivity;
 
 import java.util.List;
 
-public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorClasesEstudiante.ViewHolder> {
+public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorClasesEstudiante.ViewHolder> implements View.OnClickListener {
 
     private List<ClasesEstudiante> clasesEstudiantes;
     private LayoutInflater inflater;
-    private Context context;
-    private Boolean clickEliminar = false;
+    //private Context context;
+
+    // listener para onClick
+    private View.OnClickListener listener;
 
     public AdaptadorClasesEstudiante(List<ClasesEstudiante> clasesEstudiantes, Context context) {
         this.inflater = LayoutInflater.from(context);
         this.clasesEstudiantes = clasesEstudiantes;
-        this.context = context;
+        //this.context = context;
     }
 
 
@@ -37,7 +39,13 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
     @Override
     public AdaptadorClasesEstudiante.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_clases_estudiante, parent, false);
-        return new AdaptadorClasesEstudiante.ViewHolder(view);
+        //return new AdaptadorClasesEstudiante.ViewHolder(view);
+        view.setOnClickListener(this);
+        return new ViewHolder(view);
+    }
+
+    public void setOnClickListener(View.OnClickListener listener){
+        this.listener = listener;
     }
 
     @Override
@@ -48,7 +56,7 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
         holder.tvnombreMateria.setText("Materia: " + clase.getMateria());
         holder.tvNombreCodigo.setText("Código: " + clase.getCodigo());
 
-        holder.itemView.setOnClickListener(v -> {
+        /*holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, InfoClasesEstudianteActivity.class);
             intent.putExtra("docente", clase.getDocente());
             intent.putExtra("materia", clase.getMateria());
@@ -58,7 +66,7 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
             //overridePendingTransition(R.anim.slide_in_left, R.anim.stay);
-        });
+        });*/
     }
 
     @Override
@@ -70,6 +78,11 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
         clasesEstudiantes = items;
     }
 
+    @Override
+    public void onClick(View v) {
+        if (listener != null) listener.onClick(v);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView foto_docente;
@@ -77,7 +90,7 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
         TextView tvNombreDocente;
         TextView tvNombreCodigo;
 
-        ViewHolder(View view) {
+        public ViewHolder(View view) {
             super(view);
             foto_docente = view.findViewById(R.id.foto_docente);
             tvnombreMateria = view.findViewById(R.id.tvnombreMateria);

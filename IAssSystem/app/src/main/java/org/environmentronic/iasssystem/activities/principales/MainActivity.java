@@ -59,7 +59,9 @@ import com.google.firebase.storage.UploadTask;
 
 import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.docentes.ClasesDocente;
+import org.environmentronic.iasssystem.activities.docentes.InfoClasesAlumnoActivity;
 import org.environmentronic.iasssystem.activities.estudiantes.ClasesEstudiante;
+import org.environmentronic.iasssystem.activities.estudiantes.InfoClasesEstudianteActivity;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesDocente;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesEstudiante;
 
@@ -361,35 +363,68 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         pruebaClases = (TextView) findViewById(R.id.pruebaClases);
         pruebaClasesDocente = (TextView) findViewById(R.id.pruebaClasesDocente);
 
-        padre.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (banderabtnDocente) {
-                    btnListaClases.startAnimation(animaciondere_ocult);
-                    btnCrearClase.startAnimation(animaciondere_ocult);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            lyDocente.setVisibility(View.GONE);
-                        }
-                    }, delay);
-                    banderabtnDocente = false;
-                }
-
-                if (banderabtnEstudiante) {
-                    btnVerMisClases.startAnimation(animaciondere_ocult);
-                    btnIngresarAClases.startAnimation(animaciondere_ocult);
-                    btnSubirFotos.startAnimation(animaciondere_ocult);
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            lyEstudiante.setVisibility(View.GONE);
-                        }
-                    }, delay);
-                    banderabtnEstudiante = false;
-                }
+        padre.setOnClickListener(v -> {
+            if (banderabtnDocente) {
+                btnListaClases.startAnimation(animaciondere_ocult);
+                btnCrearClase.startAnimation(animaciondere_ocult);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        lyDocente.setVisibility(View.GONE);
+                    }
+                }, delay);
+                banderabtnDocente = false;
             }
+
+            if (banderabtnEstudiante) {
+                btnVerMisClases.startAnimation(animaciondere_ocult);
+                btnIngresarAClases.startAnimation(animaciondere_ocult);
+                btnSubirFotos.startAnimation(animaciondere_ocult);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        lyEstudiante.setVisibility(View.GONE);
+                    }
+                }, delay);
+                banderabtnEstudiante = false;
+            }
+        });
+
+        // evento click para la lista de clases de los estudiantes
+        listaClases.setOnClickListener(v -> {
+            String docente = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(v)).getDocente();
+            String materia = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(v)).getMateria();
+            String codigo = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(v)).getCodigo();
+            String iddocente = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(v)).getIdDocente();
+
+            Intent intent = new Intent(getApplicationContext(), InfoClasesEstudianteActivity.class);
+            intent.putExtra("docente", docente);
+            intent.putExtra("materia", materia);
+            intent.putExtra("codigo", codigo);
+            intent.putExtra("iddocente", iddocente);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
+        });
+
+        // evento click para la lista de clases de los docentes
+        listaClasesDocente.setOnClickListener(v -> {
+
+            String materia = clasesDocentes.get(rvClasesDocente.getChildAdapterPosition(v)).getMateria();
+            String codigo = clasesDocentes.get(rvClasesDocente.getChildAdapterPosition(v)).getCodigo();
+            String idusuario = clasesDocentes.get(rvClasesDocente.getChildAdapterPosition(v)).getIdusuario();
+            String nomusuario = clasesDocentes.get(rvClasesDocente.getChildAdapterPosition(v)).getNombreUsuario();
+
+            Intent intent = new Intent(getApplicationContext(), InfoClasesAlumnoActivity.class);
+            intent.putExtra("materia", materia);
+            intent.putExtra("codigo", codigo);
+            intent.putExtra("idusuario", idusuario);
+            intent.putExtra("nomusuario", nomusuario);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
         });
     }
 
