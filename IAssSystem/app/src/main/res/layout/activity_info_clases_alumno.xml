@@ -16,9 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="20dp"
-            android:paddingRight="20dp"
-            android:paddingLeft="20dp"
             android:layout_marginTop="30dp">
 
             <RelativeLayout
@@ -32,7 +29,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:text="Clase: "
-                    android:textColor="@color/colorAccent" />
+                    android:textColor="@color/colorAccent"
+                    android:layout_marginLeft="20dp"/>
 
                 <TextView
                     android:id="@+id/tvCodigoD"
@@ -40,7 +38,8 @@
                     android:layout_alignParentLeft="true"
                     android:text="Código: "
                     android:textColor="@color/colorAccent"
-                    android:layout_below="@+id/tvClaseD"/>
+                    android:layout_below="@+id/tvClaseD"
+                    android:layout_marginLeft="20dp"/>
 
                 <ImageView
                     android:id="@+id/imagenD"
@@ -49,18 +48,30 @@
                     android:layout_below="@+id/tvCodigoD"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="0dp"
+                    android:layout_marginTop="-1dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginRight="29dp"
                     android:src="@drawable/ic_register_hero" />
 
+                <Button
+                    android:id="@+id/btnTomarAsistencia"
+                    style="@style/Button"
+                    android:layout_below="@+id/imagenD"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="20dp"
+                    android:text="Tomar foto de asistencia"
+                    android:onClick="tomarAsistencia"/>
+
                 <TextView
-                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
                     android:id="@+id/tvAlumnosReg"
                     style="@style/viewParent.headerText.NoMode"
                     android:layout_alignParentLeft="true"
                     android:text="Estudiantes registrados en la clase:"
                     android:textColor="@color/colorAccent"
-                    android:layout_below="@+id/imagenD"/>
+                    android:layout_below="@+id/btnTomarAsistencia"/>
             </RelativeLayout>
 
             <LinearLayout

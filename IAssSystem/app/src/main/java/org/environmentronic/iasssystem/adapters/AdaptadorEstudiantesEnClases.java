@@ -1,20 +1,20 @@
 package org.environmentronic.iasssystem.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.environmentronic.iasssystem.R;
-import org.environmentronic.iasssystem.activities.estudiantes.ClasesEstudiante;
 import org.environmentronic.iasssystem.activities.estudiantes.EstudianteEnClase;
-import org.environmentronic.iasssystem.activities.estudiantes.InfoClasesEstudianteActivity;
 
 import java.util.List;
 
@@ -43,6 +43,10 @@ public class AdaptadorEstudiantesEnClases extends RecyclerView.Adapter<Adaptador
         final EstudianteEnClase estudiante = estudiantesEnClases.get(position);
 
         holder.tvnombreEstudiante.setText("Estudiante: " + estudiante.getNombreEstudiante());
+
+        /*estudiantesEnClases.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, getItemCount());*/
 
     }
 

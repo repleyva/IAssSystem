@@ -501,46 +501,34 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         btnSubirFotos.startAnimation(animation_rigth_ocult_long);
         barra.startAnimation(animation_rigth_ocult_long);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                btnIngresarAClases.setVisibility(View.GONE);
-                btnVerMisClases.setVisibility(View.GONE);
-            }
+        new Handler().postDelayed(() -> {
+            btnIngresarAClases.setVisibility(View.GONE);
+            btnVerMisClases.setVisibility(View.GONE);
         }, normal);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                tvNombre.setVisibility(View.GONE);
-                tarjetaUsuario.setVisibility(View.GONE);
-                lyEstudiante.setVisibility(View.GONE);
-                barra.setVisibility(View.GONE);
-                btnIngresarComoDocente.setVisibility(View.GONE);
-                btnIngresarComoEstudiante.setVisibility(View.GONE);
-            }
+        new Handler().postDelayed(() -> {
+            tvNombre.setVisibility(View.GONE);
+            tarjetaUsuario.setVisibility(View.GONE);
+            lyEstudiante.setVisibility(View.GONE);
+            barra.setVisibility(View.GONE);
+            btnIngresarComoDocente.setVisibility(View.GONE);
+            btnIngresarComoEstudiante.setVisibility(View.GONE);
         }, largo);
 
         mostrarBarraIzq();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                cabeceraFoto.setVisibility(View.VISIBLE);
-                fotoUsuario.startAnimation(animation_rigth);
-                tvNombreFoto.setAnimation(animation_left);
-            }
+        new Handler().postDelayed(() -> {
+            cabeceraFoto.setVisibility(View.VISIBLE);
+            fotoUsuario.startAnimation(animation_rigth);
+            tvNombreFoto.setAnimation(animation_left);
         }, normal);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                lyFoto.setVisibility(View.VISIBLE);
-                btnTomarFoto.startAnimation(animation_left);
-                btnBorrarFoto.startAnimation(animation_left);
-                btnSubirFoto.startAnimation(animation_left);
-                btnEliminarFotobbdd.startAnimation(animation_left);
-            }
+        new Handler().postDelayed(() -> {
+            lyFoto.setVisibility(View.VISIBLE);
+            btnTomarFoto.startAnimation(animation_left);
+            btnBorrarFoto.startAnimation(animation_left);
+            btnSubirFoto.startAnimation(animation_left);
+            btnEliminarFotobbdd.startAnimation(animation_left);
         }, normal);
     }
 

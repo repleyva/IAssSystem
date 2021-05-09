@@ -23,11 +23,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IAssSystem"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.docentes.InfoClasesAlumnoActivity"
-            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
+        <activity android:name=".activities.docentes.FotoAsistenciaActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar">
+
+        </activity>
+        <activity
+            android:name=".activities.docentes.InfoClasesAlumnoActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar" />
         <activity
             android:name=".activities.estudiantes.InfoClasesEstudianteActivity"
-            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
+            android:theme="@style/Theme.IAssSystem.NoActionBar" />
         <activity
             android:name=".activities.principales.UsActivity"
             android:theme="@style/Theme.IAssSystem.NoActionBar" />

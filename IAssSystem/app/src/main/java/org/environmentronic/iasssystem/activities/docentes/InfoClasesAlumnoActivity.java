@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -40,6 +41,7 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity {
 
     private TextView tvClase, tvCodigo, tvAlumnosReg;
     private ImageView imagen;
+    private Button btnTomarAsistencia;
 
     //Animaciones
     private Animation animation_rigth;
@@ -97,6 +99,7 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity {
         tvCodigo = (TextView) findViewById(R.id.tvCodigoD);
         tvAlumnosReg = (TextView) findViewById(R.id.tvAlumnosReg);
         imagen = (ImageView) findViewById(R.id.imagenD);
+        btnTomarAsistencia = (Button) findViewById(R.id.btnTomarAsistencia);
 
         pruebaAlumnos = (TextView) findViewById(R.id.pruebaAlumnos);
 
@@ -123,6 +126,7 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity {
         tvCodigo.setAnimation(animation_left);
         imagen.setAnimation(animation_rigth);
         tvAlumnosReg.setAnimation(animation_left);
+        btnTomarAsistencia.setAnimation(animation_left);
 
         // inicializamos las listas
         estudiantesEnClases = new ArrayList<>();
@@ -250,4 +254,20 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity {
         finish();
     }
 
+    public void tomarAsistencia(View view){
+        Intent intent = new Intent(this, FotoAsistenciaActivity.class);
+        intent.putExtra("materia", materia);
+        intent.putExtra("codigo", codigo);
+        intent.putExtra("idusuario", idUsuario);
+        intent.putExtra("nomusuario", nombreUsuario);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

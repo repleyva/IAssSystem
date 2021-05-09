@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.principales.MainActivity"
-    android:background="@color/login_bk_color"
+    android:background="@color/colorPrimary"
     android:focusableInTouchMode="true"
     android:gravity="center"
     android:layout_gravity="center">
