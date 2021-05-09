@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,6 +90,7 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
         TextView tvnombreMateria;
         TextView tvNombreDocente;
         TextView tvNombreCodigo;
+        public LinearLayout tarjetaEstudianteABorrar;
 
         public ViewHolder(View view) {
             super(view);
@@ -96,6 +98,12 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
             tvnombreMateria = view.findViewById(R.id.tvnombreMateria);
             tvNombreDocente = view.findViewById(R.id.tvNombreDocente);
             tvNombreCodigo = view.findViewById(R.id.tvNombreCodigo);
+            tarjetaEstudianteABorrar = view.findViewById(R.id.tarjetaEstudianteABorrar);
         }
+    }
+
+    public void removeItem(int position){
+        clasesEstudiantes.remove(position);
+        notifyItemRemoved(position);
     }
 }

@@ -19,7 +19,7 @@ import org.environmentronic.iasssystem.activities.estudiantes.InfoClasesEstudian
 
 import java.util.List;
 
-public class AdaptadorClasesDocente extends RecyclerView.Adapter<AdaptadorClasesDocente.ViewHolder> implements View.OnClickListener{
+public class AdaptadorClasesDocente extends RecyclerView.Adapter<AdaptadorClasesDocente.ViewHolder> implements View.OnClickListener {
 
     private List<ClasesDocente> clasesDocentes;
     private LayoutInflater inflater;
@@ -43,7 +43,7 @@ public class AdaptadorClasesDocente extends RecyclerView.Adapter<AdaptadorClases
         return new ViewHolder(view);
     }
 
-    public void setOnClickListener(View.OnClickListener listener){
+    public void setOnClickListener(View.OnClickListener listener) {
         this.listener = listener;
     }
 

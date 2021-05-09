@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -64,6 +65,7 @@ import org.environmentronic.iasssystem.activities.estudiantes.ClasesEstudiante;
 import org.environmentronic.iasssystem.activities.estudiantes.InfoClasesEstudianteActivity;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesDocente;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesEstudiante;
+import org.environmentronic.iasssystem.adapters.RecyclerItemTouchHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -72,7 +74,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private ImageView photoPerfil;
     private RelativeLayout barra;
@@ -426,6 +428,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
         });
+
+        // eliminar clases estudiante
+        ItemTouchHelper.SimpleCallback simpleCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, MainActivity.this);
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(rvClasesEstudiante);
     }
 
     @Override
@@ -1487,5 +1493,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mProgress.setCanceledOnTouchOutside(true);
     }
 
-
+    @Override
+    public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof AdaptadorClasesEstudiante.ViewHolder) {
+            listaClases.removeItem(viewHolder.getAdapterPosition());
+        }
+    }
 }

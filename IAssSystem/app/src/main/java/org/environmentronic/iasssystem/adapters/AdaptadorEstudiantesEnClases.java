@@ -18,16 +18,19 @@ import org.environmentronic.iasssystem.activities.estudiantes.EstudianteEnClase;
 
 import java.util.List;
 
-public class AdaptadorEstudiantesEnClases extends RecyclerView.Adapter<AdaptadorEstudiantesEnClases.ViewHolder> {
+public class AdaptadorEstudiantesEnClases extends RecyclerView.Adapter<AdaptadorEstudiantesEnClases.ViewHolder> implements View.OnClickListener{
 
     private List<EstudianteEnClase> estudiantesEnClases;
     private LayoutInflater inflater;
-    private Context context;
+    //private Context context;
+
+    // listener para onClick
+    private View.OnClickListener listener;
 
     public AdaptadorEstudiantesEnClases(List<EstudianteEnClase> estudiantesEnClases, Context context) {
         this.inflater = LayoutInflater.from(context);
         this.estudiantesEnClases = estudiantesEnClases;
-        this.context = context;
+        //this.context = context;
     }
 
 
@@ -35,7 +38,12 @@ public class AdaptadorEstudiantesEnClases extends RecyclerView.Adapter<Adaptador
     @Override
     public AdaptadorEstudiantesEnClases.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_estudiantes_en_clase, parent, false);
-        return new AdaptadorEstudiantesEnClases.ViewHolder(view);
+        view.setOnClickListener(this);
+        return new ViewHolder(view);
+    }
+
+    public void setOnClickListener(View.OnClickListener listener) {
+        this.listener = listener;
     }
 
     @Override
@@ -43,10 +51,6 @@ public class AdaptadorEstudiantesEnClases extends RecyclerView.Adapter<Adaptador
         final EstudianteEnClase estudiante = estudiantesEnClases.get(position);
 
         holder.tvnombreEstudiante.setText("Estudiante: " + estudiante.getNombreEstudiante());
-
-        /*estudiantesEnClases.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, getItemCount());*/
 
     }
 
@@ -59,12 +63,17 @@ public class AdaptadorEstudiantesEnClases extends RecyclerView.Adapter<Adaptador
         estudiantesEnClases = items;
     }
 
+    @Override
+    public void onClick(View v) {
+        if (listener != null) listener.onClick(v);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView foto_estudiante;
         TextView tvnombreEstudiante;
 
-        ViewHolder(View view) {
+        public ViewHolder(View view) {
             super(view);
             foto_estudiante = view.findViewById(R.id.foto_estudiante);
             tvnombreEstudiante = view.findViewById(R.id.tvnombreEstudiante);

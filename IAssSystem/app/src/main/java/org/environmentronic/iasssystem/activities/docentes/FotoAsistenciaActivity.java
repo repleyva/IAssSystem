@@ -46,15 +46,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
 
     //Animaciones
     private Animation animation_rigth;
-    private Animation animation_up;
-    private Animation animation_down;
     private Animation animation_left;
-    private Animation animation_left_long;
-    private Animation animation_rigth_long;
-    private Animation animation_left_ocult;
-    private Animation animaciondere_ocult;
-    private Animation animation_rigth_ocult_long;
-    private Animation animation_left_ocult_long;
 
     // constantes timer
     private Integer largo = 2000;
@@ -94,15 +86,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
         tvNombreFoto.setText("Asistencia de\n\nClase: " + materia + "\nCodigo: " + codigo + "\nDocente: " + nombreUsuario);
 
         animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
-        animation_left_long = AnimationUtils.loadAnimation(this, R.anim.animation_left_long);
-        animation_left_ocult = AnimationUtils.loadAnimation(this, R.anim.animation_left_ocult);
-        animation_left_ocult_long = AnimationUtils.loadAnimation(this, R.anim.animation_left_ocult_long);
-        animaciondere_ocult = AnimationUtils.loadAnimation(this, R.anim.animation_rigth_ocult);
-        animation_rigth_ocult_long = AnimationUtils.loadAnimation(this, R.anim.animation_rigth_ocult_long);
         animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
-        animation_rigth_long = AnimationUtils.loadAnimation(this, R.anim.animation_rigth_long);
-        animation_up = AnimationUtils.loadAnimation(this, R.anim.animation_up);
-        animation_down = AnimationUtils.loadAnimation(this, R.anim.animation_down);
 
         tvNombreFoto.setAnimation(animation_left);
         fotoUsuario.setAnimation(animation_rigth);
