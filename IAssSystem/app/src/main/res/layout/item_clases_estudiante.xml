@@ -5,11 +5,69 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:backgroundTint="@color/colorAccent"
+    app:cardBackgroundColor="@color/colorAccent"
     app:cardCornerRadius="10dp"
     app:cardElevation="2dp"
     app:cardUseCompatPadding="true"
     android:animateLayoutChanges="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/tarjetaEstudianteABorrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/foto_docente"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_register_hero">
+            </ImageView>
+
+            <LinearLayout
+                android:paddingLeft="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvnombreMateria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre de la Materia"
+                    android:textSize="14sp"
+                    style="@style/viewParent.headerText.NoMode"
+                    android:textColor="@color/colorPrimary">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tvNombreDocente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre del docente"
+                    android:textSize="12sp"
+                    style="@style/viewParent.headerText.NoMode"
+                    android:textColor="@color/colorPrimary">
+                </TextView>
+
+                <TextView
+                    android:id="@+id/tvNombreCodigo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre del codigo"
+                    android:textSize="12sp"
+                    style="@style/viewParent.headerText.NoMode"
+                    android:textColor="@color/colorPrimary">
+                </TextView>
+
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,84 +79,27 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="end"
-            android:layout_marginRight="20dp">
-
-            <TextView
-                android:layout_gravity="center"
-                android:layout_marginRight="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ELIMINAR"
-                android:textSize="16sp"
-                style="@style/viewParent.headerText.NoMode"
-                android:textColor="@color/colorPrimary">
-
-            </TextView>
+            android:layout_margin="20dp">
 
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_delete"
-                android:gravity="center">
+                android:gravity="center"
+                android:src="@drawable/ic_arrow_left">
+
+            </ImageView>
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:src="@drawable/ic_delete">
 
             </ImageView>
 
         </LinearLayout>
 
     </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/tarjetaEstudianteABorrar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="10dp">
-
-        <ImageView
-            android:id="@+id/foto_docente"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/ic_register_hero">
-        </ImageView>
-
-        <LinearLayout
-            android:paddingLeft="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvnombreMateria"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nombre de la Materia"
-                android:textSize="14sp"
-                style="@style/viewParent.headerText.NoMode"
-                android:textColor="@color/colorPrimary">
-            </TextView>
-
-            <TextView
-                android:id="@+id/tvNombreDocente"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nombre del docente"
-                android:textSize="12sp"
-                style="@style/viewParent.headerText.NoMode"
-                android:textColor="@color/colorPrimary">
-            </TextView>
-
-            <TextView
-                android:id="@+id/tvNombreCodigo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Nombre del codigo"
-                android:textSize="12sp"
-                style="@style/viewParent.headerText.NoMode"
-                android:textColor="@color/colorPrimary">
-            </TextView>
-
-        </LinearLayout>
-    </LinearLayout>
-
 
 </androidx.cardview.widget.CardView>
