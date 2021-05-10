@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,11 +73,18 @@ public class AdaptadorEstudiantesEnClases extends RecyclerView.Adapter<Adaptador
 
         ImageView foto_estudiante;
         TextView tvnombreEstudiante;
+        public LinearLayout tarjetaEstudianteEnClaseABorrar;
 
         public ViewHolder(View view) {
             super(view);
             foto_estudiante = view.findViewById(R.id.foto_estudiante);
             tvnombreEstudiante = view.findViewById(R.id.tvnombreEstudiante);
+            tarjetaEstudianteEnClaseABorrar = view.findViewById(R.id.tarjetaEstudianteEnClaseABorrar);
         }
+    }
+
+    public void removeItem(int position){
+        estudiantesEnClases.remove(position);
+        notifyItemRemoved(position);
     }
 }

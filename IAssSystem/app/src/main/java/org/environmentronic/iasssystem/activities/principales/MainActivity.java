@@ -431,8 +431,12 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         });
 
         // eliminar clases estudiante
-        ItemTouchHelper.SimpleCallback simpleCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, MainActivity.this);
-        new ItemTouchHelper(simpleCallback).attachToRecyclerView(rvClasesEstudiante);
+        ItemTouchHelper.SimpleCallback simpleCallbackEstudiantes = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, MainActivity.this, 1, 0, 0);
+        new ItemTouchHelper(simpleCallbackEstudiantes).attachToRecyclerView(rvClasesEstudiante);
+
+        // eliminar clases docente
+        ItemTouchHelper.SimpleCallback simpleCallbackDocentes = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, MainActivity.this, 0, 1, 0);
+        new ItemTouchHelper(simpleCallbackDocentes).attachToRecyclerView(rvClasesDocente);
     }
 
     @Override
@@ -1499,7 +1503,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof AdaptadorClasesEstudiante.ViewHolder) {
-
             String docente = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(viewHolder.itemView)).getDocente();
             String materia = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(viewHolder.itemView)).getMateria();
             String codigo = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(viewHolder.itemView)).getCodigo();
@@ -1563,7 +1566,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             } else {
                 Toast.makeText(this, "No tiene acceso a internet", Toast.LENGTH_SHORT).show();
             }
+        }
 
+        if (viewHolder instanceof AdaptadorClasesDocente.ViewHolder){
+            // debo borrar la carpeta de la clase,
+            // borrar la marca del docente de la clase
+            // y borrar en cada estudiante la clase
+            listaClasesDocente.removeItem(viewHolder.getAdapterPosition());
         }
     }
 }

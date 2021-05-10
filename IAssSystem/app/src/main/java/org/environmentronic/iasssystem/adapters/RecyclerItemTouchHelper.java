@@ -11,10 +11,21 @@ import androidx.recyclerview.widget.RecyclerView;
 public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     private RecyclerItemTouchHelperListener listener;
+    private Integer estudianteAdapter;
+    private Integer docentesAdapter;
+    private Integer estudiantesEnClaseAdapter;
 
-    public RecyclerItemTouchHelper(int dragDirs, int swipeDirs, RecyclerItemTouchHelperListener listener) {
+    public RecyclerItemTouchHelper(int dragDirs, int swipeDirs,
+                                   RecyclerItemTouchHelperListener listener,
+                                   Integer estudianteAdapter,
+                                   Integer docentesAdapter,
+                                   Integer estudiantesEnClaseAdapter) {
+
         super(dragDirs, swipeDirs);
         this.listener = listener;
+        this.estudianteAdapter = estudianteAdapter;
+        this.docentesAdapter = docentesAdapter;
+        this.estudiantesEnClaseAdapter = estudiantesEnClaseAdapter;
     }
 
     @Override
@@ -27,8 +38,20 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     @Override
     public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
         if (viewHolder != null) {
-            View foregroundView = ((AdaptadorClasesEstudiante.ViewHolder) viewHolder).tarjetaEstudianteABorrar;
-            getDefaultUIUtil().onSelected(foregroundView);
+            if (estudianteAdapter != 0) {
+                View foregroundView = ((AdaptadorClasesEstudiante.ViewHolder) viewHolder).tarjetaEstudianteABorrar;
+                getDefaultUIUtil().onSelected(foregroundView);
+            }
+
+            if (estudiantesEnClaseAdapter != 0){
+                View foregroundView = ((AdaptadorEstudiantesEnClases.ViewHolder) viewHolder).tarjetaEstudianteEnClaseABorrar;
+                getDefaultUIUtil().onSelected(foregroundView);
+            }
+
+            if (docentesAdapter != 0){
+                View foregroundView = ((AdaptadorClasesDocente.ViewHolder) viewHolder).tarjetaDocenteABorrar;
+                getDefaultUIUtil().onSelected(foregroundView);
+            }
         }
     }
 
@@ -37,22 +60,61 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
                                 @NonNull RecyclerView recyclerView,
                                 RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
-        View foregroundView = ((AdaptadorClasesEstudiante.ViewHolder) viewHolder).tarjetaEstudianteABorrar;
-        getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        if (estudianteAdapter != 0) {
+            View foregroundView = ((AdaptadorClasesEstudiante.ViewHolder) viewHolder).tarjetaEstudianteABorrar;
+            getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        }
+
+        if (estudiantesEnClaseAdapter != 0) {
+            View foregroundView = ((AdaptadorEstudiantesEnClases.ViewHolder) viewHolder).tarjetaEstudianteEnClaseABorrar;
+            getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        }
+
+        if (docentesAdapter != 0) {
+            View foregroundView = ((AdaptadorClasesDocente.ViewHolder) viewHolder).tarjetaDocenteABorrar;
+            getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        }
     }
 
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-        View foregroundView = ((AdaptadorClasesEstudiante.ViewHolder) viewHolder).tarjetaEstudianteABorrar;
-        getDefaultUIUtil().clearView(foregroundView);
+
+        if (estudianteAdapter != 0) {
+            View foregroundView = ((AdaptadorClasesEstudiante.ViewHolder) viewHolder).tarjetaEstudianteABorrar;
+            getDefaultUIUtil().clearView(foregroundView);
+        }
+
+        if (estudiantesEnClaseAdapter != 0){
+            View foregroundView = ((AdaptadorEstudiantesEnClases.ViewHolder) viewHolder).tarjetaEstudianteEnClaseABorrar;
+            getDefaultUIUtil().clearView(foregroundView);
+        }
+
+        if (docentesAdapter != 0){
+            View foregroundView = ((AdaptadorClasesDocente.ViewHolder) viewHolder).tarjetaDocenteABorrar;
+            getDefaultUIUtil().clearView(foregroundView);
+        }
+
     }
 
     @Override
     public void onChildDraw(@NonNull Canvas c,
                             @NonNull RecyclerView recyclerView,
                             @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        View foregroundView = ((AdaptadorClasesEstudiante.ViewHolder) viewHolder).tarjetaEstudianteABorrar;
-        getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+
+        if (estudianteAdapter != 0) {
+            View foregroundView = ((AdaptadorClasesEstudiante.ViewHolder) viewHolder).tarjetaEstudianteABorrar;
+            getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        }
+
+        if (estudiantesEnClaseAdapter != 0) {
+            View foregroundView = ((AdaptadorEstudiantesEnClases.ViewHolder) viewHolder).tarjetaEstudianteEnClaseABorrar;
+            getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        }
+
+        if (docentesAdapter != 0) {
+            View foregroundView = ((AdaptadorClasesDocente.ViewHolder) viewHolder).tarjetaDocenteABorrar;
+            getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY, actionState, isCurrentlyActive);
+        }
     }
 
     @Override
