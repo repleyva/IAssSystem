@@ -161,8 +161,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private CardView datosClaseCreada;
 
     // crear tarjetas de clases
-    private List<ClasesEstudiante> clasesEstudiantes;
-    private List<ClasesDocente> clasesDocentes;
+    private ArrayList<ClasesEstudiante> clasesEstudiantes;
+    private ArrayList<ClasesDocente> clasesDocentes;
 
     // recycler
     private RecyclerView rvClasesEstudiante;
@@ -310,6 +310,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         // recicladores
         rvClasesEstudiante = (RecyclerView) findViewById(R.id.rvClasesEstudiante);
         rvClasesDocente = (RecyclerView) findViewById(R.id.rvClasesDocente);
+
         listaClases = new AdaptadorClasesEstudiante(clasesEstudiantes, this);
         listaClasesDocente = new AdaptadorClasesDocente(clasesDocentes, this);
 
@@ -778,6 +779,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void buscarClasesDataBase() {
+
+        clasesEstudiantes.clear();
 
         List<String> clases = new ArrayList<>();
         List<String> docentes = new ArrayList<>();
@@ -1496,7 +1499,71 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof AdaptadorClasesEstudiante.ViewHolder) {
-            listaClases.removeItem(viewHolder.getAdapterPosition());
+
+            String docente = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(viewHolder.itemView)).getDocente();
+            String materia = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(viewHolder.itemView)).getMateria();
+            String codigo = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(viewHolder.itemView)).getCodigo();
+            String iddocente = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(viewHolder.itemView)).getIdDocente();
+            int posicion = viewHolder.getAdapterPosition();
+            nombreCorto = validaNombre(nombreUsuario);
+
+            DatabaseReference myRef = database.getReference().child("ESTUDIANTES");
+
+            if (compruebaConexion(this)) {
+
+                AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+                dialogo1.setTitle("Importante");
+                dialogo1.setMessage("¿Realmente deseas eliminar esta clase?");
+                dialogo1.setCancelable(false);
+                dialogo1.setPositiveButton("Confirmar", (dialogo11, id) -> {
+
+                    showProgressBar("Eliminando clase, espere ...");
+                    listaClases.removeItem(posicion);
+                    // eliminamos la foto de la carpeta de la clase
+                    storageReference.child("DOCENTES/" + iddocente + "/" + iddocente + "_" + docente + "_" + materia + "." + codigo + "/" + nombreCorto + ".png")
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // File deleted successfully
+                                    // eliminamos la marca de realtime database
+                                    myRef.child(idUsuario).child("CLASES").child(codigo)
+                                            .removeValue()
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+                                                    clasesEstudiantes.clear();
+                                                    finishProgressBar();
+                                                    buscarClasesDataBase();
+                                                    Toast.makeText(MainActivity.this, "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            finishProgressBar();
+                                            Toast.makeText(MainActivity.this, "Ha ocurrido un error, intente mas tarde", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Uh-oh, an error occurred
+                            finishProgressBar();
+                            Toast.makeText(MainActivity.this, "Ocurrió un error al eliminar la clase", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                });
+                dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        Toast.makeText(MainActivity.this, "Operación cancelada", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialogo1.show();
+            } else {
+                Toast.makeText(this, "No tiene acceso a internet", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 }

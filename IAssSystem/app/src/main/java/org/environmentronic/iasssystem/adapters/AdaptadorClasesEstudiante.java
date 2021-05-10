@@ -100,6 +100,8 @@ public class AdaptadorClasesEstudiante extends RecyclerView.Adapter<AdaptadorCla
             tvNombreCodigo = view.findViewById(R.id.tvNombreCodigo);
             tarjetaEstudianteABorrar = view.findViewById(R.id.tarjetaEstudianteABorrar);
         }
+
+
     }
 
     public void removeItem(int position){
