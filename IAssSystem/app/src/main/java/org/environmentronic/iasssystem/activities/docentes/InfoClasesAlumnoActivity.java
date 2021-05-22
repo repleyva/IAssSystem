@@ -2,6 +2,7 @@ package org.environmentronic.iasssystem.activities.docentes;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,13 +32,16 @@ import com.google.firebase.storage.StorageReference;
 
 import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.estudiantes.EstudianteEnClase;
+import org.environmentronic.iasssystem.activities.estudiantes.VerClasesEstudiantesActivity;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
+import org.environmentronic.iasssystem.adapters.AdaptadorClasesEstudiante;
 import org.environmentronic.iasssystem.adapters.AdaptadorEstudiantesEnClases;
+import org.environmentronic.iasssystem.adapters.RecyclerItemTouchHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class InfoClasesAlumnoActivity extends AppCompatActivity {
+public class InfoClasesAlumnoActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
 
     private TextView tvClase, tvCodigo, tvAlumnosReg;
     private ImageView imagen;
@@ -125,6 +129,10 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
 
         buscarAlumnos();
+
+        // eliminar clases estudiante
+        ItemTouchHelper.SimpleCallback simpleCallbackEstudiantes = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, InfoClasesAlumnoActivity.this, 0, 0, 1);
+        new ItemTouchHelper(simpleCallbackEstudiantes).attachToRecyclerView(rvAlumnosEnClase);
     }
 
     private void buscarAlumnos() {
@@ -255,5 +263,12 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+    }
+
+    @Override
+    public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if (viewHolder instanceof AdaptadorEstudiantesEnClases.ViewHolder) {
+            estudiantesAdapter.removeItem(position);
+        }
     }
 }

@@ -23,10 +23,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IAssSystem"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.docentes.FotoAsistenciaActivity"
-            android:theme="@style/Theme.IAssSystem.NoActionBar">
-
-        </activity>
+        <activity android:name=".activities.docentes.ListaClasesActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
+        <activity
+            android:name=".activities.docentes.CrearClaseActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
+        <activity
+            android:name=".activities.estudiantes.IngresarAClaseActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
+        <activity
+            android:name=".activities.estudiantes.VerClasesEstudiantesActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar" />
+        <activity
+            android:name=".activities.estudiantes.SubirFotoActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar" />
+        <activity
+            android:name=".activities.docentes.FotoAsistenciaActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar" />
         <activity
             android:name=".activities.docentes.InfoClasesAlumnoActivity"
             android:theme="@style/Theme.IAssSystem.NoActionBar" />

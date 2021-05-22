@@ -46,8 +46,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,14 +58,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.docentes.ClasesDocente;
+import org.environmentronic.iasssystem.activities.docentes.CrearClaseActivity;
+import org.environmentronic.iasssystem.activities.docentes.FotoAsistenciaActivity;
 import org.environmentronic.iasssystem.activities.docentes.InfoClasesAlumnoActivity;
+import org.environmentronic.iasssystem.activities.docentes.ListaClasesActivity;
 import org.environmentronic.iasssystem.activities.estudiantes.ClasesEstudiante;
 import org.environmentronic.iasssystem.activities.estudiantes.InfoClasesEstudianteActivity;
+import org.environmentronic.iasssystem.activities.estudiantes.IngresarAClaseActivity;
+import org.environmentronic.iasssystem.activities.estudiantes.SubirFotoActivity;
+import org.environmentronic.iasssystem.activities.estudiantes.VerClasesEstudiantesActivity;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesDocente;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesEstudiante;
 import org.environmentronic.iasssystem.adapters.RecyclerItemTouchHelper;
@@ -74,17 +84,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private ImageView photoPerfil;
     private RelativeLayout barra;
 
     private TextView tvNombre;
-    private TextView tvNombreFoto;
-    private TextView tvNombreIngClases;
-    private TextView tvNombreCrearClase;
-    private TextView tvNombreVerClases;
-    private TextView tvNombreListaClases;
     private TextView tvCorreo;
 
     private Button btnIngresarComoDocente;
@@ -97,35 +102,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private Button btnCrearClase;
     private Button btnListaClases;
 
-    private Button btnTomarFoto;
-    private Button btnBorrarFoto;
-    private Button btnSubirFoto;
-    private Button btnEliminarFotobbdd;
-
-    private Button btnIngresarAclase;
-    private Button btnDocenteCrearClase;
-
     private LinearLayout tarjetaUsuario;
     private LinearLayout lyEstudiante;
     private LinearLayout lyDocente;
 
-    private RelativeLayout cabeceraFoto;
-    private RelativeLayout cabeceraIngFoto;
     private RelativeLayout cabeceraCrearClase;
-    private RelativeLayout cabeceraVerClases;
     private RelativeLayout cabeceraListaClases;
 
-    private LinearLayout lyFoto;
-    private LinearLayout lyIngClases;
     private LinearLayout lyCrearClases;
     private LinearLayout lyprogreso;
-    private LinearLayout lyprogreso_docente;
 
-    private LinearLayout fotoUsuario;
-    private LinearLayout fotoUsuarioBBDD;
-    private LinearLayout fotoUsuarioDocente;
-    private LinearLayout fotoUsuarioVerClases;
-    private LinearLayout fotoUsuarioListaClases;
 
     private GoogleApiClient googleApiClient;
 
@@ -153,30 +139,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private ScrollView scrollVerClases;
     private ScrollView scrollListaClases;
 
-    private TextInputLayout etCodigo;
-    private TextInputLayout etNombreClase;
-    private TextInputLayout etCodigoClase;
-
     private CardView datosClase;
-    private CardView datosClaseCreada;
 
-    // crear tarjetas de clases
-    private ArrayList<ClasesEstudiante> clasesEstudiantes;
-    private ArrayList<ClasesDocente> clasesDocentes;
-
-    // recycler
-    private RecyclerView rvClasesEstudiante;
-    private RecyclerView rvClasesDocente;
-    private AdaptadorClasesEstudiante listaClases;
-    private AdaptadorClasesDocente listaClasesDocente;
-
-    // progress
-    private ProgressBar cprogress;
-    private ProgressBar cprogress_docente;
-
-    // mensajes
-    private TextView tvCargandoClases;
-    private TextView tvCargandoClases_docente;
 
     // constantes timer
     private Integer largo = 2000;
@@ -200,35 +164,21 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private String fotoPerfilUsuario;
     private String nombreCorto;
 
-    private ImageView fotoTomada;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private Bitmap imageBitmap;
     private StorageReference storageReference;
     private ProgressDialog mProgress;
 
     // -------------------------------- variables para los docente --------------------------------
-    private EditText editTextNombreClase;
-    private EditText editTextcodigoClase;
 
-    private ImageView fotoClase;
-    private TextView tvNClase;
-    private TextView tvNCodigo;
     private TextView prueba;
-
     private FirebaseDatabase database;
 
     // ----------------------------- Variables para ingresar a clases -----------------------------
-    private EditText editTextcodigo;
-    private TextView clase;
-    private TextView docente;
-    private ImageView photoBBDDIngClases;
-    private Boolean banderaIngClases = false;
 
-    // ---------------------------------- variables ver mis clases --------------------------------
-    private TextView pruebaClases;
 
     // --------------------------- variables ver lista de clases Docente --------------------------------
-    private TextView pruebaClasesDocente;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -239,6 +189,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
         setContentView(R.layout.activity_main);
+
+        mProgress = new ProgressDialog(this);
 
         photoPerfil = (ImageView) findViewById(R.id.photoPerfil);
         barra = (RelativeLayout) findViewById(R.id.barra);
@@ -260,35 +212,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         padre = (LinearLayout) findViewById(R.id.padre);
         barraFoto = (ConstraintLayout) findViewById(R.id.barraFoto);
 
-        tvNombreFoto = (TextView) findViewById(R.id.tvNombreFoto);
-        tvNombreIngClases = (TextView) findViewById(R.id.tvNombreIngClases);
-        tvNombreCrearClase = (TextView) findViewById(R.id.tvNombreCrearClase);
-        tvNombreVerClases = (TextView) findViewById(R.id.tvNombreVerClases);
-        tvNombreListaClases = (TextView) findViewById(R.id.tvNombreListaClases);
-
-        btnTomarFoto = (Button) findViewById(R.id.btnTomarFoto);
-        btnSubirFoto = (Button) findViewById(R.id.btnSubirFoto);
-        btnBorrarFoto = (Button) findViewById(R.id.btnBorrarFoto);
-        btnEliminarFotobbdd = (Button) findViewById(R.id.btnEliminarFotobbdd);
-
-        btnIngresarAclase = (Button) findViewById(R.id.btnIngresarAclase);
-        btnDocenteCrearClase = (Button) findViewById(R.id.btnDocenteCrearClase);
-
-        cabeceraFoto = (RelativeLayout) findViewById(R.id.cabeceraFoto);
-        cabeceraIngFoto = (RelativeLayout) findViewById(R.id.cabeceraIngFoto);
         cabeceraCrearClase = (RelativeLayout) findViewById(R.id.cabeceraCrearClase);
-        cabeceraVerClases = (RelativeLayout) findViewById(R.id.cabeceraVerClases);
         cabeceraListaClases = (RelativeLayout) findViewById(R.id.cabeceraListaClases);
 
-        lyFoto = (LinearLayout) findViewById(R.id.lyFoto);
-        lyIngClases = (LinearLayout) findViewById(R.id.lyIngClases);
         lyCrearClases = (LinearLayout) findViewById(R.id.lyCrearClases);
-
-        fotoUsuario = (LinearLayout) findViewById(R.id.fotoUsuario);
-        fotoUsuarioBBDD = (LinearLayout) findViewById(R.id.fotoUsuarioBBDD);
-        fotoUsuarioDocente = (LinearLayout) findViewById(R.id.fotoUsuarioDocente);
-        fotoUsuarioVerClases = (LinearLayout) findViewById(R.id.fotoUsuarioVerClases);
-        fotoUsuarioListaClases = (LinearLayout) findViewById(R.id.fotoUsuarioListaClases);
 
         scrollFoto = (ScrollView) findViewById(R.id.scrollFoto);
         scrollIngClases = (ScrollView) findViewById(R.id.scrollIngClases);
@@ -296,24 +223,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         scrollVerClases = (ScrollView) findViewById(R.id.scrollVerClases);
         scrollListaClases = (ScrollView) findViewById(R.id.scrollListaClases);
 
-        etCodigo = (TextInputLayout) findViewById(R.id.etCodigo);
-        etNombreClase = (TextInputLayout) findViewById(R.id.etNombreClase);
-        etCodigoClase = (TextInputLayout) findViewById(R.id.etCodigoClase);
-
         datosClase = (CardView) findViewById(R.id.datosClase);
-        datosClaseCreada = (CardView) findViewById(R.id.datosClaseCreada);
-
-        // inicializamos las listas
-        clasesEstudiantes = new ArrayList<>();
-        clasesDocentes = new ArrayList<>();
-
-        // recicladores
-        rvClasesEstudiante = (RecyclerView) findViewById(R.id.rvClasesEstudiante);
-        rvClasesDocente = (RecyclerView) findViewById(R.id.rvClasesDocente);
-
-        listaClases = new AdaptadorClasesEstudiante(clasesEstudiantes, this);
-        listaClasesDocente = new AdaptadorClasesDocente(clasesDocentes, this);
-
+        storageReference = FirebaseStorage.getInstance().getReference();
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -340,31 +251,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         tvNombre.setAnimation(animation_left);
         tarjetaUsuario.setAnimation(animation_rigth);
 
-        // ------------------------------ Casting variables backend -------------------------------------------
-        fotoTomada = (ImageView) findViewById(R.id.photoBBDD);
-
-        // subir foto
-        storageReference = FirebaseStorage.getInstance().getReference();
-        mProgress = new ProgressDialog(this);
-
         // ------------------------------- Variables para crear clase -----------------------------------------
-        editTextcodigoClase = (EditText) findViewById(R.id.editTextcodigoClase);
-        editTextNombreClase = (EditText) findViewById(R.id.editTextNombreClase);
-        fotoClase = (ImageView) findViewById(R.id.fotoClase);
-        tvNClase = (TextView) findViewById(R.id.tvNClase);
-        tvNCodigo = (TextView) findViewById(R.id.tvNCodigo);
+
         database = FirebaseDatabase.getInstance();
-
-        // ----------------------------- Variables para ingresar a clases -----------------------------
-        editTextcodigo = (EditText) findViewById(R.id.editTextcodigo);
-        clase = (TextView) findViewById(R.id.clase);
-        docente = (TextView) findViewById(R.id.docente);
         prueba = (TextView) findViewById(R.id.prueba);
-        photoBBDDIngClases = (ImageView) findViewById(R.id.photoBBDDIngClases);
-
-        // ---------------------------------- variables ver mis clases --------------------------------
-        pruebaClases = (TextView) findViewById(R.id.pruebaClases);
-        pruebaClasesDocente = (TextView) findViewById(R.id.pruebaClasesDocente);
 
         padre.setOnClickListener(v -> {
             if (banderabtnDocente) {
@@ -392,51 +282,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 banderabtnEstudiante = false;
             }
         });
-
-        // evento click para la lista de clases de los estudiantes
-        listaClases.setOnClickListener(v -> {
-            String docente = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(v)).getDocente();
-            String materia = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(v)).getMateria();
-            String codigo = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(v)).getCodigo();
-            String iddocente = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(v)).getIdDocente();
-
-            Intent intent = new Intent(getApplicationContext(), InfoClasesEstudianteActivity.class);
-            intent.putExtra("docente", docente);
-            intent.putExtra("materia", materia);
-            intent.putExtra("codigo", codigo);
-            intent.putExtra("iddocente", iddocente);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
-        });
-
-        // evento click para la lista de clases de los docentes
-        listaClasesDocente.setOnClickListener(v -> {
-
-            String materia = clasesDocentes.get(rvClasesDocente.getChildAdapterPosition(v)).getMateria();
-            String codigo = clasesDocentes.get(rvClasesDocente.getChildAdapterPosition(v)).getCodigo();
-            String idusuario = clasesDocentes.get(rvClasesDocente.getChildAdapterPosition(v)).getIdusuario();
-            String nomusuario = clasesDocentes.get(rvClasesDocente.getChildAdapterPosition(v)).getNombreUsuario();
-
-            Intent intent = new Intent(getApplicationContext(), InfoClasesAlumnoActivity.class);
-            intent.putExtra("materia", materia);
-            intent.putExtra("codigo", codigo);
-            intent.putExtra("idusuario", idusuario);
-            intent.putExtra("nomusuario", nomusuario);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
-        });
-
-        // eliminar clases estudiante
-        ItemTouchHelper.SimpleCallback simpleCallbackEstudiantes = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, MainActivity.this, 1, 0, 0);
-        new ItemTouchHelper(simpleCallbackEstudiantes).attachToRecyclerView(rvClasesEstudiante);
-
-        // eliminar clases docente
-        ItemTouchHelper.SimpleCallback simpleCallbackDocentes = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, MainActivity.this, 0, 1, 0);
-        new ItemTouchHelper(simpleCallbackDocentes).attachToRecyclerView(rvClasesDocente);
     }
 
     @Override
@@ -537,7 +382,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void subirFoto(View view) {
-        scrollFoto.setVisibility(View.VISIBLE);
+
+        Intent intent = new Intent(this, SubirFotoActivity.class);
+        intent.putExtra("idusuario", idUsuario);
+        intent.putExtra("nomusuario", nombreUsuario);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
+        finish();
+
+        /*scrollFoto.setVisibility(View.VISIBLE);
         tvNombre.startAnimation(animation_left_ocult_long);
         btnIngresarComoDocente.startAnimation(animation_left_ocult_long);
         btnIngresarComoEstudiante.startAnimation(animation_left_ocult_long);
@@ -545,23 +399,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         btnVerMisClases.startAnimation(animaciondere_ocult);
         btnIngresarAClases.startAnimation(animaciondere_ocult);
         btnSubirFotos.startAnimation(animation_rigth_ocult_long);
-        barra.startAnimation(animation_rigth_ocult_long);
+        barra.startAnimation(animation_rigth_ocult_long);*/
 
-        new Handler().postDelayed(() -> {
+        /*new Handler().postDelayed(() -> {
             btnIngresarAClases.setVisibility(View.GONE);
             btnVerMisClases.setVisibility(View.GONE);
-        }, normal);
+        }, normal);*/
 
-        new Handler().postDelayed(() -> {
+        /*new Handler().postDelayed(() -> {
             tvNombre.setVisibility(View.GONE);
             tarjetaUsuario.setVisibility(View.GONE);
             lyEstudiante.setVisibility(View.GONE);
             barra.setVisibility(View.GONE);
             btnIngresarComoDocente.setVisibility(View.GONE);
             btnIngresarComoEstudiante.setVisibility(View.GONE);
-        }, largo);
+        }, largo);*/
 
-        mostrarBarraIzq();
+        /*mostrarBarraIzq();
 
         new Handler().postDelayed(() -> {
             cabeceraFoto.setVisibility(View.VISIBLE);
@@ -575,146 +429,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             btnBorrarFoto.startAnimation(animation_left);
             btnSubirFoto.startAnimation(animation_left);
             btnEliminarFotobbdd.startAnimation(animation_left);
-        }, normal);
-    }
-
-    public void tomarFoto(View view) {
-        abrirCamara();
-    }
-
-    public void abrirCamara() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            imageBitmap = (Bitmap) extras.get("data");
-            fotoTomada.setImageBitmap(imageBitmap);
-        }
-    }
-
-    public void subirFotoFirebase(View view) {
-
-        boolean coneccion = compruebaConexion(this);
-        nombreCorto = validaNombre(nombreUsuario);
-
-        if (imageBitmap != null) {
-            if (coneccion) {
-                showProgressBar("Subiendo foto, espere ...");
-                // Get the data from an ImageView as bytes
-                fotoTomada.setDrawingCacheEnabled(true);
-                fotoTomada.buildDrawingCache();
-                Bitmap bitmap = ((BitmapDrawable) fotoTomada.getDrawable()).getBitmap();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] data = baos.toByteArray();
-
-                UploadTask uploadTask = storageReference.child("ESTUDIANTES/" + idUsuario + "/" + nombreCorto + ".png").putBytes(data);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        finishProgressBar();
-                        Toast.makeText(MainActivity.this, "Hubo un error intentando subir la foto", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                        finishProgressBar();
-                        fotoTomada.setImageResource(R.drawable.ic_register_hero);
-                        imageBitmap = null;
-                        Toast.makeText(MainActivity.this, "La foto se subió con exito", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else {
-                Toast.makeText(this, "Debes tener acceso a internet", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, "Debe tomar una foto", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void setBtnBorrarFoto(View view) {
-
-        if (imageBitmap != null) {
-            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
-            dialogo1.setTitle("Importante");
-            dialogo1.setMessage("¿Realmente deseas eliminar la foto?");
-            dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
-                    fotoTomada.setImageResource(R.drawable.ic_register_hero);
-                    imageBitmap = null;
-                }
-            });
-            dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
-
-                }
-            });
-            dialogo1.show();
-        } else {
-            Toast.makeText(this, "Debe tomar una foto", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public void setBtnEliminarFotobbdd(View view) {
-
-        nombreCorto = validaNombre(nombreUsuario);
-        if (compruebaConexion(this)) {
-
-            // ------------------------------- borramos la foto -----------------------------
-            AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
-            dialogo1.setTitle("Importante");
-            dialogo1.setMessage("Si eliminas la foto de la base de datos tendrás que acceder a tus clases nuevamente para actualizarla en cada una, ¿Realmente deseas eliminarla?");
-            dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
-
-                    fotoTomada.setImageResource(R.drawable.ic_register_hero);
-                    imageBitmap = null;
-
-                    showProgressBar("Estamos eliminando la foto, espere ...");
-
-                    // Delete the file
-                    storageReference.child("ESTUDIANTES/" + idUsuario + "/" + nombreCorto + ".png").delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // File deleted successfully
-                            finishProgressBar();
-                            Toast.makeText(MainActivity.this, "La foto fué borrada con éxito", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Uh-oh, an error occurred
-                            finishProgressBar();
-                            Toast.makeText(MainActivity.this, "Si no cuentas con una foto, no tienes nada que borrar.", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            });
-            dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
-
-                }
-            });
-            dialogo1.show();
-        } else {
-            Toast.makeText(this, "No tiene acceso a internet", Toast.LENGTH_SHORT).show();
-        }
+        }, normal);*/
     }
 
     public void verMisClases(View view) {
 
-        scrollVerClases.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(this, VerClasesEstudiantesActivity.class);
+        intent.putExtra("idusuario", idUsuario);
+        intent.putExtra("nomusuario", nombreUsuario);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
+        finish();
+
+        /*scrollVerClases.setVisibility(View.VISIBLE);
         tvNombre.startAnimation(animation_left_ocult_long);
         btnIngresarComoDocente.startAnimation(animation_left_ocult_long);
         btnIngresarComoEstudiante.startAnimation(animation_left_ocult_long);
@@ -747,10 +475,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 btnIngresarComoEstudiante.setVisibility(View.GONE);
                 btnIngresarAClases.setVisibility(View.GONE);
             }
-        }, largo);
+        }, largo);*/
 
         // Fin ocultar main --------------------------------------------------
-        mostrarBarraIzq();
+        /*mostrarBarraIzq();
 
         // mostrar componentes principales de la pantalla --------------------------------
         new Handler().postDelayed(() -> {
@@ -770,107 +498,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 ponerDatos();
             }, normal);
 
-        }, normal);
-    }
-
-    private void ponerDatos() {
-        if (compruebaConexion(this)) {
-            buscarClasesDataBase();
-        } else {
-            lyprogreso.setVisibility(View.GONE);
-            Toast.makeText(this, "Debe tener acceso a internet para ver sus clases. Por favor conectese a internet y vuelva a ingresar a este apartador", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void buscarClasesDataBase() {
-
-        clasesEstudiantes.clear();
-
-        List<String> clases = new ArrayList<>();
-        List<String> docentes = new ArrayList<>();
-        List<String> codigos = new ArrayList<>();
-        List<String> nClases = new ArrayList<>();
-        List<String> idDocentes = new ArrayList<>();
-
-        clases.clear();
-        docentes.clear();
-        codigos.clear();
-        nClases.clear();
-        idDocentes.clear();
-
-        DatabaseReference myRef = database.getReference().child("ESTUDIANTES").child(idUsuario).child("CLASES");
-
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                for (DataSnapshot clase :
-                        dataSnapshot.getChildren()) {
-                    clases.add(clase.getValue().toString());
-                }
-
-                lyprogreso.setVisibility(View.GONE);
-
-                if (!clases.isEmpty()) {
-
-                    String cadenaSinCodigo = "";
-                    String cadenaSinNombreSinId = "";
-                    String cadenaSinClaseSinCodigo = "";
-                    String nombreDocente = "";
-                    String idDocente = "";
-                    String nombreMateria = "";
-                    String codigo = "";
-
-
-                    for (int i = 0; i < clases.size(); i++) {
-                        cadenaSinNombreSinId = clases.get(i).replaceAll(".*_", "");
-                        cadenaSinClaseSinCodigo = clases.get(i).replaceAll("_" + cadenaSinNombreSinId, "");
-                        nombreDocente = cadenaSinClaseSinCodigo.replaceAll(".*_", "");
-                        idDocente = cadenaSinClaseSinCodigo.replaceAll("_" + nombreDocente, "");
-                        cadenaSinCodigo = clases.get(i).substring(0, clases.get(i).indexOf("."));
-                        nombreMateria = cadenaSinCodigo.replaceAll(cadenaSinClaseSinCodigo + "_", "");
-                        codigo = cadenaSinNombreSinId.replaceAll(nombreMateria + ".", "");
-
-                        codigos.add(codigo);
-                        docentes.add(nombreDocente);
-                        nClases.add(nombreMateria);
-                        idDocentes.add(idDocente);
-                    }
-
-                    clasesEstudiantes.clear();
-                    for (int i = 0; i < clases.size(); i++) {
-
-                        // asi debo meter las clases
-                        clasesEstudiantes.add(new ClasesEstudiante(
-                                docentes.get(i), codigos.get(i), nClases.get(i), idDocentes.get(i)));
-                    }
-
-                    rvClasesEstudiante.setHasFixedSize(true);
-                    rvClasesEstudiante.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    rvClasesEstudiante.setAdapter(listaClases);
-
-                    new Handler().postDelayed(() -> {
-                        rvClasesEstudiante.setVisibility(View.VISIBLE);
-                        rvClasesEstudiante.setAnimation(animation_down);
-                    }, normal);
-
-                } else {
-                    pruebaClases.setVisibility(View.VISIBLE);
-                    pruebaClases.setText("No estás registrado en ninguna clase");
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-
-            }
-        });
+        }, normal);*/
     }
 
     public void ingresarClase(View view) {
-        scrollIngClases.setVisibility(View.VISIBLE);
+
+        Intent intent = new Intent(this, IngresarAClaseActivity.class);
+        intent.putExtra("idusuario", idUsuario);
+        intent.putExtra("nomusuario", nombreUsuario);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
+        finish();
+
+        /*scrollIngClases.setVisibility(View.VISIBLE);
         tvNombre.startAnimation(animation_left_ocult_long);
         btnIngresarComoDocente.startAnimation(animation_left_ocult);
         btnIngresarComoEstudiante.startAnimation(animation_left_ocult);
@@ -878,9 +519,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         btnVerMisClases.startAnimation(animaciondere_ocult);
         btnIngresarAClases.startAnimation(animation_rigth_ocult_long);
         btnSubirFotos.startAnimation(animaciondere_ocult);
-        barra.startAnimation(animation_rigth_ocult_long);
+        barra.startAnimation(animation_rigth_ocult_long);*/
 
-        new Handler().postDelayed(new Runnable() {
+        /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 btnSubirFotos.setVisibility(View.INVISIBLE);
@@ -888,9 +529,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 btnIngresarComoDocente.setVisibility(View.INVISIBLE);
                 btnIngresarComoEstudiante.setVisibility(View.INVISIBLE);
             }
-        }, normal);
+        }, normal);*/
 
-        new Handler().postDelayed(new Runnable() {
+        /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 btnSubirFotos.setVisibility(View.GONE);
@@ -901,11 +542,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 barra.setVisibility(View.GONE);
                 btnIngresarAClases.setVisibility(View.GONE);
             }
-        }, largo);
+        }, largo);*/
 
-        mostrarBarraIzq();
+        //mostrarBarraIzq();
 
-        new Handler().postDelayed(new Runnable() {
+        /*new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 cabeceraIngFoto.setVisibility(View.VISIBLE);
@@ -921,237 +562,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 etCodigo.startAnimation(animation_left);
                 btnIngresarAclase.startAnimation(animation_left);
             }
-        }, normal);
+        }, normal);*/
     }
-
-    public void accionIngresarClase(View view) {
-
-        if (compruebaConexion(this)) {
-            if (!editTextcodigo.getText().toString().isEmpty()) {
-                showProgressBar("Buscando clase, espere ...");
-                DatabaseReference myRef = database.getReference().child("DOCENTES");
-                DatabaseReference myRefp = database.getReference();
-                List idDocentes = new ArrayList();
-                List clasesDocentes = new ArrayList();
-                List claves = new ArrayList();
-                Set codigos = new HashSet();
-                String codigoIng = editTextcodigo.getText().toString().toUpperCase();
-                idDocentes.clear();
-                clasesDocentes.clear();
-                claves.clear();
-                codigos.clear();
-
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // This method is called once with the initial value and again
-                        // whenever data at this location is updated.
-
-                        // identifico los id de los docentes
-                        for (DataSnapshot idDocente :
-                                dataSnapshot.getChildren()) {
-                            idDocentes.add(idDocente.getKey());
-                        }
-
-                        // busco las clases de cada docente
-                        for (int i = 0; i < idDocentes.size(); i++) {
-                            // Read from the database
-                            int finalI = i;
-                            myRef.child((String) idDocentes.get(i))
-                                    .addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            // identifico los campos de los docentes
-                                            for (DataSnapshot clase :
-                                                    dataSnapshot.getChildren()) {
-                                                clasesDocentes.add(clase.getKey());
-                                            }
-
-                                            for (int j = 0; j < clasesDocentes.size(); j++) {
-                                                myRef.child((String) idDocentes.get(finalI)).child((String) clasesDocentes.get(j)).addValueEventListener(new ValueEventListener() {
-                                                    @Override
-                                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                                        // This method is called once with the initial value and again
-                                                        // whenever data at this location is updated.
-                                                        // identifico los dodigos de los docentes
-                                                        for (DataSnapshot clase :
-                                                                dataSnapshot.getChildren()) {
-                                                            codigos.add(clase.getValue());
-                                                        }
-
-                                                        String codigoCompleto = null;
-                                                        String cadenaSinCodigo = "";
-                                                        String nombreClase = "";
-                                                        String cadenaSinCodigoSinClase = "";
-                                                        String nombreDocente = "";
-                                                        String idDocente = "";
-
-                                                        Iterator<String> it = codigos.iterator();
-                                                        if (!codigoIng.isEmpty()) {
-                                                            prueba.setText("");
-
-                                                            while (it.hasNext()) {
-                                                                codigoCompleto = it.next();
-                                                                if (codigoCompleto.contains(codigoIng)) {
-                                                                    banderaIngClases = true;
-                                                                    cadenaSinCodigo = codigoCompleto.replaceAll("." + codigoIng, "");
-                                                                    nombreClase = cadenaSinCodigo.replaceAll(".*_", "");
-                                                                    cadenaSinCodigoSinClase = cadenaSinCodigo.replaceAll("_" + nombreClase, "");
-                                                                    nombreDocente = cadenaSinCodigoSinClase.replaceAll(".*_", "");
-                                                                    idDocente = cadenaSinCodigoSinClase.replaceAll("_" + nombreDocente, "");
-                                                                }
-                                                            }
-
-                                                            if (nombreClase.isEmpty() || nombreDocente.isEmpty()) {
-                                                                docente.setText("Docente no encontrado");
-                                                                clase.setText("Clase no encontrada");
-                                                            } else {
-                                                                docente.setText(nombreDocente);
-                                                                clase.setText(nombreClase);
-                                                            }
-
-                                                            if (banderaIngClases) {
-                                                                buscarFotoExistente(nombreDocente, nombreClase, codigoIng, idDocente);
-                                                            } else {
-                                                                finishProgressBar();
-                                                                new Handler().postDelayed(new Runnable() {
-                                                                    @Override
-                                                                    public void run() {
-                                                                        datosClase.setVisibility(View.VISIBLE);
-                                                                        datosClase.setAnimation(animation_down);
-                                                                    }
-                                                                }, acond1);
-
-                                                                new Handler().postDelayed(new Runnable() {
-                                                                    @Override
-                                                                    public void run() {
-                                                                        editTextcodigo.setText("");
-                                                                    }
-                                                                }, acond2);
-                                                            }
-                                                        } else {
-                                                            finishProgressBar();
-                                                            prueba.setText("Debe ingresar un Código");
-                                                        }
-                                                    }
-
-                                                    @Override
-                                                    public void onCancelled(DatabaseError error) {
-                                                        // Failed to read value
-                                                        finishProgressBar();
-                                                    }
-                                                });
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError error) {
-                                            finishProgressBar();
-                                        }
-                                    });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        // Failed to read value
-                        prueba.setText("Ha ocurrido un error, revise su conexión a internet o intentelo de nuevo mas tarde");
-                    }
-                });
-            } else {
-                Toast.makeText(this, "Debe ingresar un código", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(this, "Para ingresar a una clase debe tener acceso a internet", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void buscarFotoExistente(String nombreDocente, String nombreClase, String codigoIng, String idDocente) {
-        nombreCorto = validaNombre(nombreUsuario);
-
-        storageReference.child("ESTUDIANTES/" + idUsuario + "/" + nombreCorto + ".png")
-                .getDownloadUrl()
-                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-
-                        banderaIngClases = false;
-                        Glide.with(getApplicationContext()).load(uri).into(photoBBDDIngClases);
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                subirFotoClase(nombreDocente, nombreClase, codigoIng, idDocente);
-                            }
-                        }, 2000);
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                editTextcodigo.setText("");
-                finishProgressBar();
-                prueba.setText("Lo sentimos, para ingresar a una clase debes tener una foto para " +
-                        "realizar el reconocimiento facial. Dirígete a la sección de subir foto de " +
-                        "reconocimiento accediendo al boton de ingresar como estudiante.");
-            }
-        });
-
-
-    }
-
-    private void subirFotoClase(String nombreDocente, String nombreClase, String codigoIng, String idDocente) {
-
-        if (photoBBDDIngClases != null) {
-            // Get the data from an ImageView as bytes
-            photoBBDDIngClases.setDrawingCacheEnabled(true);
-            photoBBDDIngClases.buildDrawingCache();
-            Bitmap bitmap = ((BitmapDrawable) photoBBDDIngClases.getDrawable()).getBitmap();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] data = baos.toByteArray();
-
-            UploadTask uploadTask = storageReference.child("DOCENTES/" + idDocente + "/" + idDocente + "_" + nombreDocente + "_" + nombreClase + "." + codigoIng + "/" + nombreCorto + ".png").putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                    finishProgressBar();
-                    prueba.setText("Ha ocurrido un error, revise su conexión a internet o intentelo de nuevo mas tarde");
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-
-                    DatabaseReference myRef = database.getReference().child("ESTUDIANTES");
-
-                    myRef.child(idUsuario)
-                            .child("CLASES")
-                            .child(codigoIng)
-                            .setValue(idDocente + "_" + nombreDocente + "_" + nombreClase + "." + codigoIng);
-
-                    finishProgressBar();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            datosClase.setVisibility(View.VISIBLE);
-                            datosClase.setAnimation(animation_down);
-                        }
-                    }, acond1);
-
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            editTextcodigo.setText("");
-                        }
-                    }, acond2);
-                }
-            });
-        }
-    }
-
-    // ****************************** métodos de docentes ******************************
 
     public void ingDocente(View view) {
         if (banderabtnEstudiante) {
@@ -1170,8 +582,17 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void crearClase(View view) {
+
+        Intent intent = new Intent(this, CrearClaseActivity.class);
+        intent.putExtra("idusuario", idUsuario);
+        intent.putExtra("nomusuario", nombreUsuario);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
+        finish();
+
         // Inicio ocultar main --------------------------------------------------
-        scrollCrearClases.setVisibility(View.VISIBLE);
+        /*scrollCrearClases.setVisibility(View.VISIBLE);
         tvNombre.startAnimation(animation_left_ocult_long);
         btnIngresarComoDocente.startAnimation(animation_left_ocult);
         btnIngresarComoEstudiante.startAnimation(animation_left_ocult);
@@ -1194,13 +615,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             tarjetaUsuario.setVisibility(View.GONE);
             lyEstudiante.setVisibility(View.GONE);
             barra.setVisibility(View.GONE);
-        }, largo);
+        }, largo);*/
 
         // Fin ocultar main --------------------------------------------------
-        mostrarBarraIzq();
+        //mostrarBarraIzq();
 
         // mostrar componentes de la pantalla --------------------------------
-        new Handler().postDelayed(() -> {
+        /*new Handler().postDelayed(() -> {
             cabeceraCrearClase.setVisibility(View.VISIBLE);
             fotoUsuarioDocente.startAnimation(animation_rigth);
             tvNombreCrearClase.setAnimation(animation_left);
@@ -1211,82 +632,19 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             etNombreClase.startAnimation(animation_left);
             etCodigoClase.startAnimation(animation_rigth);
             btnDocenteCrearClase.startAnimation(animation_left);
-        }, acond1);
+        }, acond1);*/
     }
-
-    public void accionCrearClase(View view) {
-
-        if (compruebaConexion(this)) {
-            String nClase = editTextNombreClase.getText().toString().toUpperCase();
-            String nCodigo = editTextcodigoClase.getText().toString().toUpperCase();
-            nombreCorto = validaNombre(nombreUsuario);
-
-            if ((nClase.isEmpty()) || (nCodigo.isEmpty())) {
-                Toast.makeText(this, "Debe ingresar los parámetros requeridos", Toast.LENGTH_SHORT).show();
-            } else {
-                // --------------------------- se crea la clase -------------------------
-                showProgressBar("Creando clase, espere ...");
-                // Get the data from an ImageView as bytes
-                fotoClase.setImageResource(R.drawable.ic_register_hero);
-                fotoClase.buildDrawingCache();
-                Bitmap bmap = fotoClase.getDrawingCache();
-                fotoClase.setImageBitmap(bmap);
-                fotoClase.buildDrawingCache();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                byte[] data = baos.toByteArray();
-
-                UploadTask uploadTask = storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + nClase + "." + nCodigo + "/" + "clase.png").putBytes(data);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        finishProgressBar();
-                        Toast.makeText(MainActivity.this, "Hubo un error intentando crear clase", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-
-                        tvNClase.setText(nClase);
-                        tvNCodigo.setText(nCodigo);
-
-                        DatabaseReference myRef = database.getReference().child("DOCENTES");
-
-                        myRef.child(idUsuario)
-                                .child("CLASES")
-                                .child(nCodigo)
-                                .setValue(idUsuario + "_" + nombreUsuario + "_" + nClase + "." + nCodigo);
-
-                        finishProgressBar();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                datosClaseCreada.setVisibility(View.VISIBLE);
-                                datosClaseCreada.setAnimation(animation_down);
-                            }
-                        }, acond2);
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                editTextNombreClase.setText("");
-                                editTextcodigoClase.setText("");
-                            }
-                        }, acond2);
-                    }
-                });
-                // ----------------------------------------------------------------------
-            }
-        } else {
-            Toast.makeText(this, "Debe tener acceso a Internet", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 
     public void verListaClases(View view) {
+        Intent intent = new Intent(this, ListaClasesActivity.class);
+        intent.putExtra("idusuario", idUsuario);
+        intent.putExtra("nomusuario", nombreUsuario);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
+        finish();
         // Inicio ocultar main --------------------------------------------------
-        scrollListaClases.setVisibility(View.VISIBLE);
+        /*scrollListaClases.setVisibility(View.VISIBLE);
         tvNombre.startAnimation(animation_left_ocult_long);
         btnIngresarComoDocente.startAnimation(animation_left_ocult);
         btnIngresarComoEstudiante.startAnimation(animation_left_ocult);
@@ -1309,13 +667,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             tarjetaUsuario.setVisibility(View.GONE);
             lyEstudiante.setVisibility(View.GONE);
             barra.setVisibility(View.GONE);
-        }, largo);
+        }, largo);*/
 
         // Fin ocultar main --------------------------------------------------
-        mostrarBarraIzq();
+        //mostrarBarraIzq();
 
         // mostrar componentes principales de la pantalla --------------------------------
-        new Handler().postDelayed(() -> {
+        /*new Handler().postDelayed(() -> {
             cabeceraListaClases.setVisibility(View.VISIBLE);
             fotoUsuarioListaClases.startAnimation(animation_rigth);
             tvNombreListaClases.setAnimation(animation_left);
@@ -1331,97 +689,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 ponerDatosClasesDocente();
             }, normal);
 
-        }, normal);
+        }, normal);*/
     }
 
-    private void ponerDatosClasesDocente() {
-        if (compruebaConexion(this)) {
-            buscarClasesDataBaseDocente();
-        } else {
-            lyprogreso.setVisibility(View.GONE);
-            Toast.makeText(this, "Debe tener acceso a internet para ver sus clases. Por favor conectese a internet y vuelva a ingresar a este apartador", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private void buscarClasesDataBaseDocente() {
-        List<String> clases = new ArrayList<>();
-        List<String> codigos = new ArrayList<>();
-        List<String> nClases = new ArrayList<>();
-
-        clases.clear();
-        codigos.clear();
-        nClases.clear();
-
-        DatabaseReference myRef = database.getReference().child("DOCENTES").child(idUsuario).child("CLASES");
-
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot clase :
-                        dataSnapshot.getChildren()) {
-                    clases.add(clase.getValue().toString());
-                }
-
-                lyprogreso_docente.setVisibility(View.GONE);
-
-                if (!clases.isEmpty()) {
-
-                    String cadenaSinCodigo = "";
-                    String cadenaSinNombreSinId = "";
-                    String cadenaSinClaseSinCodigo = "";
-                    String nombreDocente = "";
-                    String idDocente = "";
-                    String nombreMateria = "";
-                    String codigo = "";
-
-
-                    for (int i = 0; i < clases.size(); i++) {
-                        cadenaSinNombreSinId = clases.get(i).replaceAll(".*_", "");
-                        cadenaSinClaseSinCodigo = clases.get(i).replaceAll("_" + cadenaSinNombreSinId, "");
-                        nombreDocente = cadenaSinClaseSinCodigo.replaceAll(".*_", "");
-                        idDocente = cadenaSinClaseSinCodigo.replaceAll("_" + nombreDocente, "");
-                        cadenaSinCodigo = clases.get(i).substring(0, clases.get(i).indexOf("."));
-                        nombreMateria = cadenaSinCodigo.replaceAll(cadenaSinClaseSinCodigo + "_", "");
-                        codigo = cadenaSinNombreSinId.replaceAll(nombreMateria + ".", "");
-
-                        codigos.add(codigo);
-                        nClases.add(nombreMateria);
-                    }
-
-                    clasesDocentes.clear();
-
-                    for (int i = 0; i < clases.size(); i++) {
-
-                        clasesDocentes.add(new ClasesDocente(
-                                nClases.get(i), codigos.get(i), idUsuario, nombreUsuario));
-                    }
-
-                    rvClasesDocente.setHasFixedSize(true);
-                    rvClasesDocente.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    rvClasesDocente.setAdapter(listaClasesDocente);
-
-                    new Handler().postDelayed(() -> {
-                        rvClasesDocente.setVisibility(View.VISIBLE);
-                        rvClasesDocente.setAnimation(animation_down);
-                    }, normal);
-
-                } else {
-                    pruebaClasesDocente.setVisibility(View.VISIBLE);
-                    pruebaClasesDocente.setText("No has creado ninguna clase");
-                }
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-
-            }
-        });
-    }
-
-    // ****************************** Otras configuraciones ******************************
-    private void mostrarBarraIzq() {
+    /*private void mostrarBarraIzq() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -1429,7 +700,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 barraFoto.startAnimation(animation_left);
             }
         }, normal);
-    }
+    }*/
 
     public void onMainFotoClick(View view) {
         startActivity(new Intent(this, MainActivity.class));
@@ -1440,35 +711,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
-    }
-
-    private static String validaNombre(String nombre) {
-
-        String primerNombre;
-        String primerApellido;
-
-        List posiciones = new ArrayList();
-
-        for (int i = 0; i < nombre.length(); i++) {
-            char indice = nombre.charAt(i);
-            if (indice == ' ') {
-                posiciones.add(i);
-            }
-        }
-
-        if (posiciones.size() == 3) {
-            primerNombre = nombre.substring(0, (int) posiciones.get(0)).trim();
-            primerApellido = nombre.substring((int) posiciones.get(1), (int) posiciones.get(2)).trim();
-            return nombre = primerNombre + " " + primerApellido;
-        } else if (posiciones.size() == 2) {
-            primerNombre = nombre.substring(0, (int) posiciones.get(0)).trim();
-            primerApellido = nombre.substring((int) posiciones.get(0), (int) posiciones.get(1)).trim();
-            return nombre = primerNombre + " " + primerApellido;
-        } else if (posiciones.size() == 1) {
-            return nombre;
-        }
-
-        return nombre;
     }
 
     public static boolean compruebaConexion(Context context) {
@@ -1485,94 +727,5 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         }
         return connected;
-    }
-
-    public void showProgressBar(String mensaje) {
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        mProgress.setMessage(mensaje);
-        mProgress.show();
-        mProgress.setCanceledOnTouchOutside(false);
-    }
-
-    public void finishProgressBar() {
-        mProgress.dismiss();
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        mProgress.setCanceledOnTouchOutside(true);
-    }
-
-    @Override
-    public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (viewHolder instanceof AdaptadorClasesEstudiante.ViewHolder) {
-            String docente = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(viewHolder.itemView)).getDocente();
-            String materia = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(viewHolder.itemView)).getMateria();
-            String codigo = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(viewHolder.itemView)).getCodigo();
-            String iddocente = clasesEstudiantes.get(rvClasesEstudiante.getChildAdapterPosition(viewHolder.itemView)).getIdDocente();
-            int posicion = viewHolder.getAdapterPosition();
-            nombreCorto = validaNombre(nombreUsuario);
-
-            DatabaseReference myRef = database.getReference().child("ESTUDIANTES");
-
-            if (compruebaConexion(this)) {
-
-                AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
-                dialogo1.setTitle("Importante");
-                dialogo1.setMessage("¿Realmente deseas eliminar esta clase?");
-                dialogo1.setCancelable(false);
-                dialogo1.setPositiveButton("Confirmar", (dialogo11, id) -> {
-
-                    showProgressBar("Eliminando clase, espere ...");
-                    listaClases.removeItem(posicion);
-                    // eliminamos la foto de la carpeta de la clase
-                    storageReference.child("DOCENTES/" + iddocente + "/" + iddocente + "_" + docente + "_" + materia + "." + codigo + "/" + nombreCorto + ".png")
-                            .delete()
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // File deleted successfully
-                                    // eliminamos la marca de realtime database
-                                    myRef.child(idUsuario).child("CLASES").child(codigo)
-                                            .removeValue()
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
-                                                    clasesEstudiantes.clear();
-                                                    finishProgressBar();
-                                                    buscarClasesDataBase();
-                                                    Toast.makeText(MainActivity.this, "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            finishProgressBar();
-                                            Toast.makeText(MainActivity.this, "Ha ocurrido un error, intente mas tarde", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Uh-oh, an error occurred
-                            finishProgressBar();
-                            Toast.makeText(MainActivity.this, "Ocurrió un error al eliminar la clase", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                });
-                dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogo1, int id) {
-                        Toast.makeText(MainActivity.this, "Operación cancelada", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                dialogo1.show();
-            } else {
-                Toast.makeText(this, "No tiene acceso a internet", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        if (viewHolder instanceof AdaptadorClasesDocente.ViewHolder){
-            // debo borrar la carpeta de la clase,
-            // borrar la marca del docente de la clase
-            // y borrar en cada estudiante la clase
-            listaClasesDocente.removeItem(viewHolder.getAdapterPosition());
-        }
     }
 }

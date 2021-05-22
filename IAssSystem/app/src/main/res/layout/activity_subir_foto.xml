@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".activities.estudiantes.SubirFotoActivity">
+
+    <!-- ____________ Scroll Subir Foto ________________ -->
+    <ScrollView
+        android:id="@+id/scrollFoto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/cabeceraFoto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/fotoUsuario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvNombreFoto"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardFotoUsuario"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tvNombre"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="30dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="5dp"
+                        app:cardUseCompatPadding="true">
+
+                        <ImageView
+                            android:id="@+id/photoBBDD"
+                            android:layout_width="250dp"
+                            android:layout_height="250dp"
+                            android:src="@drawable/ic_register_hero" />
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvNombreFoto"
+                    style="@style/viewParent.headerText.NoMode"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:text="En este apartado\npodrás tomar\ntu foto de\nreconocimiento"
+                    android:textColor="@color/colorAccent" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/lyFoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btnTomarFoto"
+                    style="@style/Button"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="10dp"
+                    android:text="Tomar Foto"
+                    android:onClick="tomarFoto"/>
+
+                <Button
+                    android:id="@+id/btnBorrarFoto"
+                    style="@style/Button"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="10dp"
+                    android:text="Borrar Foto"
+                    android:onClick="setBtnBorrarFoto">
+
+                </Button>
+
+                <Button
+                    android:id="@+id/btnSubirFoto"
+                    style="@style/Button"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="10dp"
+                    android:text="Subir Foto"
+                    android:onClick="subirFotoFirebase">
+
+                </Button>
+
+                <Button
+                    android:id="@+id/btnEliminarFotobbdd"
+                    style="@style/Button"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="10dp"
+                    android:text="Eliminar Foto de la base de datos"
+                    android:onClick="setBtnEliminarFotobbdd">
+                </Button>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- ____________ Barra Secundaria ________________ -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/barraFoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <View
+            android:visibility="invisible"
+            android:layout_width="11dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_side_bg_izq"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="35dp"
+            android:adjustViewBounds="false"
+            android:src="@drawable/ic_back_img_verde"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:onClick="onMainClick"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</RelativeLayout>

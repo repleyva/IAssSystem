@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/colorPrimary"
+    android:layout_height="match_parent"
+    tools:context=".activities.docentes.CrearClaseActivity">
+
+    <!-- ____________ Scroll Crear Clases ________________ -->
+    <ScrollView
+        android:id="@+id/scrollCrearClases"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/cabeceraCrearClase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/fotoUsuarioDocente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvNombreCrearClase"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginBottom="0dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardCrearClase"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tvNombre"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="30dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="5dp"
+                        app:cardUseCompatPadding="true">
+
+                        <ImageView
+                            android:id="@+id/perfilDocente"
+                            android:layout_width="250dp"
+                            android:layout_height="250dp"
+                            android:src="@drawable/ic_register_hero" />
+
+                        <ImageView
+                            android:id="@+id/fotoClase"
+                            android:layout_width="250dp"
+                            android:layout_height="250dp"
+                            android:src="@drawable/ic_register_hero" />
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvNombreCrearClase"
+                    style="@style/viewParent.headerText.NoMode"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:text="Aquí podrás crear\ntus clases usando\nel codigo que da\nla institución."
+                    android:textColor="@color/colorAccent" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp">
+
+                        <LinearLayout
+                            android:id="@+id/lyCrearClases"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/etNombreClase"
+                                style="@style/parent"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                app:boxBackgroundColor="@color/colorPrimary">
+
+                                <EditText
+                                    android:id="@+id/editTextNombreClase"
+                                    style="@style/modifiedEditText"
+                                    android:hint="Ingrese el nombre de la clase"
+                                    android:maxLines="1" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_marginTop="15dp"
+                                android:id="@+id/etCodigoClase"
+                                style="@style/parent"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                app:boxBackgroundColor="@color/colorPrimary">
+
+                                <EditText
+                                    android:id="@+id/editTextcodigoClase"
+                                    style="@style/modifiedEditText"
+                                    android:hint="Ingrese el código de la clase"
+                                    android:maxLines="1" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <Button
+                                android:id="@+id/btnDocenteCrearClase"
+                                style="@style/loginButton"
+                                android:layout_marginTop="15dp"
+                                android:text="Crear una Clase"
+                                android:onClick="accionCrearClase">
+
+                            </Button>
+
+                        </LinearLayout>
+
+                        <androidx.cardview.widget.CardView
+                            android:visibility="gone"
+                            android:id="@+id/datosClaseCreada"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            app:cardBackgroundColor="@color/colorAccent"
+                            app:cardCornerRadius="15dp"
+                            app:cardElevation="5dp"
+                            app:cardUseCompatPadding="true">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:padding="15dp">
+
+                                <TextView
+                                    style="@style/viewParent.headerText.NoMode"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="10dp"
+                                    android:gravity="center"
+                                    android:text="¡Felicidades, haz creado una clase!"
+                                    android:textColor="@color/colorPrimary">
+
+                                </TextView>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="20dp"
+                                    android:gravity="center"
+                                    android:weightSum="12"
+                                    app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent">
+
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="3"
+                                        android:background="@color/colorPrimary" />
+                                </LinearLayout>
+
+                                <TextView
+                                    style="@style/viewParent.headerText.NoMode"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Nombre de la clase:"
+                                    android:textColor="@color/colorPrimary">
+
+                                </TextView>
+
+                                <TextView
+                                    android:id="@+id/tvNClase"
+                                    style="@style/viewParent.headerText.NoMode"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="right"
+                                    android:text="Instrumentación"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textStyle="italic">
+
+                                </TextView>
+
+                                <TextView
+                                    style="@style/viewParent.headerText.NoMode"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Código de la clase:"
+                                    android:textColor="@color/colorPrimary">
+
+                                </TextView>
+
+                                <TextView
+                                    android:id="@+id/tvNCodigo"
+                                    style="@style/viewParent.headerText.NoMode"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="right"
+                                    android:text="EL447"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textStyle="italic">
+
+                                </TextView>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="20dp"
+                                    android:gravity="center"
+                                    android:weightSum="12"
+                                    app:layout_constraintBottom_toTopOf="@+id/linearLayout4"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent">
+
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:layout_gravity="center"
+                                        android:layout_weight="3"
+                                        android:background="@color/colorPrimary" />
+                                </LinearLayout>
+
+                                <TextView
+                                    style="@style/viewParent.headerText.NoMode"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:gravity="center"
+                                    android:text="Nota: Revisa tus clases, desde ahí podrás visualizarlas todas."
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="14sp">
+
+                                </TextView>
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ____________ Barra Secundaria ________________ -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/barraFoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <View
+            android:visibility="invisible"
+            android:layout_width="11dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_side_bg_izq"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="35dp"
+            android:adjustViewBounds="false"
+            android:src="@drawable/ic_back_img_verde"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:onClick="onMainClick"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>
