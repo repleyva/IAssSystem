@@ -274,6 +274,35 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
         finish();
     }
 
+    private static String validaNombre(String nombre) {
+
+        String primerNombre;
+        String primerApellido;
+
+        List posiciones = new ArrayList();
+
+        for (int i = 0; i < nombre.length(); i++) {
+            char indice = nombre.charAt(i);
+            if (indice == ' ') {
+                posiciones.add(i);
+            }
+        }
+
+        if (posiciones.size() == 3) {
+            primerNombre = nombre.substring(0, (int) posiciones.get(0)).trim();
+            primerApellido = nombre.substring((int) posiciones.get(1), (int) posiciones.get(2)).trim();
+            return nombre = primerNombre + " " + primerApellido;
+        } else if (posiciones.size() == 2) {
+            primerNombre = nombre.substring(0, (int) posiciones.get(0)).trim();
+            primerApellido = nombre.substring((int) posiciones.get(0), (int) posiciones.get(1)).trim();
+            return nombre = primerNombre + " " + primerApellido;
+        } else if (posiciones.size() == 1) {
+            return nombre;
+        }
+
+        return nombre;
+    }
+
     @Override
     public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof AdaptadorClasesDocente.ViewHolder) {
@@ -325,6 +354,43 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
                                                     }
                                                 });
                                         //fotos.add(item.getName());
+                                    }
+
+                                    ArrayList<String> nombreCarpetaEstudiante = new ArrayList();
+                                    ArrayList<String> idEstudiantes = new ArrayList();
+                                    ArrayList<String> nombreEstudiantes = new ArrayList();
+                                    ArrayList<String> nombresCortosEstudiantes = new ArrayList();
+                                    nombreCarpetaEstudiante.clear();
+                                    idEstudiantes.clear();
+                                    nombreEstudiantes.clear();
+                                    nombresCortosEstudiantes.clear();
+
+                                    // borramos las fotos
+                                    for (StorageReference carpetasEstudiantes :
+                                            listResult.getPrefixes()) {
+                                        nombreCarpetaEstudiante.add(carpetasEstudiantes.getName());
+                                    }
+
+                                    for (int i = 0; i < nombreCarpetaEstudiante.size(); i++) {
+                                        nombreEstudiantes.add(nombreCarpetaEstudiante.get(i).replaceAll(".*_", ""));
+                                        nombresCortosEstudiantes.add(validaNombre(nombreEstudiantes.get(i)));
+                                        idEstudiantes.add(nombreCarpetaEstudiante.get(i).replaceAll("_" + nombreEstudiantes.get(i), ""));
+                                    }
+
+                                    for (int i = 0; i < nombreCarpetaEstudiante.size(); i++) {
+                                        storageReference
+                                                .child("DOCENTES/" + idusuario + "/" + idusuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/" + idEstudiantes.get(i) + "_" + nombreEstudiantes.get(i) + "/" + nombresCortosEstudiantes.get(i) + ".png")
+                                                .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception exception) {
+
+                                            }
+                                        });
                                     }
 
                                     borrarCarpetaAsistencia(idusuario, materia, codigo, miMarca);
@@ -415,7 +481,7 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
                                 finishProgressBar();
                                 clasesDocentes.clear();
                                 buscarClasesDataBaseDocente();
-                                Toast.makeText(getApplicationContext(), "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ListaClasesActivity.this, "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {

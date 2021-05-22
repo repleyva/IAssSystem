@@ -52,6 +52,7 @@ public class AdaptadorEstudiantesEnClases extends RecyclerView.Adapter<Adaptador
         final EstudianteEnClase estudiante = estudiantesEnClases.get(position);
 
         holder.tvnombreEstudiante.setText("Estudiante: " + estudiante.getNombreEstudiante());
+        holder.idEstudiante.setText("Id: " + estudiante.getIdEstudiante());
 
     }
 
@@ -73,12 +74,14 @@ public class AdaptadorEstudiantesEnClases extends RecyclerView.Adapter<Adaptador
 
         ImageView foto_estudiante;
         TextView tvnombreEstudiante;
+        TextView idEstudiante;
         public LinearLayout tarjetaEstudianteEnClaseABorrar;
 
         public ViewHolder(View view) {
             super(view);
             foto_estudiante = view.findViewById(R.id.foto_estudiante);
             tvnombreEstudiante = view.findViewById(R.id.tvnombreEstudiante);
+            idEstudiante = view.findViewById(R.id.idEstudiante);
             tarjetaEstudianteEnClaseABorrar = view.findViewById(R.id.tarjetaEstudianteEnClaseABorrar);
         }
     }

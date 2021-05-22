@@ -6,7 +6,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -14,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -25,6 +29,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
@@ -41,7 +46,7 @@ import org.environmentronic.iasssystem.adapters.RecyclerItemTouchHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InfoClasesAlumnoActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
+public class InfoClasesAlumnoActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private TextView tvClase, tvCodigo, tvAlumnosReg;
     private ImageView imagen;
@@ -86,6 +91,9 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
     private String idUsuario;
     private String nombreUsuario;
 
+    private ProgressDialog mProgress;
+    private StorageReference storageReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,6 +137,8 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
         database = FirebaseDatabase.getInstance();
 
         buscarAlumnos();
+        mProgress = new ProgressDialog(this);
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         // eliminar clases estudiante
         ItemTouchHelper.SimpleCallback simpleCallbackEstudiantes = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, InfoClasesAlumnoActivity.this, 0, 0, 1);
@@ -172,23 +182,28 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
                     @Override
                     public void onSuccess(ListResult listResult) {
 
-                        for (StorageReference item : listResult.getItems()) {
+                        for (StorageReference item : listResult.getPrefixes()) {
                             // All the items under listRef.
                             estudiantes.add(item.getName());
                         }
 
                         estudiantes.remove("clase.png");
+                        estudiantes.remove("FOTO_CLASE");
 
                         if (!estudiantes.isEmpty()) {
 
                             lyprogresoAlum.setVisibility(View.GONE);
                             String nombreEstudiante = "";
+                            String idEstudiante = "";
 
                             estudiantesEnClases.clear();
-                            for (int i = 0; i < estudiantes.size() ; i++) {
-                                if ((!estudiantes.get(i).equals("clase.png"))){
-                                    nombreEstudiante = estudiantes.get(i).replace(".png", "");
-                                    estudiantesEnClases.add(new EstudianteEnClase(nombreEstudiante));
+                            for (int i = 0; i < estudiantes.size(); i++) {
+                                if ((!estudiantes.get(i).equals("clase.png"))) {
+                                    nombreEstudiante = estudiantes.get(i).replaceAll(".*_", "");
+                                    idEstudiante = estudiantes.get(i).replaceAll("_" + nombreEstudiante, "");
+                                    //nombreEstudiante = estudiantes.get(i).replace(".png", "");
+                                    // sacamos el id del estudiante y el nombre
+                                    estudiantesEnClases.add(new EstudianteEnClase(nombreEstudiante, idEstudiante));
                                 }
                             }
 
@@ -248,7 +263,7 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
         finish();
     }
 
-    public void tomarAsistencia(View view){
+    public void tomarAsistencia(View view) {
         Intent intent = new Intent(this, FotoAsistenciaActivity.class);
         intent.putExtra("materia", materia);
         intent.putExtra("codigo", codigo);
@@ -265,10 +280,120 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
 
     }
 
+    private static String validaNombre(String nombre) {
+
+        String primerNombre;
+        String primerApellido;
+
+        List posiciones = new ArrayList();
+
+        for (int i = 0; i < nombre.length(); i++) {
+            char indice = nombre.charAt(i);
+            if (indice == ' ') {
+                posiciones.add(i);
+            }
+        }
+
+        if (posiciones.size() == 3) {
+            primerNombre = nombre.substring(0, (int) posiciones.get(0)).trim();
+            primerApellido = nombre.substring((int) posiciones.get(1), (int) posiciones.get(2)).trim();
+            return nombre = primerNombre + " " + primerApellido;
+        } else if (posiciones.size() == 2) {
+            primerNombre = nombre.substring(0, (int) posiciones.get(0)).trim();
+            primerApellido = nombre.substring((int) posiciones.get(0), (int) posiciones.get(1)).trim();
+            return nombre = primerNombre + " " + primerApellido;
+        } else if (posiciones.size() == 1) {
+            return nombre;
+        }
+
+        return nombre;
+    }
+
+    public void showProgressBar(String mensaje) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        mProgress.setMessage(mensaje);
+        mProgress.show();
+        mProgress.setCanceledOnTouchOutside(false);
+    }
+
+    public void finishProgressBar() {
+        mProgress.dismiss();
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        mProgress.setCanceledOnTouchOutside(true);
+    }
+
     @Override
     public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof AdaptadorEstudiantesEnClases.ViewHolder) {
-            estudiantesAdapter.removeItem(position);
+
+            String nombreEstudiante = estudiantesEnClases.get(rvAlumnosEnClase.getChildAdapterPosition(viewHolder.itemView)).getNombreEstudiante();
+            String idEstudiante = estudiantesEnClases.get(rvAlumnosEnClase.getChildAdapterPosition(viewHolder.itemView)).getIdEstudiante();
+            String nombreCortoEstudiante = validaNombre(nombreUsuario);
+
+            if (compruebaConexion(this)) {
+
+                AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
+                dialogo1.setTitle("Importante");
+                dialogo1.setMessage("¿Realmente deseas eliminar a " + nombreCortoEstudiante + "?");
+                dialogo1.setCancelable(false);
+                dialogo1.setPositiveButton("Confirmar", (dialogo11, id) -> {
+
+                    showProgressBar("Eliminando alumno, espere ...");
+                    estudiantesAdapter.removeItem(position);
+                    // eliminamos la foto de la carpeta de la clase
+                    borrarCarpetaEstudiante(idEstudiante, nombreEstudiante, nombreCortoEstudiante);
+
+                });
+                dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogo1, int id) {
+                        Toast.makeText(getApplicationContext(), "Operación cancelada", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialogo1.show();
+            } else {
+                Toast.makeText(this, "No tiene acceso a internet", Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+
+    private void borrarCarpetaEstudiante(String idEstudiante, String nombreEstudiante, String nombreCortoEstudiante) {
+        storageReference
+                .child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/" + idEstudiante + "_" + nombreEstudiante + "/" + nombreCortoEstudiante + ".png")
+                .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // File deleted successfully
+                // borrar la marca del docente de la clase
+                borrarMarcaEstudiante(idEstudiante);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Uh-oh, an error occurred!
+                finishProgressBar();
+                Toast.makeText(getApplicationContext(), "Ha ocurrido un error, intente mas tarde", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void borrarMarcaEstudiante(String idEstudiante) {
+        DatabaseReference marcaEstudiante = database.getReference().child("ESTUDIANTES").child(idEstudiante).child("CLASES").child(codigo);
+
+        marcaEstudiante.removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        finishProgressBar();
+                        estudiantesEnClases.clear();
+                        buscarAlumnosDataBase();
+                        Toast.makeText(InfoClasesAlumnoActivity.this, "¡Alumno eliminado con exito!", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                finishProgressBar();
+                Toast.makeText(getApplicationContext(), "Ha ocurrido un error, intente mas tarde", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

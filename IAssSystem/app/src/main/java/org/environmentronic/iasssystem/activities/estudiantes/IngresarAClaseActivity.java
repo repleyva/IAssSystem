@@ -309,7 +309,7 @@ public class IngresarAClaseActivity extends AppCompatActivity {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] data = baos.toByteArray();
 
-            UploadTask uploadTask = storageReference.child("DOCENTES/" + idDocente + "/" + idDocente + "_" + nombreDocente + "_" + nombreClase + "." + codigoIng + "/" + nombreCorto + ".png").putBytes(data);
+            UploadTask uploadTask = storageReference.child("DOCENTES/" + idDocente + "/" + idDocente + "_" + nombreDocente + "_" + nombreClase + "." + codigoIng + "/" + idUsuario + "_" + nombreUsuario + "/" + nombreCorto + ".png").putBytes(data);
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {

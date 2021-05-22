@@ -327,7 +327,7 @@ public class VerClasesEstudiantesActivity extends AppCompatActivity implements R
                     showProgressBar("Eliminando clase, espere ...");
                     listaClases.removeItem(posicion);
                     // eliminamos la foto de la carpeta de la clase
-                    storageReference.child("DOCENTES/" + iddocente + "/" + iddocente + "_" + docente + "_" + materia + "." + codigo + "/" + nombreCorto + ".png")
+                    storageReference.child("DOCENTES/" + iddocente + "/" + iddocente + "_" + docente + "_" + materia + "." + codigo + "/" + idUsuario + "_" + nombreUsuario + "/" + nombreCorto + ".png")
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -342,7 +342,7 @@ public class VerClasesEstudiantesActivity extends AppCompatActivity implements R
                                                     clasesEstudiantes.clear();
                                                     finishProgressBar();
                                                     buscarClasesDataBase();
-                                                    Toast.makeText(getApplicationContext(), "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(VerClasesEstudiantesActivity.this, "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                         @Override

@@ -168,23 +168,28 @@ public class InfoClasesEstudianteActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(ListResult listResult) {
 
-                        for (StorageReference item : listResult.getItems()) {
+                        for (StorageReference item : listResult.getPrefixes()) {
                             // All the items under listRef.
                             estudiantes.add(item.getName());
                         }
 
                         estudiantes.remove("clase.png");
+                        estudiantes.remove("FOTO_CLASE");
 
                         if (!estudiantes.isEmpty()) {
 
                             lyprogresoEst.setVisibility(View.GONE);
                             String nombreEstudiante = "";
+                            String idEstudiante = "";
 
                             estudiantesEnClases.clear();
                             for (int i = 0; i < estudiantes.size() ; i++) {
                                 if ((!estudiantes.get(i).equals("clase.png"))){
-                                    nombreEstudiante = estudiantes.get(i).replace(".png", "");
-                                    estudiantesEnClases.add(new EstudianteEnClase(nombreEstudiante));
+                                    nombreEstudiante = estudiantes.get(i).replaceAll(".*_", "");
+                                    idEstudiante = estudiantes.get(i).replaceAll("_" + nombreEstudiante, "");
+                                    //nombreEstudiante = estudiantes.get(i).replace(".png", "");
+                                    // sacamos el id del estudiante y el nombre
+                                    estudiantesEnClases.add(new EstudianteEnClase(nombreEstudiante, idEstudiante));
                                 }
                             }
 

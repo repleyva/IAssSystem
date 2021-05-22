@@ -39,6 +39,16 @@
                 style="@style/viewParent.headerText.NoMode"
                 android:textColor="@color/colorPrimary">
             </TextView>
+
+            <TextView
+                android:id="@+id/idEstudiante"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre del estudiante"
+                android:textSize="15sp"
+                style="@style/viewParent.headerText.NoMode"
+                android:textColor="@color/colorPrimary">
+            </TextView>
         </LinearLayout>
 
     </LinearLayout>
