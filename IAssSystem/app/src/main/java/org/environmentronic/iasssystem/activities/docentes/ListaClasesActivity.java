@@ -41,6 +41,7 @@ import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesDocente;
 import org.environmentronic.iasssystem.adapters.RecyclerItemTouchHelper;
+import org.environmentronic.iasssystem.modulos.Genericos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -274,35 +275,6 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
         finish();
     }
 
-    private static String validaNombre(String nombre) {
-
-        String primerNombre;
-        String primerApellido;
-
-        List posiciones = new ArrayList();
-
-        for (int i = 0; i < nombre.length(); i++) {
-            char indice = nombre.charAt(i);
-            if (indice == ' ') {
-                posiciones.add(i);
-            }
-        }
-
-        if (posiciones.size() == 3) {
-            primerNombre = nombre.substring(0, (int) posiciones.get(0)).trim();
-            primerApellido = nombre.substring((int) posiciones.get(1), (int) posiciones.get(2)).trim();
-            return nombre = primerNombre + " " + primerApellido;
-        } else if (posiciones.size() == 2) {
-            primerNombre = nombre.substring(0, (int) posiciones.get(0)).trim();
-            primerApellido = nombre.substring((int) posiciones.get(0), (int) posiciones.get(1)).trim();
-            return nombre = primerNombre + " " + primerApellido;
-        } else if (posiciones.size() == 1) {
-            return nombre;
-        }
-
-        return nombre;
-    }
-
     @Override
     public void onSwipe(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof AdaptadorClasesDocente.ViewHolder) {
@@ -373,7 +345,7 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
 
                                     for (int i = 0; i < nombreCarpetaEstudiante.size(); i++) {
                                         nombreEstudiantes.add(nombreCarpetaEstudiante.get(i).replaceAll(".*_", ""));
-                                        nombresCortosEstudiantes.add(validaNombre(nombreEstudiantes.get(i)));
+                                        nombresCortosEstudiantes.add(Genericos.validaNombre(nombreEstudiantes.get(i)));
                                         idEstudiantes.add(nombreCarpetaEstudiante.get(i).replaceAll("_" + nombreEstudiantes.get(i), ""));
                                     }
 
@@ -481,7 +453,7 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
                                 finishProgressBar();
                                 clasesDocentes.clear();
                                 buscarClasesDataBaseDocente();
-                                Toast.makeText(ListaClasesActivity.this, "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(ListaClasesActivity.this, "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {

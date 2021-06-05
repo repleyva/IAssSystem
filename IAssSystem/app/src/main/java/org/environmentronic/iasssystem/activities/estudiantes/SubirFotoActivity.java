@@ -3,7 +3,6 @@ package org.environmentronic.iasssystem.activities.estudiantes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -15,7 +14,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,19 +24,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
+import org.environmentronic.iasssystem.modulos.Genericos;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SubirFotoActivity extends AppCompatActivity {
 
@@ -87,6 +82,9 @@ public class SubirFotoActivity extends AppCompatActivity {
 
         idUsuario = getIntent().getStringExtra("idusuario");
         nombreUsuario = getIntent().getStringExtra("nomusuario");
+
+        //nombreCorto = validaNombre(nombreUsuario);
+        nombreCorto = Genericos.validaNombre(nombreUsuario);
 
         animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
         animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
@@ -151,7 +149,6 @@ public class SubirFotoActivity extends AppCompatActivity {
 
     public void setBtnEliminarFotobbdd(View view) {
 
-        nombreCorto = validaNombre(nombreUsuario);
         if (compruebaConexion(this)) {
 
             // ------------------------------- borramos la foto -----------------------------
@@ -199,7 +196,6 @@ public class SubirFotoActivity extends AppCompatActivity {
     public void subirFotoFirebase(View view) {
 
         boolean coneccion = compruebaConexion(this);
-        nombreCorto = validaNombre(nombreUsuario);
 
         if (imageBitmap != null) {
             if (coneccion) {
@@ -236,35 +232,6 @@ public class SubirFotoActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Debe tomar una foto", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private static String validaNombre(String nombre) {
-
-        String primerNombre;
-        String primerApellido;
-
-        List posiciones = new ArrayList();
-
-        for (int i = 0; i < nombre.length(); i++) {
-            char indice = nombre.charAt(i);
-            if (indice == ' ') {
-                posiciones.add(i);
-            }
-        }
-
-        if (posiciones.size() == 3) {
-            primerNombre = nombre.substring(0, (int) posiciones.get(0)).trim();
-            primerApellido = nombre.substring((int) posiciones.get(1), (int) posiciones.get(2)).trim();
-            return nombre = primerNombre + " " + primerApellido;
-        } else if (posiciones.size() == 2) {
-            primerNombre = nombre.substring(0, (int) posiciones.get(0)).trim();
-            primerApellido = nombre.substring((int) posiciones.get(0), (int) posiciones.get(1)).trim();
-            return nombre = primerNombre + " " + primerApellido;
-        } else if (posiciones.size() == 1) {
-            return nombre;
-        }
-
-        return nombre;
     }
 
     public void onMainClick(View view) {

@@ -33,6 +33,7 @@ import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import org.environmentronic.iasssystem.R;
+import org.environmentronic.iasssystem.activities.docentes.ListaClasesActivity;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
 import org.environmentronic.iasssystem.adapters.AdaptadorEstudiantesEnClases;
 
@@ -84,6 +85,9 @@ public class InfoClasesEstudianteActivity extends AppCompatActivity {
     private String codigo;
     private String idDocente;
 
+    private String nombreUsuario;
+    private String idUsuario;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +106,8 @@ public class InfoClasesEstudianteActivity extends AppCompatActivity {
         materia = getIntent().getStringExtra("materia");
         codigo = getIntent().getStringExtra("codigo");
         idDocente = getIntent().getStringExtra("iddocente");
+        idUsuario = getIntent().getStringExtra("idusuario");
+        nombreUsuario = getIntent().getStringExtra("nomusuario");
 
         tvClase.setText("Materia: " + materia);
         tvDocente.setText("Docente: " + docente);
@@ -220,7 +226,11 @@ public class InfoClasesEstudianteActivity extends AppCompatActivity {
     }
 
     public void onMainClick(View view) {
-        startActivity(new Intent(this, MainActivity.class));
+        Intent intent = new Intent(this, VerClasesEstudiantesActivity.class);
+        intent.putExtra("idusuario", idUsuario);
+        intent.putExtra("nomusuario", nombreUsuario);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.stay);
         finish();
     }

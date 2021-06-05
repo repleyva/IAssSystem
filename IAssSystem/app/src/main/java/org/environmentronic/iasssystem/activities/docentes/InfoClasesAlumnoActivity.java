@@ -37,14 +37,14 @@ import com.google.firebase.storage.StorageReference;
 
 import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.estudiantes.EstudianteEnClase;
-import org.environmentronic.iasssystem.activities.estudiantes.VerClasesEstudiantesActivity;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
-import org.environmentronic.iasssystem.adapters.AdaptadorClasesEstudiante;
 import org.environmentronic.iasssystem.adapters.AdaptadorEstudiantesEnClases;
 import org.environmentronic.iasssystem.adapters.RecyclerItemTouchHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.environmentronic.iasssystem.modulos.Genericos.validaNombre;
 
 public class InfoClasesAlumnoActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
@@ -258,7 +258,11 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
     }
 
     public void onMainClick(View view) {
-        startActivity(new Intent(this, MainActivity.class));
+        Intent intent = new Intent(this, ListaClasesActivity.class);
+        intent.putExtra("idusuario", idUsuario);
+        intent.putExtra("nomusuario", nombreUsuario);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.stay);
         finish();
     }
@@ -278,35 +282,6 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
     @Override
     public void onBackPressed() {
 
-    }
-
-    private static String validaNombre(String nombre) {
-
-        String primerNombre;
-        String primerApellido;
-
-        List posiciones = new ArrayList();
-
-        for (int i = 0; i < nombre.length(); i++) {
-            char indice = nombre.charAt(i);
-            if (indice == ' ') {
-                posiciones.add(i);
-            }
-        }
-
-        if (posiciones.size() == 3) {
-            primerNombre = nombre.substring(0, (int) posiciones.get(0)).trim();
-            primerApellido = nombre.substring((int) posiciones.get(1), (int) posiciones.get(2)).trim();
-            return nombre = primerNombre + " " + primerApellido;
-        } else if (posiciones.size() == 2) {
-            primerNombre = nombre.substring(0, (int) posiciones.get(0)).trim();
-            primerApellido = nombre.substring((int) posiciones.get(0), (int) posiciones.get(1)).trim();
-            return nombre = primerNombre + " " + primerApellido;
-        } else if (posiciones.size() == 1) {
-            return nombre;
-        }
-
-        return nombre;
     }
 
     public void showProgressBar(String mensaje) {
