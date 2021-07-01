@@ -31,20 +31,31 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
 import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
 import org.environmentronic.iasssystem.modulos.Genericos;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+
+import io.grpc.Compressor;
+
+import static java.security.AccessController.getContext;
 
 public class SubirFotoActivity extends AppCompatActivity {
 
@@ -73,6 +84,7 @@ public class SubirFotoActivity extends AppCompatActivity {
     private ProgressDialog mProgress;
     private String currentPhotoPath = null;
     private static final int REQUEST_TAKE_PHOTO = 1;
+    private Bitmap rotatedBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,12 +158,11 @@ public class SubirFotoActivity extends AppCompatActivity {
     // crea una imagen
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = nombreCorto;
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".png",         /* suffix */
                 storageDir      /* directory */
         );
 
@@ -166,37 +177,41 @@ public class SubirFotoActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imageBitmap = BitmapFactory.decodeFile(currentPhotoPath);
-            ExifInterface ei = null;
-            try {
-                ei = new ExifInterface(currentPhotoPath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                    ExifInterface.ORIENTATION_UNDEFINED);
-
-            Bitmap rotatedBitmap = null;
-            switch(orientation) {
-
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    rotatedBitmap = rotateImage(imageBitmap, 90);
-                    break;
-
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    rotatedBitmap = rotateImage(imageBitmap, 180);
-                    break;
-
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    rotatedBitmap = rotateImage(imageBitmap, 270);
-                    break;
-
-                case ExifInterface.ORIENTATION_NORMAL:
-                default:
-                    rotatedBitmap = imageBitmap;
-            }
-
+            rotatedBitmap = rotarImagen(imageBitmap);
             fotoTomada.setImageBitmap(rotatedBitmap);
         }
+    }
+
+    public Bitmap rotarImagen(Bitmap imageBitmap) {
+        ExifInterface ei = null;
+        try {
+            ei = new ExifInterface(currentPhotoPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED);
+
+        Bitmap rotatedBitmap = null;
+        switch (orientation) {
+
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotatedBitmap = rotateImage(imageBitmap, 90);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotatedBitmap = rotateImage(imageBitmap, 180);
+                break;
+
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotatedBitmap = rotateImage(imageBitmap, 270);
+                break;
+
+            case ExifInterface.ORIENTATION_NORMAL:
+            default:
+                rotatedBitmap = imageBitmap;
+        }
+        return rotatedBitmap;
     }
 
     // la foto rota, entonces
@@ -207,6 +222,7 @@ public class SubirFotoActivity extends AppCompatActivity {
                 matrix, true);
     }
 
+    // borrar foto local
     public void setBtnBorrarFoto(View view) {
 
         if (imageBitmap != null) {
@@ -216,8 +232,19 @@ public class SubirFotoActivity extends AppCompatActivity {
             dialogo1.setCancelable(false);
             dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-                    fotoTomada.setImageResource(R.drawable.ic_register_hero);
-                    imageBitmap = null;
+
+                    File dir = new File(Environment.getExternalStorageDirectory() + "/Android/data/org.environmentronic.iasssystem/files/Pictures");
+                    //comprueba si es directorio.
+                    if (dir.isDirectory()) {
+                        //obtiene un listado de los archivos contenidos en el directorio.
+                        String[] hijos = dir.list();
+                        //Elimina los archivos contenidos.
+                        for (int i = 0; i < hijos.length; i++) {
+                            new File(dir, hijos[i]).delete();
+                        }
+                        fotoTomada.setImageResource(R.drawable.ic_register_hero);
+                        imageBitmap = null;
+                    }
                 }
             });
             dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -277,22 +304,30 @@ public class SubirFotoActivity extends AppCompatActivity {
         }
     }
 
-    public void subirFotoFirebase(View view) {
+    public void subirFotoFirebase(View view) throws IOException {
 
         boolean coneccion = compruebaConexion(this);
 
         if (imageBitmap != null) {
             if (coneccion) {
                 showProgressBar("Subiendo foto, espere ...");
-                // Get the data from an ImageView as bytes
-                fotoTomada.setDrawingCacheEnabled(true);
-                fotoTomada.buildDrawingCache();
-                Bitmap bitmap = ((BitmapDrawable) fotoTomada.getDrawable()).getBitmap();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] data = baos.toByteArray();
 
-                UploadTask uploadTask = storageReference.child("ESTUDIANTES/" + idUsuario + "/" + nombreCorto + ".png").putBytes(data);
+                Uri file = Uri.fromFile(new File(currentPhotoPath));
+                InputStream imageStream = null;
+                try {
+                    imageStream = getApplication().getContentResolver().openInputStream(file);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                Bitmap original = BitmapFactory.decodeStream(imageStream);
+                //Bitmap bmp = getResizedBitmap(original, 500);
+                Bitmap rotateBitmap = rotateImageIfRequired(getApplicationContext(), original, file);
+                Bitmap bmp = getResizedBitmap(rotateBitmap, 800);
+
+                String path = MediaStore.Images.Media.insertImage(getApplication().getContentResolver(), bmp, String.valueOf(System.currentTimeMillis()), null);
+                Uri imagen = Uri.parse(path);
+
+                UploadTask uploadTask = storageReference.child("ESTUDIANTES/" + idUsuario + "/" + nombreCorto + ".png").putFile(imagen);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
@@ -315,6 +350,47 @@ public class SubirFotoActivity extends AppCompatActivity {
             }
         } else {
             Toast.makeText(this, "Debe tomar una foto", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
+
+    }
+
+    private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
+
+        InputStream input = context.getContentResolver().openInputStream(selectedImage);
+        ExifInterface ei;
+        if (Build.VERSION.SDK_INT > 23)
+            ei = new ExifInterface(input);
+        else
+            ei = new ExifInterface(selectedImage.getPath());
+
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return rotateImage(img, 90);
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return rotateImage(img, 180);
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return rotateImage(img, 270);
+            default:
+                return img;
         }
     }
 
