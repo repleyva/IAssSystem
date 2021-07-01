@@ -23,14 +23,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IAssSystem"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.docentes.ListaClasesActivity"
-            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
+        <activity
+            android:name=".activities.docentes.ListaClasesActivity"
+            android:theme="@style/Theme.IAssSystem.NoActionBar" />
         <activity
             android:name=".activities.docentes.CrearClaseActivity"
-            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
+            android:theme="@style/Theme.IAssSystem.NoActionBar" />
         <activity
             android:name=".activities.estudiantes.IngresarAClaseActivity"
-            android:theme="@style/Theme.IAssSystem.NoActionBar"></activity>
+            android:theme="@style/Theme.IAssSystem.NoActionBar" />
         <activity
             android:name=".activities.estudiantes.VerClasesEstudiantesActivity"
             android:theme="@style/Theme.IAssSystem.NoActionBar" />
@@ -64,6 +65,15 @@
         <activity
             android:name=".activities.principales.LoginActivity"
             android:theme="@style/Theme.IAssSystem.NoActionBar" />
+        <provider
+            android:authorities="org.environmentronic.iasssystem.fileprovider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
     </application>
 
 </manifest>

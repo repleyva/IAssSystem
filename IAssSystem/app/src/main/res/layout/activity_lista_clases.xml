@@ -8,6 +8,8 @@
     tools:context=".activities.docentes.ListaClasesActivity">
 
     <!-- ____________ Scroll Lista de Clases ________________ -->
+
+
     <ScrollView
         android:id="@+id/scrollListaClases"
         android:layout_width="match_parent"
@@ -19,9 +21,9 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/cabeceraListaClases"
@@ -80,12 +82,12 @@
 
             <LinearLayout
                 android:id="@+id/lyprogreso_docente"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tvCargandoClases_docente"
@@ -96,41 +98,39 @@
                 </TextView>
 
                 <ProgressBar
-                    android:paddingTop="20dp"
                     android:id="@+id/cprogress_docente"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:progressDrawable="@drawable/circular_bar"
                     android:background="@drawable/circular_bar"
-                    android:progress="50">
+                    android:paddingTop="20dp"
+                    android:progress="50"
+                    android:progressDrawable="@drawable/circular_bar">
 
                 </ProgressBar>
 
             </LinearLayout>
 
             <TextView
-                android:visibility="gone"
-                android:gravity="center"
-                android:layout_gravity="center"
                 android:id="@+id/pruebaClasesDocente"
+                style="@style/viewParent.headerText.NoMode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/viewParent.headerText.NoMode"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text=""
                 android:textColor="@color/colorAccent"
-                android:text="">
-            </TextView>
+                android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:visibility="gone"
                 android:id="@+id/rvClasesDocente"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
             </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
 
     </ScrollView>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/barraFoto"
