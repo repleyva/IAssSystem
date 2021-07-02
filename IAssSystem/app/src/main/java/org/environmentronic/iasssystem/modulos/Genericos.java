@@ -1,5 +1,10 @@
 package org.environmentronic.iasssystem.modulos;
 
+import android.os.Environment;
+
+import org.environmentronic.iasssystem.R;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,5 +40,20 @@ public class Genericos {
         }
 
         return nombre;
+    }
+
+    public static boolean borrarCache() {
+        File dir = new File(Environment.getExternalStorageDirectory() + "/Android/data/org.environmentronic.iasssystem/files/Pictures");
+        //comprueba si es directorio.
+        if (dir.isDirectory()) {
+            //obtiene un listado de los archivos contenidos en el directorio.
+            String[] hijos = dir.list();
+            //Elimina los archivos contenidos.
+            for (int i = 0; i < hijos.length; i++) {
+                new File(dir, hijos[i]).delete();
+            }
+            return true;
+        }
+        return false;
     }
 }

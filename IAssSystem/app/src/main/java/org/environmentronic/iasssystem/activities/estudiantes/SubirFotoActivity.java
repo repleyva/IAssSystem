@@ -232,16 +232,9 @@ public class SubirFotoActivity extends AppCompatActivity {
             dialogo1.setCancelable(false);
             dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-
-                    File dir = new File(Environment.getExternalStorageDirectory() + "/Android/data/org.environmentronic.iasssystem/files/Pictures");
-                    //comprueba si es directorio.
-                    if (dir.isDirectory()) {
-                        //obtiene un listado de los archivos contenidos en el directorio.
-                        String[] hijos = dir.list();
-                        //Elimina los archivos contenidos.
-                        for (int i = 0; i < hijos.length; i++) {
-                            new File(dir, hijos[i]).delete();
-                        }
+                    
+                    boolean borrado = Genericos.borrarCache();
+                    if (borrado) {
                         fotoTomada.setImageResource(R.drawable.ic_register_hero);
                         imageBitmap = null;
                     }

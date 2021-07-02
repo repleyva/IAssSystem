@@ -84,6 +84,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+/* TODO: 2/07/2021
+ *   Hasta este momento toda la funcionalidad de la aplicacion se encuentra activa
+ * */
+
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private ImageView photoPerfil;

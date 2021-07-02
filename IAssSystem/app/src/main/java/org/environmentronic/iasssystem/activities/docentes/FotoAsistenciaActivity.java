@@ -39,6 +39,7 @@ import com.google.firebase.storage.UploadTask;
 
 import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
+import org.environmentronic.iasssystem.modulos.Genericos;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -162,7 +163,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             imageBitmap = BitmapFactory.decodeFile(currentPhotoPath);
             rotatedBitmap = rotarImagen(imageBitmap);
-            photoAsistencia.setImageBitmap(imageBitmap);
+            photoAsistencia.setImageBitmap(rotatedBitmap);
         }
     }
 
@@ -296,7 +297,6 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
         }
     }
 
-
     public void setBtnBorrarFotoD(View view) {
 
         if (imageBitmap != null) {
@@ -306,8 +306,11 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
             dialogo1.setCancelable(false);
             dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-                    photoAsistencia.setImageResource(R.drawable.ic_register_hero);
-                    imageBitmap = null;
+                    boolean borrado = Genericos.borrarCache();
+                    if (borrado) {
+                        photoAsistencia.setImageResource(R.drawable.ic_register_hero);
+                        imageBitmap = null;
+                    }
                 }
             });
             dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {

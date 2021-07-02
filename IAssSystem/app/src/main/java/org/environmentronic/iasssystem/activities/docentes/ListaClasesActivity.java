@@ -435,36 +435,41 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot id :
-                        dataSnapshot.getChildren()) {
-                    idEstudiantes.add(id.getKey());
-                }
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot id :
+                            dataSnapshot.getChildren()) {
+                        idEstudiantes.add(id.getKey());
+                    }
 
-                for (int i = 0; i < idEstudiantes.size(); i++) {
-                    int finalI = i;
-                    marcaEstudiante
-                            .child(idEstudiantes.get(i))
-                            .child("CLASES")
-                            .child(codigo)
-                            .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            if ((finalI == (idEstudiantes.size() - 1))) {
-                                finishProgressBar();
-                                clasesDocentes.clear();
-                                buscarClasesDataBaseDocente();
-                                //Toast.makeText(ListaClasesActivity.this, "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
+                    for (int i = 0; i < idEstudiantes.size(); i++) {
+                        int finalI = i;
+                        marcaEstudiante
+                                .child(idEstudiantes.get(i))
+                                .child("CLASES")
+                                .child(codigo)
+                                .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                if ((finalI == (idEstudiantes.size() - 1))) {
+                                    finishProgressBar();
+                                    clasesDocentes.clear();
+                                    buscarClasesDataBaseDocente();
+                                    //Toast.makeText(ListaClasesActivity.this, "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            finishProgressBar();
-                        }
-                    });
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                finishProgressBar();
+                            }
+                        });
+                    }
+                } else {
+                    finishProgressBar();
+                    clasesDocentes.clear();
+                    buscarClasesDataBaseDocente();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError error) {
                 finishProgressBar();
