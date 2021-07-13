@@ -36,6 +36,7 @@ import com.google.firebase.storage.UploadTask;
 
 import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
+import org.environmentronic.iasssystem.modulos.Genericos;
 
 import java.io.ByteArrayOutputStream;
 
@@ -120,7 +121,9 @@ public class CrearClaseActivity extends AppCompatActivity {
 
         if (compruebaConexion(this)) {
             String nClase = editTextNombreClase.getText().toString().toUpperCase();
+            nClase = Genericos.cleanString(nClase);
             String nCodigo = editTextcodigoClase.getText().toString().toUpperCase();
+            nCodigo = Genericos.cleanString(nCodigo);
 
             if ((nClase.isEmpty()) || (nCodigo.isEmpty())) {
                 Toast.makeText(this, "Debe ingresar los parámetros requeridos", Toast.LENGTH_SHORT).show();
@@ -137,6 +140,8 @@ public class CrearClaseActivity extends AppCompatActivity {
                 byte[] data = baos.toByteArray();
 
                 UploadTask uploadTask = storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + nClase + "." + nCodigo + "/" + "clase.png").putBytes(data);
+                String finalNClase = nClase;
+                String finalNCodigo = nCodigo;
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
@@ -149,15 +154,15 @@ public class CrearClaseActivity extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
                         fotoClase.setImageResource(R.drawable.ic_register_hero);
-                        tvNClase.setText(nClase);
-                        tvNCodigo.setText(nCodigo);
+                        tvNClase.setText(finalNClase);
+                        tvNCodigo.setText(finalNCodigo);
 
                         DatabaseReference myRef = database.getReference().child("DOCENTES");
 
                         myRef.child(idUsuario)
                                 .child("CLASES")
-                                .child(nCodigo)
-                                .setValue(idUsuario + "_" + nombreUsuario + "_" + nClase + "." + nCodigo);
+                                .child(finalNCodigo)
+                                .setValue(idUsuario + "_" + nombreUsuario + "_" + finalNClase + "." + finalNCodigo);
 
                         finishProgressBar();
                         new Handler().postDelayed(new Runnable() {

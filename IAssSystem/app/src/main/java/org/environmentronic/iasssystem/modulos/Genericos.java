@@ -5,6 +5,7 @@ import android.os.Environment;
 import org.environmentronic.iasssystem.R;
 
 import java.io.File;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,5 +56,11 @@ public class Genericos {
             return true;
         }
         return false;
+    }
+
+    public static String cleanString(String texto) {
+        texto = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        texto = texto.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return texto;
     }
 }
