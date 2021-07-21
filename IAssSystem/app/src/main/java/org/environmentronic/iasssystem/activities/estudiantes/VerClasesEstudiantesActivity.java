@@ -303,7 +303,7 @@ public class VerClasesEstudiantesActivity extends AppCompatActivity implements R
                     showProgressBar("Eliminando clase, espere ...");
                     listaClases.removeItem(posicion);
                     // eliminamos la foto de la carpeta de la clase
-                    storageReference.child("DOCENTES/" + iddocente + "/" + iddocente + "_" + docente + "_" + materia + "." + codigo + "/" + idUsuario + "_" + nombreUsuario + "/" + nombreCorto + ".png")
+                    storageReference.child("DOCENTES/" + iddocente + "/" + iddocente + "_" + docente + "_" + materia + "." + codigo + "/ESTUDIANTES/" + idUsuario + "_" + nombreUsuario + "/" + nombreCorto + ".png")
                             .delete()
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override

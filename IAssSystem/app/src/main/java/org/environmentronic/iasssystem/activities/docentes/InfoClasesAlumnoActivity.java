@@ -176,7 +176,7 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
         // Create a Cloud Storage reference from the app
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         storageReference
-                .child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/")
+                .child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/ESTUDIANTES/")
                 .listAll()
                 .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
@@ -333,7 +333,7 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
 
     private void borrarCarpetaEstudiante(String idEstudiante, String nombreEstudiante, String nombreCortoEstudiante) {
         storageReference
-                .child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/" + idEstudiante + "_" + nombreEstudiante + "/" + nombreCortoEstudiante + ".png")
+                .child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/ESTUDIANTES/" + idEstudiante + "_" + nombreEstudiante + "/" + nombreCortoEstudiante + ".png")
                 .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

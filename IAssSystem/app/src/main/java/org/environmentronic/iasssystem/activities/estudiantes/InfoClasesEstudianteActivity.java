@@ -168,7 +168,7 @@ public class InfoClasesEstudianteActivity extends AppCompatActivity {
         // Create a Cloud Storage reference from the app
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         storageReference
-                .child("DOCENTES/" + idDocente + "/" + idDocente + "_" + docente + "_" + materia + "." + codigo + "/")
+                .child("DOCENTES/" + idDocente + "/" + idDocente + "_" + docente + "_" + materia + "." + codigo + "/ESTUDIANTES/")
                 .listAll()
                 .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override

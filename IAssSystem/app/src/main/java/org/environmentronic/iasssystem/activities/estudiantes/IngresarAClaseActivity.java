@@ -9,13 +9,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -28,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
@@ -45,6 +49,11 @@ import org.environmentronic.iasssystem.activities.principales.MainActivity;
 import org.environmentronic.iasssystem.modulos.Genericos;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -282,7 +291,7 @@ public class IngresarAClaseActivity extends AppCompatActivity {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                subirFotoClase(nombreDocente, nombreClase, codigoIng, idDocente);
+                                subirFotoClase(nombreDocente, nombreClase, codigoIng, idDocente, uri);
                             }
                         }, 2000);
 
@@ -297,13 +306,13 @@ public class IngresarAClaseActivity extends AppCompatActivity {
                         "reconocimiento accediendo al boton de ingresar como estudiante.");
             }
         });
-
-
     }
 
-    private void subirFotoClase(String nombreDocente, String nombreClase, String codigoIng, String idDocente) {
+    private void subirFotoClase(String nombreDocente, String nombreClase, String codigoIng, String idDocente, Uri fotoUri){
+        boolean coneccion = compruebaConexion(getApplicationContext());
+        if (coneccion) {
+            if (photoBBDDIngClases != null) {
 
-        if (photoBBDDIngClases != null) {
             // Get the data from an ImageView as bytes
             photoBBDDIngClases.setDrawingCacheEnabled(true);
             photoBBDDIngClases.buildDrawingCache();
@@ -312,43 +321,46 @@ public class IngresarAClaseActivity extends AppCompatActivity {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] data = baos.toByteArray();
 
-            UploadTask uploadTask = storageReference.child("DOCENTES/" + idDocente + "/" + idDocente + "_" + nombreDocente + "_" + nombreClase + "." + codigoIng + "/" + idUsuario + "_" + nombreUsuario + "/" + nombreCorto + ".png").putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                    finishProgressBar();
-                    prueba.setText("Ha ocurrido un error, revise su conexión a internet o intentelo de nuevo mas tarde");
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                UploadTask uploadTask = storageReference.child("DOCENTES/" + idDocente + "/" + idDocente + "_" + nombreDocente + "_" + nombreClase + "." + codigoIng + "/ESTUDIANTES/" + idUsuario + "_" + nombreUsuario + "/" + nombreCorto + ".png").putBytes(data);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        finishProgressBar();
+                        prueba.setText("Ha ocurrido un error, revise su conexión a internet o intentelo de nuevo mas tarde");
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
 
-                    DatabaseReference myRef = database.getReference().child("ESTUDIANTES");
+                        DatabaseReference myRef = database.getReference().child("ESTUDIANTES");
 
-                    myRef.child(idUsuario)
-                            .child("CLASES")
-                            .child(codigoIng)
-                            .setValue(idDocente + "_" + nombreDocente + "_" + nombreClase + "." + codigoIng);
+                        myRef.child(idUsuario)
+                                .child("CLASES")
+                                .child(codigoIng)
+                                .setValue(idDocente + "_" + nombreDocente + "_" + nombreClase + "." + codigoIng);
 
-                    finishProgressBar();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            datosClase.setVisibility(View.VISIBLE);
-                            datosClase.setAnimation(animation_down);
-                        }
-                    }, acond1);
+                        finishProgressBar();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                datosClase.setVisibility(View.VISIBLE);
+                                datosClase.setAnimation(animation_down);
+                            }
+                        }, acond1);
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            editTextcodigo.setText("");
-                        }
-                    }, acond2);
-                }
-            });
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                editTextcodigo.setText("");
+                            }
+                        }, acond2);
+                    }
+                });
+            }
+        } else {
+            Toast.makeText(this, "Debes tener acceso a internet", Toast.LENGTH_SHORT).show();
         }
     }
 
