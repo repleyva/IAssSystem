@@ -40,6 +40,7 @@ import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesEstudiante;
 import org.environmentronic.iasssystem.adapters.RecyclerItemTouchHelper;
+import org.environmentronic.iasssystem.modulos.ClasesEstudiante;
 import org.environmentronic.iasssystem.modulos.Genericos;
 
 import java.util.ArrayList;

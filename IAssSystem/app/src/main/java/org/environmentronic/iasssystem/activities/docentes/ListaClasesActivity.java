@@ -41,10 +41,14 @@ import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesDocente;
 import org.environmentronic.iasssystem.adapters.RecyclerItemTouchHelper;
+import org.environmentronic.iasssystem.modulos.ClasesDocente;
 import org.environmentronic.iasssystem.modulos.Genericos;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+// TODO: 25/07/2021 Falta validar que elimine la clase con la carpeta de estudiantes y la de FOTO_CLASE junstas 
 
 public class ListaClasesActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
@@ -328,16 +332,59 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
                                         //fotos.add(item.getName());
                                     }
 
-                                    ArrayList<String> nombreCarpetaEstudiante = new ArrayList();
+                                    for (StorageReference fixed :
+                                            listResult.getPrefixes()) {
+                                        fixed.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                                            @Override
+                                            public void onSuccess(ListResult listResult) {
+                                                for (StorageReference estudiante :
+                                                        listResult.getPrefixes()) {
+                                                    estudiante.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                                                        @Override
+                                                        public void onSuccess(ListResult listResult) {
+                                                            for (StorageReference item :
+                                                                    listResult.getItems()) {
+                                                                item.delete()
+                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                            @Override
+                                                                            public void onSuccess(Void unused) {
+
+                                                                            }
+                                                                        })
+                                                                        .addOnFailureListener(new OnFailureListener() {
+                                                                            @Override
+                                                                            public void onFailure(@NonNull Exception e) {
+
+                                                                            }
+                                                                        });
+                                                            }
+
+
+                                                        }
+                                                    });
+                                                }
+                                                borrarCarpetaAsistencia(idusuario, materia, codigo, miMarca);
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                            }
+                                        });
+                                    }
+
+                                    borrarCarpetaAsistencia(idusuario, materia, codigo, miMarca);
+
+                                    /*ArrayList<String> nombreCarpetaEstudiante = new ArrayList();
                                     ArrayList<String> idEstudiantes = new ArrayList();
                                     ArrayList<String> nombreEstudiantes = new ArrayList();
                                     ArrayList<String> nombresCortosEstudiantes = new ArrayList();
                                     nombreCarpetaEstudiante.clear();
                                     idEstudiantes.clear();
                                     nombreEstudiantes.clear();
-                                    nombresCortosEstudiantes.clear();
+                                    nombresCortosEstudiantes.clear();*/
 
-                                    storageReference
+                                    /*storageReference
                                             .child("DOCENTES/" + idusuario + "/" + idusuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/ESTUDIANTES/")
                                             .listAll()
                                             .addOnSuccessListener(new OnSuccessListener<ListResult>() {
@@ -381,7 +428,7 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
                                                     finishProgressBar();
                                                     Toast.makeText(getApplicationContext(), "Error al eliminar la clase: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
-                                            });
+                                            });*/
 
                                 }
                             })
@@ -422,6 +469,7 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
                 // Uh-oh, an error occurred!
                 // borrar la marca del docente de la clase
                 borrarMarcaDocente(miMarca, codigo);
+                //Toast.makeText(ListaClasesActivity.this, "Error", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -431,6 +479,7 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        //finishProgressBar();
                         borrarMarcaEstudiante(codigo);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -444,55 +493,64 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
     }
 
     private void borrarMarcaEstudiante(String codigo) {
-        ArrayList<String> idEstudiantes = new ArrayList();
-        idEstudiantes.clear();
-        DatabaseReference marcaEstudiante = database.getReference().child("ESTUDIANTES");
+        try {
+            ArrayList<String> idEstudiantes = new ArrayList();
+            idEstudiantes.clear();
+            DatabaseReference marcaEstudiante = database.getReference().child("ESTUDIANTES");
 
-        // Read from the database
-        marcaEstudiante.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            // Read from the database
+            marcaEstudiante.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot id :
-                            dataSnapshot.getChildren()) {
-                        idEstudiantes.add(id.getKey());
-                    }
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot id :
+                                dataSnapshot.getChildren()) {
+                            idEstudiantes.add(id.getKey());
+                        }
 
-                    for (int i = 0; i < idEstudiantes.size(); i++) {
-                        int finalI = i;
-                        marcaEstudiante
-                                .child(idEstudiantes.get(i))
-                                .child("CLASES")
-                                .child(codigo)
-                                .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                if ((finalI == (idEstudiantes.size() - 1))) {
+                        for (int i = 0; i < idEstudiantes.size(); i++) {
+                            int finalI = i;
+                            marcaEstudiante
+                                    .child(idEstudiantes.get(i))
+                                    .child("CLASES")
+                                    .child(codigo)
+                                    .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    if ((finalI == (idEstudiantes.size() - 1))) {
+                                        finishProgressBar();
+                                        clasesDocentes.clear();
+                                        //lyprogreso_docente.setVisibility(View.VISIBLE);
+                                        buscarClasesDataBaseDocente();
+                                    }
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
                                     finishProgressBar();
                                     clasesDocentes.clear();
                                     buscarClasesDataBaseDocente();
-                                    //Toast.makeText(ListaClasesActivity.this, "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                finishProgressBar();
-                            }
-                        });
+                            });
+                        }
+                    } else {
+                        finishProgressBar();
+                        clasesDocentes.clear();
+                        //lyprogreso_docente.setVisibility(View.VISIBLE);
+                        buscarClasesDataBaseDocente();
                     }
-                } else {
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
                     finishProgressBar();
                     clasesDocentes.clear();
                     buscarClasesDataBaseDocente();
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                finishProgressBar();
-            }
-        });
+            });
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }

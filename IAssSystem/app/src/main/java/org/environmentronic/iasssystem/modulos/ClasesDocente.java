@@ -1,4 +1,4 @@
-package org.environmentronic.iasssystem.activities.docentes;
+package org.environmentronic.iasssystem.modulos;
 
 public class ClasesDocente {
 
