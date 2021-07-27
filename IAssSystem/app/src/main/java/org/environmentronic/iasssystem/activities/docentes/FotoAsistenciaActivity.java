@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -346,8 +347,40 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
                     showProgressBar("Estamos eliminando la foto, espere ...");
 
                     // Delete the file
-                    storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/" + "FOTO_CLASE/" + "asistencia.png")
-                            .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/" + "FOTO_CLASE/")
+                            .listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                        @Override
+                        public void onSuccess(ListResult listResult) {
+                            for (StorageReference fotoAsistencia :
+                                    listResult.getItems()) {
+                                fotoAsistencia.delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                            }
+                                        });
+                            }
+
+                            finishProgressBar();
+                            Toast.makeText(getApplicationContext(), "La foto fué borrada con éxito", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            finishProgressBar();
+                            Toast.makeText(getApplicationContext(), "Si no has tomado una foto de asistencia, no tienes nada que borrar.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+                /*.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             // File deleted successfully
@@ -361,7 +394,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
                             finishProgressBar();
                             Toast.makeText(getApplicationContext(), "Si no has tomado una foto de asistencia, no tienes nada que borrar.", Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    });*/
                 }
             });
             dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
