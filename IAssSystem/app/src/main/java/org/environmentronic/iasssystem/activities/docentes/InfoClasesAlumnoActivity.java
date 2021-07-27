@@ -46,8 +46,6 @@ import java.util.List;
 
 import static org.environmentronic.iasssystem.modulos.Genericos.validaNombre;
 
-// TODO: 25/07/2021 Falta validar que elimine el alumno sin problemas 
-
 public class InfoClasesAlumnoActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private TextView tvClase, tvCodigo, tvAlumnosReg;

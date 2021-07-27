@@ -48,8 +48,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-// TODO: 25/07/2021 Falta validar que elimine la clase con la carpeta de estudiantes y la de FOTO_CLASE junstas 
-
 public class ListaClasesActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
 
     private ProgressDialog mProgress;
@@ -455,8 +453,38 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
     private void borrarCarpetaAsistencia(String idusuario, String materia, String codigo, DatabaseReference miMarca) {
         // borramos la carpeta
         storageReference
-                .child("DOCENTES/" + idusuario + "/" + idusuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/FOTO_CLASE/asistencia.png")
-                .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                .child("DOCENTES/" + idusuario + "/" + idusuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/FOTO_CLASE/")
+                .listAll()
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        for (StorageReference fotosAsistencia:
+                             listResult.getItems()) {
+                            fotosAsistencia.delete()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+
+                                        }
+                                    });
+                        }
+                        borrarMarcaDocente(miMarca, codigo);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        borrarMarcaDocente(miMarca, codigo);
+                    }
+                });
+
+                /*.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 // File deleted successfully
@@ -471,7 +499,7 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
                 borrarMarcaDocente(miMarca, codigo);
                 //Toast.makeText(ListaClasesActivity.this, "Error", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     private void borrarMarcaDocente(DatabaseReference miMarca, String codigo) {

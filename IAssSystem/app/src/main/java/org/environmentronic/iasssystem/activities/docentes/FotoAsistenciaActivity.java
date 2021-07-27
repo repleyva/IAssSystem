@@ -1,6 +1,7 @@
 package org.environmentronic.iasssystem.activities.docentes;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
@@ -46,6 +47,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
 
 public class FotoAsistenciaActivity extends AppCompatActivity {
 
@@ -207,6 +209,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
                 matrix, true);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void subirFotoFirebaseD(View view) throws IOException {
 
         boolean coneccion = compruebaConexion(this);
@@ -229,8 +232,9 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
 
                 String path = MediaStore.Images.Media.insertImage(getApplication().getContentResolver(), bmp, String.valueOf(System.currentTimeMillis()), null);
                 Uri imagen = Uri.parse(path);
+                String nombreFoto = "asistencia" + "_" + LocalDate.now() + ".png";
 
-                UploadTask uploadTask = storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/" + "FOTO_CLASE/" + "asistencia.png").putFile(imagen);
+                UploadTask uploadTask = storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/" + "FOTO_CLASE/" + nombreFoto).putFile(imagen);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
