@@ -3,13 +3,18 @@ package org.environmentronic.iasssystem.activities.estudiantes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -73,7 +78,7 @@ public class SubirFotoActivity extends AppCompatActivity {
     private String idUsuario;
 
     private ImageView fotoTomada;
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 100;
     private Bitmap imageBitmap;
 
     //Animaciones
@@ -83,7 +88,7 @@ public class SubirFotoActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private ProgressDialog mProgress;
     private String currentPhotoPath = null;
-    private static final int REQUEST_TAKE_PHOTO = 1;
+    private static final int REQUEST_TAKE_PHOTO = 100;
     private Bitmap rotatedBitmap;
 
     @Override
@@ -94,6 +99,10 @@ public class SubirFotoActivity extends AppCompatActivity {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
         setContentView(R.layout.activity_subir_foto);
+
+        if (ContextCompat.checkSelfPermission(SubirFotoActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(SubirFotoActivity.this, new String[]{Manifest.permission.CAMERA}, 100);
+        }
 
         barraFoto = (ConstraintLayout) findViewById(R.id.barraFoto);
         tvNombreFoto = (TextView) findViewById(R.id.tvNombreFoto);
@@ -232,7 +241,7 @@ public class SubirFotoActivity extends AppCompatActivity {
             dialogo1.setCancelable(false);
             dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogo1, int id) {
-                    
+
                     boolean borrado = Genericos.borrarCache();
                     if (borrado) {
                         fotoTomada.setImageResource(R.drawable.ic_register_hero);
@@ -299,7 +308,7 @@ public class SubirFotoActivity extends AppCompatActivity {
 
     public void subirFotoFirebase(View view) throws IOException {
 
-        boolean coneccion = compruebaConexion(this);
+        boolean coneccion = compruebaConexion(getApplicationContext());
 
         if (imageBitmap != null) {
             if (coneccion) {

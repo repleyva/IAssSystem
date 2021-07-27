@@ -50,7 +50,8 @@ import org.environmentronic.iasssystem.activities.estudiantes.VerClasesEstudiant
  *   Hasta este momento toda la funcionalidad de la aplicacion se encuentra activa
  * */
 
-public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+public class
+MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private ImageView photoPerfil;
     private RelativeLayout barra;
@@ -279,7 +280,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 fotoPerfilUsuario = cuenta.getPhotoUrl().toString();
                 tvNombre.setText("Bienvenido\na IAssSystem\n" + nombreUsuario);
                 tvCorreo.setText(correoUsuario);
-                Glide.with(this).load(cuenta.getPhotoUrl()).into(photoPerfil);
+                if (cuenta.getPhotoUrl() != null) {
+                    Glide.with(this).load(cuenta.getPhotoUrl()).into(photoPerfil);
+                } else {
+                    photoPerfil.setImageResource(R.drawable.ic_register_hero);
+                }
             } else {
                 Toast.makeText(getApplicationContext(), "Debe tener acceso a internet", Toast.LENGTH_SHORT).show();
                 goToScreenLogin();
