@@ -46,8 +46,11 @@ import org.environmentronic.iasssystem.activities.estudiantes.IngresarAClaseActi
 import org.environmentronic.iasssystem.activities.estudiantes.SubirFotoActivity;
 import org.environmentronic.iasssystem.activities.estudiantes.VerClasesEstudiantesActivity;
 
-public class
-MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+/* TODO: 2/07/2021
+ *   Se debe hace el manual de usuario y limpiar el codigo
+ * */
+
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private ImageView photoPerfil;
     private RelativeLayout barra;
@@ -358,45 +361,6 @@ MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFa
         overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
         finish();
 
-        /*scrollFoto.setVisibility(View.VISIBLE);
-        tvNombre.startAnimation(animation_left_ocult_long);
-        btnIngresarComoDocente.startAnimation(animation_left_ocult_long);
-        btnIngresarComoEstudiante.startAnimation(animation_left_ocult_long);
-        tarjetaUsuario.startAnimation(animation_rigth_ocult_long);
-        btnVerMisClases.startAnimation(animaciondere_ocult);
-        btnIngresarAClases.startAnimation(animaciondere_ocult);
-        btnSubirFotos.startAnimation(animation_rigth_ocult_long);
-        barra.startAnimation(animation_rigth_ocult_long);*/
-
-        /*new Handler().postDelayed(() -> {
-            btnIngresarAClases.setVisibility(View.GONE);
-            btnVerMisClases.setVisibility(View.GONE);
-        }, normal);*/
-
-        /*new Handler().postDelayed(() -> {
-            tvNombre.setVisibility(View.GONE);
-            tarjetaUsuario.setVisibility(View.GONE);
-            lyEstudiante.setVisibility(View.GONE);
-            barra.setVisibility(View.GONE);
-            btnIngresarComoDocente.setVisibility(View.GONE);
-            btnIngresarComoEstudiante.setVisibility(View.GONE);
-        }, largo);*/
-
-        /*mostrarBarraIzq();
-
-        new Handler().postDelayed(() -> {
-            cabeceraFoto.setVisibility(View.VISIBLE);
-            fotoUsuario.startAnimation(animation_rigth);
-            tvNombreFoto.setAnimation(animation_left);
-        }, normal);
-
-        new Handler().postDelayed(() -> {
-            lyFoto.setVisibility(View.VISIBLE);
-            btnTomarFoto.startAnimation(animation_left);
-            btnBorrarFoto.startAnimation(animation_left);
-            btnSubirFoto.startAnimation(animation_left);
-            btnEliminarFotobbdd.startAnimation(animation_left);
-        }, normal);*/
     }
 
     public void verMisClases(View view) {
@@ -409,63 +373,6 @@ MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFa
         overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
         finish();
 
-        /*scrollVerClases.setVisibility(View.VISIBLE);
-        tvNombre.startAnimation(animation_left_ocult_long);
-        btnIngresarComoDocente.startAnimation(animation_left_ocult_long);
-        btnIngresarComoEstudiante.startAnimation(animation_left_ocult_long);
-        tarjetaUsuario.startAnimation(animation_rigth_ocult_long);
-        btnVerMisClases.startAnimation(animation_rigth_ocult_long);
-        btnIngresarAClases.startAnimation(animaciondere_ocult);
-        btnSubirFotos.startAnimation(animaciondere_ocult);
-        barra.startAnimation(animation_rigth_ocult_long);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                btnSubirFotos.setVisibility(View.INVISIBLE);
-                btnVerMisClases.setVisibility(View.INVISIBLE);
-                btnIngresarAClases.setVisibility(View.INVISIBLE);
-            }
-        }, normal);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                btnSubirFotos.setVisibility(View.GONE);
-                btnVerMisClases.setVisibility(View.GONE);
-                btnIngresarAClases.setVisibility(View.GONE);
-                tvNombre.setVisibility(View.GONE);
-                tarjetaUsuario.setVisibility(View.GONE);
-                lyEstudiante.setVisibility(View.GONE);
-                barra.setVisibility(View.GONE);
-                btnIngresarComoDocente.setVisibility(View.GONE);
-                btnIngresarComoEstudiante.setVisibility(View.GONE);
-                btnIngresarAClases.setVisibility(View.GONE);
-            }
-        }, largo);*/
-
-        // Fin ocultar main --------------------------------------------------
-        /*mostrarBarraIzq();
-
-        // mostrar componentes principales de la pantalla --------------------------------
-        new Handler().postDelayed(() -> {
-            cabeceraVerClases.setVisibility(View.VISIBLE);
-            fotoUsuarioVerClases.startAnimation(animation_rigth);
-            tvNombreVerClases.setAnimation(animation_left);
-        }, normal);
-
-        new Handler().postDelayed(() -> {
-            lyprogreso = (LinearLayout) findViewById(R.id.lyprogreso);
-            lyprogreso.setVisibility(View.VISIBLE);
-            tvCargandoClases = (TextView) findViewById(R.id.tvCargandoClases);
-            cprogress = (ProgressBar) findViewById(R.id.cprogress);
-
-
-            new Handler().postDelayed(() -> {
-                ponerDatos();
-            }, normal);
-
-        }, normal);*/
     }
 
     public void ingresarClase(View view) {
@@ -478,58 +385,6 @@ MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFa
         overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
         finish();
 
-        /*scrollIngClases.setVisibility(View.VISIBLE);
-        tvNombre.startAnimation(animation_left_ocult_long);
-        btnIngresarComoDocente.startAnimation(animation_left_ocult);
-        btnIngresarComoEstudiante.startAnimation(animation_left_ocult);
-        tarjetaUsuario.startAnimation(animation_rigth_ocult_long);
-        btnVerMisClases.startAnimation(animaciondere_ocult);
-        btnIngresarAClases.startAnimation(animation_rigth_ocult_long);
-        btnSubirFotos.startAnimation(animaciondere_ocult);
-        barra.startAnimation(animation_rigth_ocult_long);*/
-
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                btnSubirFotos.setVisibility(View.INVISIBLE);
-                btnVerMisClases.setVisibility(View.INVISIBLE);
-                btnIngresarComoDocente.setVisibility(View.INVISIBLE);
-                btnIngresarComoEstudiante.setVisibility(View.INVISIBLE);
-            }
-        }, normal);*/
-
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                btnSubirFotos.setVisibility(View.GONE);
-                btnVerMisClases.setVisibility(View.GONE);
-                tvNombre.setVisibility(View.GONE);
-                tarjetaUsuario.setVisibility(View.GONE);
-                lyEstudiante.setVisibility(View.GONE);
-                barra.setVisibility(View.GONE);
-                btnIngresarAClases.setVisibility(View.GONE);
-            }
-        }, largo);*/
-
-        //mostrarBarraIzq();
-
-        /*new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                cabeceraIngFoto.setVisibility(View.VISIBLE);
-                fotoUsuarioBBDD.startAnimation(animation_rigth);
-                tvNombreIngClases.setAnimation(animation_left);
-            }
-        }, normal);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                lyIngClases.setVisibility(View.VISIBLE);
-                etCodigo.startAnimation(animation_left);
-                btnIngresarAclase.startAnimation(animation_left);
-            }
-        }, normal);*/
     }
 
     public void ingDocente(View view) {
@@ -558,48 +413,6 @@ MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFa
         overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
         finish();
 
-        // Inicio ocultar main --------------------------------------------------
-        /*scrollCrearClases.setVisibility(View.VISIBLE);
-        tvNombre.startAnimation(animation_left_ocult_long);
-        btnIngresarComoDocente.startAnimation(animation_left_ocult);
-        btnIngresarComoEstudiante.startAnimation(animation_left_ocult);
-        tarjetaUsuario.startAnimation(animation_rigth_ocult_long);
-        btnListaClases.startAnimation(animaciondere_ocult);
-        btnCrearClase.startAnimation(animation_rigth_ocult_long);
-        barra.startAnimation(animation_rigth_ocult_long);
-
-        new Handler().postDelayed(() -> {
-            btnListaClases.setVisibility(View.INVISIBLE);
-            btnCrearClase.setVisibility(View.INVISIBLE);
-            btnIngresarComoDocente.setVisibility(View.INVISIBLE);
-            btnIngresarComoEstudiante.setVisibility(View.INVISIBLE);
-        }, normal);
-
-        new Handler().postDelayed(() -> {
-            btnListaClases.setVisibility(View.GONE);
-            btnCrearClase.setVisibility(View.GONE);
-            tvNombre.setVisibility(View.GONE);
-            tarjetaUsuario.setVisibility(View.GONE);
-            lyEstudiante.setVisibility(View.GONE);
-            barra.setVisibility(View.GONE);
-        }, largo);*/
-
-        // Fin ocultar main --------------------------------------------------
-        //mostrarBarraIzq();
-
-        // mostrar componentes de la pantalla --------------------------------
-        /*new Handler().postDelayed(() -> {
-            cabeceraCrearClase.setVisibility(View.VISIBLE);
-            fotoUsuarioDocente.startAnimation(animation_rigth);
-            tvNombreCrearClase.setAnimation(animation_left);
-        }, normal);
-
-        new Handler().postDelayed(() -> {
-            lyCrearClases.setVisibility(View.VISIBLE);
-            etNombreClase.startAnimation(animation_left);
-            etCodigoClase.startAnimation(animation_rigth);
-            btnDocenteCrearClase.startAnimation(animation_left);
-        }, acond1);*/
     }
 
     public void verListaClases(View view) {
@@ -610,64 +423,8 @@ MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFa
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
         finish();
-        // Inicio ocultar main --------------------------------------------------
-        /*scrollListaClases.setVisibility(View.VISIBLE);
-        tvNombre.startAnimation(animation_left_ocult_long);
-        btnIngresarComoDocente.startAnimation(animation_left_ocult);
-        btnIngresarComoEstudiante.startAnimation(animation_left_ocult);
-        tarjetaUsuario.startAnimation(animation_rigth_ocult_long);
-        btnListaClases.startAnimation(animation_rigth_ocult_long);
-        btnCrearClase.startAnimation(animaciondere_ocult);
-        barra.startAnimation(animation_rigth_ocult_long);
 
-        new Handler().postDelayed(() -> {
-            btnListaClases.setVisibility(View.INVISIBLE);
-            btnCrearClase.setVisibility(View.INVISIBLE);
-            btnIngresarComoDocente.setVisibility(View.INVISIBLE);
-            btnIngresarComoEstudiante.setVisibility(View.INVISIBLE);
-        }, normal);
-
-        new Handler().postDelayed(() -> {
-            btnListaClases.setVisibility(View.GONE);
-            btnCrearClase.setVisibility(View.GONE);
-            tvNombre.setVisibility(View.GONE);
-            tarjetaUsuario.setVisibility(View.GONE);
-            lyEstudiante.setVisibility(View.GONE);
-            barra.setVisibility(View.GONE);
-        }, largo);*/
-
-        // Fin ocultar main --------------------------------------------------
-        //mostrarBarraIzq();
-
-        // mostrar componentes principales de la pantalla --------------------------------
-        /*new Handler().postDelayed(() -> {
-            cabeceraListaClases.setVisibility(View.VISIBLE);
-            fotoUsuarioListaClases.startAnimation(animation_rigth);
-            tvNombreListaClases.setAnimation(animation_left);
-        }, normal);
-
-        new Handler().postDelayed(() -> {
-            lyprogreso_docente = (LinearLayout) findViewById(R.id.lyprogreso_docente);
-            lyprogreso_docente.setVisibility(View.VISIBLE);
-            tvCargandoClases_docente = (TextView) findViewById(R.id.tvCargandoClases_docente);
-            cprogress_docente = (ProgressBar) findViewById(R.id.cprogress_docente);
-
-            new Handler().postDelayed(() -> {
-                ponerDatosClasesDocente();
-            }, normal);
-
-        }, normal);*/
     }
-
-    /*private void mostrarBarraIzq() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                barraFoto.setVisibility(View.VISIBLE);
-                barraFoto.startAnimation(animation_left);
-            }
-        }, normal);
-    }*/
 
     public void onMainFotoClick(View view) {
         startActivity(new Intent(this, MainActivity.class));
