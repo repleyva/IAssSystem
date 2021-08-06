@@ -50,7 +50,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 
-public class FotoAsistenciaActivity extends AppCompatActivity {
+public class FotoAsistenciaActivity extends AppCompatActivity implements  EliminarFotoAsistenciaDialogo.iFinalizoCuadroDialogo{
 
     private ProgressDialog mProgress;
     private TextView tvNombreFoto;
@@ -78,6 +78,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
     private static final int REQUEST_TAKE_PHOTO = 1;
     private String currentPhotoPath = null;
     private Bitmap rotatedBitmap;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
         changeStatusBarColor();
         setContentView(R.layout.activity_foto_asistencia);
 
+        context = this;
         tvNombreFoto = (TextView) findViewById(R.id.tvNombreFoto);
         fotoUsuario = (LinearLayout) findViewById(R.id.fotoUsuario);
         btnTomarFoto = (Button) findViewById(R.id.btnTomarFoto);
@@ -234,8 +236,9 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
                 String path = MediaStore.Images.Media.insertImage(getApplication().getContentResolver(), bmp, String.valueOf(System.currentTimeMillis()), null);
                 Uri imagen = Uri.parse(path);
                 String nombreFoto = "asistencia" + "_" + LocalDate.now() + ".png";
+                String nombreFotoFormat = nombreFoto.replace("-", "_");
 
-                UploadTask uploadTask = storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/" + "FOTO_CLASE/" + nombreFoto).putFile(imagen);
+                UploadTask uploadTask = storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/" + "FOTO_CLASE/" + nombreFotoFormat).putFile(imagen);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
@@ -332,6 +335,19 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
     public void setBtnEliminarFotobbddD(View view) {
 
         if (compruebaConexion(this)) {
+            new EliminarFotoAsistenciaDialogo(context, FotoAsistenciaActivity.this);
+        } else {
+            Toast.makeText(this, "No tiene acceso a internet", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void ResultadoCuadroDialogo(String fecha) {
+
+        if ((fecha.length() != 10) || (fecha.contains(" ")) || (!fecha.contains("-"))) {
+            Toast.makeText(FotoAsistenciaActivity.this, "Ingrese la fecha en formato válido (AÑO-MES-DIA)", Toast.LENGTH_LONG).show();
+        } else {
+            String fechaFormateada = fecha.replace("-", "_");
 
             // ------------------------------- borramos la foto -----------------------------
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
@@ -347,27 +363,10 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
                     showProgressBar("Estamos eliminando la foto, espere ...");
 
                     // Delete the file
-                    storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/" + "FOTO_CLASE/")
-                            .listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/" + "FOTO_CLASE/" + "asistencia_" + fechaFormateada + ".png")
+                            .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
-                        public void onSuccess(ListResult listResult) {
-                            for (StorageReference fotoAsistencia :
-                                    listResult.getItems()) {
-                                fotoAsistencia.delete()
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-
-                                            }
-                                        });
-                            }
-
+                        public void onSuccess(Void unused) {
                             finishProgressBar();
                             Toast.makeText(getApplicationContext(), "La foto fué borrada con éxito", Toast.LENGTH_SHORT).show();
                         }
@@ -378,23 +377,6 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Si no has tomado una foto de asistencia, no tienes nada que borrar.", Toast.LENGTH_SHORT).show();
                         }
                     });
-
-
-                /*.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // File deleted successfully
-                            finishProgressBar();
-                            Toast.makeText(getApplicationContext(), "La foto fué borrada con éxito", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Uh-oh, an error occurred
-                            finishProgressBar();
-                            Toast.makeText(getApplicationContext(), "Si no has tomado una foto de asistencia, no tienes nada que borrar.", Toast.LENGTH_SHORT).show();
-                        }
-                    });*/
                 }
             });
             dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -403,8 +385,6 @@ public class FotoAsistenciaActivity extends AppCompatActivity {
                 }
             });
             dialogo1.show();
-        } else {
-            Toast.makeText(this, "No tiene acceso a internet", Toast.LENGTH_SHORT).show();
         }
     }
 

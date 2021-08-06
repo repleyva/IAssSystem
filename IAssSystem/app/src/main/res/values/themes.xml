@@ -54,6 +54,12 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="ButtonWhite" parent="viewParent">
+        <item name="android:background">@drawable/button_background_white</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="ButtonDerecha" parent="viewParent">
         <item name="android:background">@drawable/button_background_gen_derecha</item>
         <item name="android:textColor">@color/colorPrimary</item>
