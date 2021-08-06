@@ -46,10 +46,6 @@ import org.environmentronic.iasssystem.activities.estudiantes.IngresarAClaseActi
 import org.environmentronic.iasssystem.activities.estudiantes.SubirFotoActivity;
 import org.environmentronic.iasssystem.activities.estudiantes.VerClasesEstudiantesActivity;
 
-/* TODO: 2/07/2021
- *   Hasta este momento toda la funcionalidad de la aplicacion se encuentra activa
- * */
-
 public class
 MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
