@@ -47,7 +47,7 @@ import org.environmentronic.iasssystem.activities.estudiantes.SubirFotoActivity;
 import org.environmentronic.iasssystem.activities.estudiantes.VerClasesEstudiantesActivity;
 
 /* TODO: 2/07/2021
- *   Se debe hace el manual de usuario y limpiar el codigo
+ *   Se debe hacer el manual de usuario y limpiar el codigo
  * */
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {

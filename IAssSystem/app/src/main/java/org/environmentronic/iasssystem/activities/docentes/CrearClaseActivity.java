@@ -223,4 +223,9 @@ public class CrearClaseActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.stay);
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

@@ -3,14 +3,14 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 28
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "org.environmentronic.iasssystem"
         minSdkVersion 17
-        //noinspection OldTargetApi
-        targetSdkVersion 29
+        //noinspection ExpiredTargetSdkVersion,OldTargetApi
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 

@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -18,7 +17,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -47,20 +45,12 @@ import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
 import org.environmentronic.iasssystem.modulos.Genericos;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
-import io.grpc.Compressor;
-
-import static java.security.AccessController.getContext;
+// TODO: 20/08/2021 Se debe agregar la funcionalidad de tomar una foto de la galería 
 
 public class SubirFotoActivity extends AppCompatActivity {
 
@@ -181,6 +171,7 @@ public class SubirFotoActivity extends AppCompatActivity {
     }
 
     // muestra la foto
+    // me genera problemas para versiones del sdk inferiores a 29
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -264,7 +255,6 @@ public class SubirFotoActivity extends AppCompatActivity {
 
         if (compruebaConexion(this)) {
 
-            // ------------------------------- borramos la foto -----------------------------
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
             dialogo1.setTitle("Importante");
             dialogo1.setMessage("Si eliminas la foto de la base de datos tendrás que acceder a tus clases nuevamente para actualizarla en cada una, ¿Realmente deseas eliminarla?");
@@ -308,7 +298,7 @@ public class SubirFotoActivity extends AppCompatActivity {
 
     public void subirFotoFirebase(View view) throws IOException {
 
-        boolean coneccion = compruebaConexion(getApplicationContext());
+        boolean coneccion = compruebaConexion(SubirFotoActivity.this);
 
         if (imageBitmap != null) {
             if (coneccion) {

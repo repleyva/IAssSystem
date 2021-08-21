@@ -581,4 +581,9 @@ public class ListaClasesActivity extends AppCompatActivity implements RecyclerIt
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }

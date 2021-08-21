@@ -3,17 +3,20 @@ package org.environmentronic.iasssystem.activities.docentes;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -35,15 +38,13 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.environmentronic.iasssystem.R;
-import org.environmentronic.iasssystem.activities.principales.MainActivity;
+import org.environmentronic.iasssystem.activities.estudiantes.SubirFotoActivity;
 import org.environmentronic.iasssystem.modulos.Genericos;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -85,6 +86,10 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements  Elimin
         super.onCreate(savedInstanceState);
         changeStatusBarColor();
         setContentView(R.layout.activity_foto_asistencia);
+
+        if (ContextCompat.checkSelfPermission(FotoAsistenciaActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(FotoAsistenciaActivity.this, new String[]{Manifest.permission.CAMERA}, 100);
+        }
 
         context = this;
         tvNombreFoto = (TextView) findViewById(R.id.tvNombreFoto);
@@ -156,7 +161,6 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements  Elimin
                 ".png",         /* suffix */
                 storageDir      /* directory */
         );
-
         // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
