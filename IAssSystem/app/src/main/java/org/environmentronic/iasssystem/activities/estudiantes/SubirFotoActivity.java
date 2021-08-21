@@ -61,6 +61,7 @@ public class SubirFotoActivity extends AppCompatActivity {
     private Button btnTomarFoto;
     private Button btnBorrarFoto;
     private Button btnSubirFoto;
+    private Button btnSelectFoto;
     private Button btnEliminarFotobbdd;
 
     private String nombreUsuario;
@@ -81,6 +82,12 @@ public class SubirFotoActivity extends AppCompatActivity {
     private static final int REQUEST_TAKE_PHOTO = 100;
     private Bitmap rotatedBitmap;
 
+    private static int SELECT_IMAGE_CODE = 1;
+    private Uri imagen;
+    private boolean camara = false;
+    private boolean galeria = false;
+    private boolean puedeSubirFoto = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,11 +105,13 @@ public class SubirFotoActivity extends AppCompatActivity {
         tvNombreFoto = (TextView) findViewById(R.id.tvNombreFoto);
         btnTomarFoto = (Button) findViewById(R.id.btnTomarFoto);
         btnSubirFoto = (Button) findViewById(R.id.btnSubirFoto);
+        btnSelectFoto = (Button) findViewById(R.id.btnSelectFoto);
         btnBorrarFoto = (Button) findViewById(R.id.btnBorrarFoto);
         btnEliminarFotobbdd = (Button) findViewById(R.id.btnEliminarFotobbdd);
         fotoUsuario = (LinearLayout) findViewById(R.id.fotoUsuario);
 
         fotoTomada = (ImageView) findViewById(R.id.photoBBDD);
+        fotoTomada.setImageResource(R.drawable.ic_register_hero);
 
         idUsuario = getIntent().getStringExtra("idusuario");
         nombreUsuario = getIntent().getStringExtra("nomusuario");
@@ -119,6 +128,7 @@ public class SubirFotoActivity extends AppCompatActivity {
         btnTomarFoto.startAnimation(animation_left);
         btnBorrarFoto.startAnimation(animation_left);
         btnSubirFoto.startAnimation(animation_left);
+        btnSelectFoto.startAnimation(animation_left);
         btnEliminarFotobbdd.startAnimation(animation_left);
 
         // subir foto
@@ -175,10 +185,18 @@ public class SubirFotoActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if ((requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK)) {
+            camara = true;
             imageBitmap = BitmapFactory.decodeFile(currentPhotoPath);
             rotatedBitmap = rotarImagen(imageBitmap);
             fotoTomada.setImageBitmap(rotatedBitmap);
+            puedeSubirFoto = true;
+        } else if (requestCode == SELECT_IMAGE_CODE) {
+            galeria = true;
+            Uri uri = data.getData();
+            imagen = uri;
+            fotoTomada.setImageURI(imagen);
+            puedeSubirFoto = true;
         }
     }
 
@@ -220,6 +238,13 @@ public class SubirFotoActivity extends AppCompatActivity {
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
+    }
+
+    public void selectFoto(View view) { // seleccionar una foto de la galeria
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent.createChooser(intent, "title"), SELECT_IMAGE_CODE);
     }
 
     // borrar foto local
@@ -300,30 +325,53 @@ public class SubirFotoActivity extends AppCompatActivity {
 
         boolean coneccion = compruebaConexion(SubirFotoActivity.this);
 
-        if (imageBitmap != null) {
-            if (coneccion) {
+        if (coneccion) {
+            if (puedeSubirFoto) {
                 showProgressBar("Subiendo foto, espere ...");
+                if (camara) {
+                    Uri file = Uri.fromFile(new File(currentPhotoPath));
+                    InputStream imageStream = null;
+                    try {
+                        imageStream = getApplication().getContentResolver().openInputStream(file);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap original = BitmapFactory.decodeStream(imageStream);
+                    //Bitmap bmp = getResizedBitmap(original, 500);
+                    Bitmap rotateBitmap = rotateImageIfRequired(getApplicationContext(), original, file);
+                    Bitmap bmp = getResizedBitmap(rotateBitmap, 800);
 
-                Uri file = Uri.fromFile(new File(currentPhotoPath));
-                InputStream imageStream = null;
-                try {
-                    imageStream = getApplication().getContentResolver().openInputStream(file);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    String path = MediaStore.Images.Media.insertImage(getApplication().getContentResolver(), bmp, String.valueOf(System.currentTimeMillis()), null);
+                    imagen = Uri.parse(path);
+                    camara = false;
+                    galeria = false;
                 }
-                Bitmap original = BitmapFactory.decodeStream(imageStream);
-                //Bitmap bmp = getResizedBitmap(original, 500);
-                Bitmap rotateBitmap = rotateImageIfRequired(getApplicationContext(), original, file);
-                Bitmap bmp = getResizedBitmap(rotateBitmap, 800);
 
-                String path = MediaStore.Images.Media.insertImage(getApplication().getContentResolver(), bmp, String.valueOf(System.currentTimeMillis()), null);
-                Uri imagen = Uri.parse(path);
+                if (galeria) {
+                    Uri file = imagen;
+                    InputStream imageStream = null;
+                    try {
+                        imageStream = getApplication().getContentResolver().openInputStream(file);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap original = BitmapFactory.decodeStream(imageStream);
+                    //Bitmap bmp = getResizedBitmap(original, 500);
+                    Bitmap rotateBitmap = rotateImageIfRequired(getApplicationContext(), original, file);
+                    Bitmap bmp = getResizedBitmap(rotateBitmap, 800);
+
+                    String path = MediaStore.Images.Media.insertImage(getApplication().getContentResolver(), bmp, String.valueOf(System.currentTimeMillis()), null);
+                    imagen = Uri.parse(path);
+                    camara = false;
+                    galeria = false;
+                }
 
                 UploadTask uploadTask = storageReference.child("ESTUDIANTES/" + idUsuario + "/" + nombreCorto + ".png").putFile(imagen);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         // Handle unsuccessful uploads
+                        puedeSubirFoto = false;
                         finishProgressBar();
                         Toast.makeText(getApplicationContext(), "Hubo un error intentando subir la foto", Toast.LENGTH_SHORT).show();
                     }
@@ -331,17 +379,19 @@ public class SubirFotoActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                        puedeSubirFoto = false;
                         finishProgressBar();
                         fotoTomada.setImageResource(R.drawable.ic_register_hero);
                         imageBitmap = null;
                         Toast.makeText(getApplicationContext(), "La foto se subió con exito", Toast.LENGTH_SHORT).show();
                     }
                 });
+
             } else {
-                Toast.makeText(this, "Debes tener acceso a internet", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Debe tomar una foto", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Debe tomar una foto", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Debes tener acceso a internet", Toast.LENGTH_SHORT).show();
         }
     }
 
