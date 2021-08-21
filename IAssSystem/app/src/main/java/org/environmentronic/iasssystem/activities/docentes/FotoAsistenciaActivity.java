@@ -51,12 +51,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 
-public class FotoAsistenciaActivity extends AppCompatActivity implements  EliminarFotoAsistenciaDialogo.iFinalizoCuadroDialogo{
+public class FotoAsistenciaActivity extends AppCompatActivity implements EliminarFotoAsistenciaDialogo.iFinalizoCuadroDialogo {
 
     private ProgressDialog mProgress;
     private TextView tvNombreFoto;
     private LinearLayout fotoUsuario;
     private Button btnTomarFoto, btnBorrarFoto, btnSubirFoto, btnEliminarFotobbdd;
+    private Button btnSelectFoto;
     private ImageView photoAsistencia;
 
     //Animaciones
@@ -73,13 +74,19 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements  Elimin
     private String idUsuario;
     private String nombreUsuario;
 
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 100;
     private Bitmap imageBitmap;
     private StorageReference storageReference;
-    private static final int REQUEST_TAKE_PHOTO = 1;
+    private static final int REQUEST_TAKE_PHOTO = 100;
     private String currentPhotoPath = null;
     private Bitmap rotatedBitmap;
     private Context context;
+
+    private static int SELECT_IMAGE_CODE = 1;
+    private Uri imagen;
+    private boolean camara = false;
+    private boolean galeria = false;
+    private boolean puedeSubirFoto = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +104,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements  Elimin
         btnTomarFoto = (Button) findViewById(R.id.btnTomarFoto);
         btnBorrarFoto = (Button) findViewById(R.id.btnBorrarFoto);
         btnSubirFoto = (Button) findViewById(R.id.btnSubirFoto);
+        btnSelectFoto = (Button) findViewById(R.id.btnSelectFoto);
         btnEliminarFotobbdd = (Button) findViewById(R.id.btnEliminarFotobbdd);
         photoAsistencia = (ImageView) findViewById(R.id.photoAsistencia);
 
@@ -117,6 +125,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements  Elimin
         btnTomarFoto.setAnimation(animation_left);
         btnEliminarFotobbdd.setAnimation(animation_left);
         btnSubirFoto.setAnimation(animation_left);
+        btnSelectFoto.startAnimation(animation_left);
         btnBorrarFoto.setAnimation(animation_left);
 
         // subir foto
@@ -170,9 +179,17 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements  Elimin
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            camara = true;
             imageBitmap = BitmapFactory.decodeFile(currentPhotoPath);
             rotatedBitmap = rotarImagen(imageBitmap);
             photoAsistencia.setImageBitmap(rotatedBitmap);
+            puedeSubirFoto = true;
+        } else if (requestCode == SELECT_IMAGE_CODE) {
+            galeria = true;
+            Uri uri = data.getData();
+            imagen = uri;
+            photoAsistencia.setImageURI(imagen);
+            puedeSubirFoto = true;
         }
     }
 
@@ -219,34 +236,64 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements  Elimin
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void subirFotoFirebaseD(View view) throws IOException {
 
-        boolean coneccion = compruebaConexion(this);
+        boolean coneccion = compruebaConexion(FotoAsistenciaActivity.this);
 
-        if (imageBitmap != null) {
-            if (coneccion) {
+        if (coneccion) {
+            if (puedeSubirFoto) {
                 showProgressBar("Subiendo foto de asistencia, espere ...");
-                // Get the data from an ImageView as bytes
-                Uri file = Uri.fromFile(new File(currentPhotoPath));
-                InputStream imageStream = null;
-                try {
-                    imageStream = getApplication().getContentResolver().openInputStream(file);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Bitmap original = BitmapFactory.decodeStream(imageStream);
-                //Bitmap bmp = getResizedBitmap(original, 500);
-                Bitmap rotateBitmap = rotateImageIfRequired(getApplicationContext(), original, file);
-                Bitmap bmp = getResizedBitmap(rotateBitmap, 1000);
 
-                String path = MediaStore.Images.Media.insertImage(getApplication().getContentResolver(), bmp, String.valueOf(System.currentTimeMillis()), null);
-                Uri imagen = Uri.parse(path);
-                String nombreFoto = "asistencia" + "_" + LocalDate.now() + ".png";
-                String nombreFotoFormat = nombreFoto.replace("-", "_");
+                String nombreFotoFormat = "";
+
+                if (camara) {
+                    // Get the data from an ImageView as bytes
+                    Uri file = Uri.fromFile(new File(currentPhotoPath));
+                    InputStream imageStream = null;
+                    try {
+                        imageStream = getApplication().getContentResolver().openInputStream(file);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap original = BitmapFactory.decodeStream(imageStream);
+                    //Bitmap bmp = getResizedBitmap(original, 500);
+                    Bitmap rotateBitmap = rotateImageIfRequired(getApplicationContext(), original, file);
+                    Bitmap bmp = getResizedBitmap(rotateBitmap, 1000);
+
+                    String path = MediaStore.Images.Media.insertImage(getApplication().getContentResolver(), bmp, String.valueOf(System.currentTimeMillis()), null);
+                    imagen = Uri.parse(path);
+                    String nombreFoto = "asistencia" + "_" + LocalDate.now() + ".png";
+                    nombreFotoFormat = nombreFoto.replace("-", "_");
+                    camara = false;
+                    galeria = false;
+                }
+
+                if (galeria) {
+                    // Get the data from an ImageView as bytes
+                    Uri file = imagen;
+                    InputStream imageStream = null;
+                    try {
+                        imageStream = getApplication().getContentResolver().openInputStream(file);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    Bitmap original = BitmapFactory.decodeStream(imageStream);
+                    //Bitmap bmp = getResizedBitmap(original, 500);
+                    Bitmap rotateBitmap = rotateImageIfRequired(getApplicationContext(), original, file);
+                    Bitmap bmp = getResizedBitmap(rotateBitmap, 1000);
+
+                    String path = MediaStore.Images.Media.insertImage(getApplication().getContentResolver(), bmp, String.valueOf(System.currentTimeMillis()), null);
+                    imagen = Uri.parse(path);
+                    String nombreFoto = "asistencia" + "_" + LocalDate.now() + ".png";
+                    nombreFotoFormat = nombreFoto.replace("-", "_");
+                    camara = false;
+                    galeria = false;
+                }
 
                 UploadTask uploadTask = storageReference.child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/" + "FOTO_CLASE/" + nombreFotoFormat).putFile(imagen);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         // Handle unsuccessful uploads
+                        puedeSubirFoto = false;
                         finishProgressBar();
                         Toast.makeText(getApplicationContext(), "Hubo un error intentando subir la foto", Toast.LENGTH_SHORT).show();
                     }
@@ -254,6 +301,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements  Elimin
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                        puedeSubirFoto = false;
                         finishProgressBar();
                         photoAsistencia.setImageResource(R.drawable.ic_register_hero);
                         imageBitmap = null;
@@ -261,10 +309,10 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements  Elimin
                     }
                 });
             } else {
-                Toast.makeText(this, "Debes tener acceso a internet", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Debe tomar una foto", Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(this, "Debe tomar una foto", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Debes tener acceso a internet", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -307,6 +355,13 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements  Elimin
             default:
                 return img;
         }
+    }
+
+    public void selectFoto(View view) { // seleccionar una foto de la galeria
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent.createChooser(intent, "title"), SELECT_IMAGE_CODE);
     }
 
     public void setBtnBorrarFotoD(View view) {

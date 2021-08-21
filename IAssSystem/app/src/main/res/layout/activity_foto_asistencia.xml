@@ -93,6 +93,14 @@
                     android:onClick="tomarFotoD"/>
 
                 <Button
+                    android:id="@+id/btnSelectFoto"
+                    style="@style/Button"
+                    android:layout_gravity="left"
+                    android:layout_marginTop="10dp"
+                    android:text="Seleccionar Foto de la Galeria"
+                    android:onClick="selectFoto"/>
+
+                <Button
                     android:id="@+id/btnBorrarFoto"
                     style="@style/Button"
                     android:layout_gravity="left"
