@@ -50,8 +50,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-// TODO: 20/08/2021 Se debe agregar la funcionalidad de tomar una foto de la galería 
-
 public class SubirFotoActivity extends AppCompatActivity {
 
     private ConstraintLayout barraFoto;
