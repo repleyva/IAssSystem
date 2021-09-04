@@ -2,9 +2,10 @@
 <resources>
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#FFFFFF</color>
-    <color name="colorAccent">#2A4873</color>
+    <color name="colorAccent">#062346</color>
     <color name="themeColor">#2B8129</color>
-    <!-- Azul metal = #2A4873 :: Verde UPC = #2B8129 -->
+    <!-- Azul metal = #2A4873 :: Verde UPC = #2B8129 :: 062346 :: 2A4873-->
+
 
     <!--normal colors-->
     <color name="darkTextColor">#020000</color>

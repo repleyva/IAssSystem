@@ -289,7 +289,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 goToScreenLogin();
             }
         }
-
     }
 
     private void goToScreenLogin() {

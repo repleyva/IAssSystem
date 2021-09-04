@@ -248,7 +248,7 @@ public class SubirFotoActivity extends AppCompatActivity {
     // borrar foto local
     public void setBtnBorrarFoto(View view) {
 
-        if (imageBitmap != null) {
+        if (puedeSubirFoto) {
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
             dialogo1.setTitle("Importante");
             dialogo1.setMessage("¿Realmente deseas eliminar la foto?");

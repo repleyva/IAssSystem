@@ -131,15 +131,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/btnIngresarComoDocente" />
 
                 <Button
-                    android:id="@+id/btnVerMisClases"
-                    style="@style/ButtonDerecha"
-                    android:layout_gravity="right"
-                    android:layout_marginTop="10dp"
-                    android:padding="15dp"
-                    android:text="Ver mis clases"
-                    android:onClick="verMisClases"/>
-
-                <Button
                     android:id="@+id/btnIngresarAClases"
                     style="@style/ButtonDerecha"
                     android:layout_gravity="right"
@@ -147,6 +138,15 @@
                     android:padding="15dp"
                     android:text="Ingresar a una Clase"
                     android:onClick="ingresarClase"/>
+
+                <Button
+                    android:id="@+id/btnVerMisClases"
+                    style="@style/ButtonDerecha"
+                    android:layout_gravity="right"
+                    android:layout_marginTop="10dp"
+                    android:padding="15dp"
+                    android:text="Ver mis clases"
+                    android:onClick="verMisClases"/>
             </LinearLayout>
 
             <LinearLayout

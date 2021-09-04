@@ -60,6 +60,5 @@ dependencies {
 
     // FirebaseUI Storage only
     implementation 'com.firebaseui:firebase-ui-storage:6.4.0'
-
     implementation 'com.iceteck.silicompressorr:silicompressor:2.2.4'
 }

@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //for changing status bar icon colors
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
         setContentView(R.layout.activity_login);
@@ -144,32 +144,38 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         super.onActivityResult(requestCode, resultCode, data);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == SIGN_IN_CODE){
+        if (requestCode == SIGN_IN_CODE) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
     }
 
-    private void handleSignInResult(GoogleSignInResult result){
-        if (result.isSuccess()){
+    private void handleSignInResult(GoogleSignInResult result) {
+        if (result.isSuccess()) {
             goMainScreen();
         } else {
             Toast.makeText(this, "No se pudo iniciar sesión", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void goMainScreen(){
+    public void goMainScreen() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
         finish();
     }
 
-    public void onLoginClick(View View){
+    public void onLoginClick(View View) {
         startActivity(new Intent(this, InfoAppActivity.class));
-        overridePendingTransition(R.anim.slide_in_right,R.anim.stay);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
         finish();
+    }
+
+    public void downloadManual(View view) {
+        Uri link = Uri.parse("https://firebasestorage.googleapis.com/v0/b/iasssystem.appspot.com/o/MANUAL%2FMANUAL%20DE%20USUARIO%20DE%20LA%20APLICACI%C3%93N%20M%C3%93VIL%20IASSSYSTEM.pdf?alt=media&token=ca2ad8b7-4d3a-4dc6-8332-cf68c3e9beb1");
+        Intent intent = new Intent(Intent.ACTION_VIEW, link);
+        startActivity(intent);
     }
 
     @Override

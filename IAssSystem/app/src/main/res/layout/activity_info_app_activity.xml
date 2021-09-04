@@ -37,8 +37,8 @@
 
                 <ImageView
                     android:id="@+id/imagen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="250dp"
+                    android:layout_height="250dp"
                     android:layout_below="@+id/texto"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
@@ -77,7 +77,7 @@
                         android:textStyle="normal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Versión 1.1.3"
+                        android:text="Versión 1.0"
                         android:textAlignment="center"
                         android:textColor="@color/colorAccent">
                     </TextView>
@@ -96,7 +96,7 @@
                         android:textSize="15dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="IAssSystem es un sistema de toma de asistencia por reconocimiento facial desarrollado por los estudiantes de pregrado en Ingeniería Electrónica en la Universidad Popular del Cesar Rusvel Enrique Pasos Leyva y Carlos Andrés Bermúdes Arango bajo la modalidad de Tesis o Proyecto de grado. Este sistema permitirá tomar la asistencia estudiantil solo tomando una foto a los presentes y de manera inmediata recibir la informacion de los asistentes en el correo electrónico del docente. Además cuenta con una plataforma web en donde se hace uso de las estadisticas para estudiar el indice de desempeño de los estudiantes con respecto a su asistencia a clases."
+                        android:text="IAssSystem es un sistema de toma de asistencia por reconocimiento facial desarrollado por los estudiantes de pregrado en Ingeniería Electrónica en la Universidad Popular del Cesar Rusvel Enrique Pasos Leyva y Carlos Andrés Bermúdez Arango bajo la modalidad de Tesis o Proyecto de grado. Este sistema permitirá tomar la asistencia estudiantil solo tomando una foto a los presentes y de manera inmediata recibir la informacion de los asistentes en el correo electrónico del docente. Además cuenta con una plataforma web en donde se hace uso de las estadisticas para estudiar el indice de desempeño de los estudiantes con respecto a su asistencia a clases."
                         android:textColor="@color/colorAccent"
                         android:gravity="center"
                         android:textStyle="normal">

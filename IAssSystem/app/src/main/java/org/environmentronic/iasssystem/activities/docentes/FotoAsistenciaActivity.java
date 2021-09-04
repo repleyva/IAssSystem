@@ -42,7 +42,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.environmentronic.iasssystem.R;
-import org.environmentronic.iasssystem.activities.estudiantes.SubirFotoActivity;
 import org.environmentronic.iasssystem.modulos.Genericos;
 
 import java.io.File;
@@ -366,7 +365,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements Elimina
 
     public void setBtnBorrarFotoD(View view) {
 
-        if (imageBitmap != null) {
+        if (puedeSubirFoto) {
             AlertDialog.Builder dialogo1 = new AlertDialog.Builder(this);
             dialogo1.setTitle("Importante");
             dialogo1.setMessage("¿Realmente deseas eliminar la foto?");
