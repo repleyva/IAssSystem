@@ -47,7 +47,7 @@ import org.environmentronic.iasssystem.activities.estudiantes.SubirFotoActivity;
 import org.environmentronic.iasssystem.activities.estudiantes.VerClasesEstudiantesActivity;
 
 /* TODO: 2/07/2021
- *   Se debe hacer el manual de usuario y limpiar el codigo
+ *   Se debe limpiar el codigo
  * */
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 nombreUsuario = cuenta.getDisplayName();
                 correoUsuario = cuenta.getEmail();
                 idUsuario = cuenta.getId();
-                fotoPerfilUsuario = cuenta.getPhotoUrl().toString();
+                //fotoPerfilUsuario = cuenta.getPhotoUrl().toString();
                 tvNombre.setText("Bienvenido\na IAssSystem\n" + nombreUsuario);
                 tvCorreo.setText(correoUsuario);
                 if (cuenta.getPhotoUrl() != null) {
