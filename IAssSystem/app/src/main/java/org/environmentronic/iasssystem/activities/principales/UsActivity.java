@@ -1,7 +1,6 @@
 package org.environmentronic.iasssystem.activities.principales;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -13,37 +12,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 import org.environmentronic.iasssystem.R;
-import org.environmentronic.iasssystem.activities.principales.MainActivity;
 
 public class UsActivity extends AppCompatActivity {
 
-    private String facebookR = "https://www.facebook.com/roosevelt.leyva";
-    private ImageView btnFacebookRusvel;
-    private String twitterR = "https://twitter.com/repleyva";
-    private ImageView btnTwitterRusvel;
-    private String instagramR = "https://www.instagram.com/repleyva/?hl=es-la";
-    private ImageView btnInstaRusvel;
-    private String githubR = "https://github.com/RusvelLeyva";
-    private ImageView btnGitRusvel;
-    private String linkedinR = "https://www.linkedin.com/in/rusvel-enrique-pasos-leyva-969b9918b/";
-    private ImageView btnLinkedinRusvel;
-
-    private String facebookC = "https://www.facebook.com/carlosandres.bermudezarango.9";
-    private ImageView btnFacebookCarlos;
-    private String instagramC = "https://www.instagram.com/carlosandres.bermudezarango.9/?hl=es-la";
-    private ImageView btnInstaCarlos;
-    private String linkedinC = "https://www.linkedin.com/in/carlos-andres-bermudez-arango-6320a3129/";
-    private ImageView btnLinkedinCarlos;
-
-    private LinearLayout tarjetaCarlos;
-    private LinearLayout tarjetaRusvel;
-    private LinearLayout infoRusvel;
-    private LinearLayout infoCarlos;
-
-    private Animation animation_rigth;
-    private Animation animation_left;
+    private final String facebookR = "https://www.facebook.com/roosevelt.leyva";
+    private final String twitterR = "https://twitter.com/repleyva";
+    private final String instagramR = "https://www.instagram.com/repleyva/?hl=es-la";
+    private final String githubR = "https://github.com/RusvelLeyva";
+    private final String linkedinR = "https://www.linkedin.com/in/rusvel-enrique-pasos-leyva-969b9918b/";
+    private final String facebookC = "https://www.facebook.com/carlosandres.bermudezarango.9";
+    private final String instagramC = "https://www.instagram.com/carlosandres.bermudezarango.9/?hl=es-la";
+    private final String linkedinC = "https://www.linkedin.com/in/carlos-andres-bermudez-arango-6320a3129/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,99 +32,75 @@ public class UsActivity extends AppCompatActivity {
 
         changeStatusBarColor();
 
-        btnFacebookRusvel = (ImageView) findViewById(R.id.btnFacebookRusvel);
-        btnTwitterRusvel = (ImageView) findViewById(R.id.btnTwitterRusvel);
-        btnInstaRusvel = (ImageView) findViewById(R.id.btnInstaRusvel);
-        btnLinkedinRusvel = (ImageView) findViewById(R.id.btnLinkedinRusvel);
-        btnGitRusvel = (ImageView) findViewById(R.id.btnGitRusvel);
+        ImageView btnFacebookRusvel = (ImageView) findViewById(R.id.btnFacebookRusvel);
+        ImageView btnTwitterRusvel = (ImageView) findViewById(R.id.btnTwitterRusvel);
+        ImageView btnInstaRusvel = (ImageView) findViewById(R.id.btnInstaRusvel);
+        ImageView btnLinkedinRusvel = (ImageView) findViewById(R.id.btnLinkedinRusvel);
+        ImageView btnGitRusvel = (ImageView) findViewById(R.id.btnGitRusvel);
 
-        btnFacebookCarlos = (ImageView) findViewById(R.id.btnFacebookCarlos);
-        btnInstaCarlos = (ImageView) findViewById(R.id.btnInstaCarlos);
-        btnLinkedinCarlos = (ImageView) findViewById(R.id.btnLinkedinCarlos);
+        ImageView btnFacebookCarlos = (ImageView) findViewById(R.id.btnFacebookCarlos);
+        ImageView btnInstaCarlos = (ImageView) findViewById(R.id.btnInstaCarlos);
+        ImageView btnLinkedinCarlos = (ImageView) findViewById(R.id.btnLinkedinCarlos);
 
-        tarjetaCarlos = (LinearLayout) findViewById(R.id.tarjetaCarlos);
-        tarjetaRusvel = (LinearLayout) findViewById(R.id.tarjetaRusvel);
-        infoRusvel = (LinearLayout) findViewById(R.id.infoRusvel);
-        infoCarlos = (LinearLayout) findViewById(R.id.infoCarlos);
+        LinearLayout tarjetaCarlos = (LinearLayout) findViewById(R.id.tarjetaCarlos);
+        LinearLayout tarjetaRusvel = (LinearLayout) findViewById(R.id.tarjetaRusvel);
+        LinearLayout infoRusvel = (LinearLayout) findViewById(R.id.infoRusvel);
+        LinearLayout infoCarlos = (LinearLayout) findViewById(R.id.infoCarlos);
 
-        animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
-        animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
+        Animation animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
+        Animation animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
 
         tarjetaRusvel.startAnimation(animation_left);
         tarjetaCarlos.startAnimation(animation_rigth);
         infoRusvel.startAnimation(animation_left);
         infoCarlos.startAnimation(animation_rigth);
 
-        btnFacebookRusvel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri link = Uri.parse(facebookR);
-                Intent intent = new Intent(Intent.ACTION_VIEW, link);
-                startActivity(intent);
-            }
+        btnFacebookRusvel.setOnClickListener(v -> {
+            Uri link = Uri.parse(facebookR);
+            Intent intent = new Intent(Intent.ACTION_VIEW, link);
+            startActivity(intent);
         });
 
-        btnTwitterRusvel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri link = Uri.parse(twitterR);
-                Intent intent = new Intent(Intent.ACTION_VIEW, link);
-                startActivity(intent);
-            }
+        btnTwitterRusvel.setOnClickListener(v -> {
+            Uri link = Uri.parse(twitterR);
+            Intent intent = new Intent(Intent.ACTION_VIEW, link);
+            startActivity(intent);
         });
 
-        btnInstaRusvel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri link = Uri.parse(instagramR);
-                Intent intent = new Intent(Intent.ACTION_VIEW, link);
-                startActivity(intent);
-            }
+        btnInstaRusvel.setOnClickListener(v -> {
+            Uri link = Uri.parse(instagramR);
+            Intent intent = new Intent(Intent.ACTION_VIEW, link);
+            startActivity(intent);
         });
 
-        btnLinkedinRusvel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri link = Uri.parse(linkedinR);
-                Intent intent = new Intent(Intent.ACTION_VIEW, link);
-                startActivity(intent);
-            }
+        btnLinkedinRusvel.setOnClickListener(v -> {
+            Uri link = Uri.parse(linkedinR);
+            Intent intent = new Intent(Intent.ACTION_VIEW, link);
+            startActivity(intent);
         });
 
-        btnGitRusvel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri link = Uri.parse(githubR);
-                Intent intent = new Intent(Intent.ACTION_VIEW, link);
-                startActivity(intent);
-            }
+        btnGitRusvel.setOnClickListener(v -> {
+            Uri link = Uri.parse(githubR);
+            Intent intent = new Intent(Intent.ACTION_VIEW, link);
+            startActivity(intent);
         });
 
-        btnFacebookCarlos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri link = Uri.parse(facebookC);
-                Intent intent = new Intent(Intent.ACTION_VIEW, link);
-                startActivity(intent);
-            }
+        btnFacebookCarlos.setOnClickListener(v -> {
+            Uri link = Uri.parse(facebookC);
+            Intent intent = new Intent(Intent.ACTION_VIEW, link);
+            startActivity(intent);
         });
 
-        btnInstaCarlos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri link = Uri.parse(instagramC);
-                Intent intent = new Intent(Intent.ACTION_VIEW, link);
-                startActivity(intent);
-            }
+        btnInstaCarlos.setOnClickListener(v -> {
+            Uri link = Uri.parse(instagramC);
+            Intent intent = new Intent(Intent.ACTION_VIEW, link);
+            startActivity(intent);
         });
 
-        btnLinkedinCarlos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri link = Uri.parse(linkedinC);
-                Intent intent = new Intent(Intent.ACTION_VIEW, link);
-                startActivity(intent);
-            }
+        btnLinkedinCarlos.setOnClickListener(v -> {
+            Uri link = Uri.parse(linkedinC);
+            Intent intent = new Intent(Intent.ACTION_VIEW, link);
+            startActivity(intent);
         });
     }
 

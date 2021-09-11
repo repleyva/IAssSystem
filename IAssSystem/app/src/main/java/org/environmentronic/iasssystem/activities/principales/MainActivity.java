@@ -2,13 +2,8 @@ package org.environmentronic.iasssystem.activities.principales;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -20,11 +15,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -35,10 +27,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.docentes.CrearClaseActivity;
 import org.environmentronic.iasssystem.activities.docentes.ListaClasesActivity;
@@ -46,105 +34,30 @@ import org.environmentronic.iasssystem.activities.estudiantes.IngresarAClaseActi
 import org.environmentronic.iasssystem.activities.estudiantes.SubirFotoActivity;
 import org.environmentronic.iasssystem.activities.estudiantes.VerClasesEstudiantesActivity;
 
-/* TODO: 2/07/2021
- *   Se debe limpiar el codigo
- * */
-
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private ImageView photoPerfil;
-    private RelativeLayout barra;
-
     private TextView tvNombre;
     private TextView tvCorreo;
-
-    private Button btnIngresarComoDocente;
-    private Button btnIngresarComoEstudiante;
-
     private Button btnSubirFotos;
     private Button btnVerMisClases;
     private Button btnIngresarAClases;
-
     private Button btnCrearClase;
     private Button btnListaClases;
-
     private LinearLayout tarjetaUsuario;
     private LinearLayout lyEstudiante;
     private LinearLayout lyDocente;
-
-    private RelativeLayout cabeceraCrearClase;
-    private RelativeLayout cabeceraListaClases;
-
-    private LinearLayout lyCrearClases;
-    private LinearLayout lyprogreso;
-
-
     private GoogleApiClient googleApiClient;
-
     private Boolean banderabtnEstudiante = false;
     private Boolean banderabtnDocente = false;
-
-    //Animaciones
     private Animation animation_rigth;
-    private Animation animation_up;
-    private Animation animation_down;
     private Animation animation_left;
-    private Animation animation_left_long;
-    private Animation animation_rigth_long;
-    private Animation animation_left_ocult;
     private Animation animaciondere_ocult;
-    private Animation animation_rigth_ocult_long;
-    private Animation animation_left_ocult_long;
-
     private LinearLayout padre;
-    private ConstraintLayout barraFoto;
-
-    private ScrollView scrollFoto;
-    private ScrollView scrollIngClases;
-    private ScrollView scrollCrearClases;
-    private ScrollView scrollVerClases;
-    private ScrollView scrollListaClases;
-
-    private CardView datosClase;
-
-
-    // constantes timer
-    private Integer largo = 2000;
-    private Integer normal = 1000;
     private Integer delay = 667;
-    private Integer acond1 = 1340;
-    private Integer acond2 = 600;
-
-    /*
-    3000 = 2000
-    1000 = 667
-    1500 = 1000
-    2000 = 1340
-    900 = 600
-    */
-
-    // ---------------------------------- Variables para el backend -------------------------------
     private String nombreUsuario;
     private String correoUsuario;
     private String idUsuario;
-    private String fotoPerfilUsuario;
-    private String nombreCorto;
-
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private Bitmap imageBitmap;
-    private StorageReference storageReference;
-    private ProgressDialog mProgress;
-
-    // -------------------------------- variables para los docente --------------------------------
-
-    private TextView prueba;
-    private FirebaseDatabase database;
-
-    // ----------------------------- Variables para ingresar a clases -----------------------------
-
-
-    // --------------------------- variables ver lista de clases Docente --------------------------------
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,14 +69,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         }
         setContentView(R.layout.activity_main);
 
-        mProgress = new ProgressDialog(this);
-
         photoPerfil = (ImageView) findViewById(R.id.photoPerfil);
-        barra = (RelativeLayout) findViewById(R.id.barra);
         tvNombre = (TextView) findViewById(R.id.tvNombre);
         tvCorreo = (TextView) findViewById(R.id.tvCorreo);
-        btnIngresarComoDocente = (Button) findViewById(R.id.btnIngresarComoDocente);
-        btnIngresarComoEstudiante = (Button) findViewById(R.id.btnIngresarComoEstudiante);
+        Button btnIngresarComoDocente = (Button) findViewById(R.id.btnIngresarComoDocente);
+        Button btnIngresarComoEstudiante = (Button) findViewById(R.id.btnIngresarComoEstudiante);
         tarjetaUsuario = (LinearLayout) findViewById(R.id.tarjetaUsuario);
         lyEstudiante = (LinearLayout) findViewById(R.id.lyEstudiante);
         lyDocente = (LinearLayout) findViewById(R.id.lyDocente);
@@ -176,21 +86,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         btnListaClases = (Button) findViewById(R.id.btnListaClases);
 
         padre = (LinearLayout) findViewById(R.id.padre);
-        barraFoto = (ConstraintLayout) findViewById(R.id.barraFoto);
 
-        cabeceraCrearClase = (RelativeLayout) findViewById(R.id.cabeceraCrearClase);
-        cabeceraListaClases = (RelativeLayout) findViewById(R.id.cabeceraListaClases);
-
-        lyCrearClases = (LinearLayout) findViewById(R.id.lyCrearClases);
-
-        scrollFoto = (ScrollView) findViewById(R.id.scrollFoto);
-        scrollIngClases = (ScrollView) findViewById(R.id.scrollIngClases);
-        scrollCrearClases = (ScrollView) findViewById(R.id.scrollCrearClases);
-        scrollVerClases = (ScrollView) findViewById(R.id.scrollVerClases);
-        scrollListaClases = (ScrollView) findViewById(R.id.scrollListaClases);
-
-        datosClase = (CardView) findViewById(R.id.datosClase);
-        storageReference = FirebaseStorage.getInstance().getReference();
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -202,15 +98,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 .build();
 
         animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
-        animation_left_long = AnimationUtils.loadAnimation(this, R.anim.animation_left_long);
-        animation_left_ocult = AnimationUtils.loadAnimation(this, R.anim.animation_left_ocult);
-        animation_left_ocult_long = AnimationUtils.loadAnimation(this, R.anim.animation_left_ocult_long);
         animaciondere_ocult = AnimationUtils.loadAnimation(this, R.anim.animation_rigth_ocult);
-        animation_rigth_ocult_long = AnimationUtils.loadAnimation(this, R.anim.animation_rigth_ocult_long);
         animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
-        animation_rigth_long = AnimationUtils.loadAnimation(this, R.anim.animation_rigth_long);
-        animation_up = AnimationUtils.loadAnimation(this, R.anim.animation_up);
-        animation_down = AnimationUtils.loadAnimation(this, R.anim.animation_down);
 
         btnIngresarComoDocente.startAnimation(animation_left);
         btnIngresarComoEstudiante.startAnimation(animation_left);
@@ -218,9 +107,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         tarjetaUsuario.setAnimation(animation_rigth);
 
         // ------------------------------- Variables para crear clase -----------------------------------------
-
-        database = FirebaseDatabase.getInstance();
-        prueba = (TextView) findViewById(R.id.prueba);
 
         padre.setOnClickListener(v -> {
             if (banderabtnDocente) {

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -20,40 +19,24 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
-
 import org.environmentronic.iasssystem.R;
-import org.environmentronic.iasssystem.activities.docentes.ListaClasesActivity;
-import org.environmentronic.iasssystem.activities.principales.MainActivity;
 import org.environmentronic.iasssystem.adapters.AdaptadorEstudiantesEnClases;
-
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class InfoClasesEstudianteActivity extends AppCompatActivity {
 
-    private TextView tvClase, tvDocente, tvCodigo, tvEstudiantesReg;
-    private ImageView imagen;
-
-    //Animaciones
-    private Animation animation_rigth;
     private Animation animation_down;
-    private Animation animation_left;
 
     // constantes timer
-    private Integer largo = 2000;
-    private Integer normal = 1000;
+    private final Integer largo = 2000;
+    private final Integer normal = 1000;
 
     // crear tarjetas de clases
     private List<EstudianteEnClase> estudiantesEnClases;
@@ -94,11 +77,11 @@ public class InfoClasesEstudianteActivity extends AppCompatActivity {
         changeStatusBarColor();
         setContentView(R.layout.activity_info_clases_estudiante);
 
-        tvClase = (TextView) findViewById(R.id.tvClase);
-        tvDocente = (TextView) findViewById(R.id.tvDocente);
-        tvCodigo = (TextView) findViewById(R.id.tvCodigo);
-        tvEstudiantesReg = (TextView) findViewById(R.id.tvEstudiantesReg);
-        imagen = (ImageView) findViewById(R.id.imagen);
+        TextView tvClase = (TextView) findViewById(R.id.tvClase);
+        TextView tvDocente = (TextView) findViewById(R.id.tvDocente);
+        TextView tvCodigo = (TextView) findViewById(R.id.tvCodigo);
+        TextView tvEstudiantesReg = (TextView) findViewById(R.id.tvEstudiantesReg);
+        ImageView imagen = (ImageView) findViewById(R.id.imagen);
 
         pruebaEstudiantes = (TextView) findViewById(R.id.pruebaEstudiantes);
 
@@ -113,8 +96,9 @@ public class InfoClasesEstudianteActivity extends AppCompatActivity {
         tvDocente.setText("Docente: " + docente);
         tvCodigo.setText("Código: " + codigo);
 
-        animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
-        animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
+        Animation animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
+        //Animaciones
+        Animation animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
         animation_down = AnimationUtils.loadAnimation(this, R.anim.animation_down);
 
         tvClase.setAnimation(animation_left);
@@ -143,11 +127,7 @@ public class InfoClasesEstudianteActivity extends AppCompatActivity {
             lyprogresoEst.setVisibility(View.VISIBLE);
             tvCargandoCompaneros = (TextView) findViewById(R.id.tvCargandoCompaneros);
             cprogressEst = (ProgressBar) findViewById(R.id.cprogressEst);
-
-            new Handler().postDelayed(() -> {
-                ponerDatos();
-            }, normal);
-
+            new Handler().postDelayed(this::ponerDatos, normal);
         }, normal);
     }
 

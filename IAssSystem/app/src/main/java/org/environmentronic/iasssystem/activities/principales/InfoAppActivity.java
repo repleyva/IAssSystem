@@ -32,15 +32,6 @@ public class InfoAppActivity extends AppCompatActivity implements GoogleApiClien
 
     private GoogleApiClient googleApiClient;
     public static final int SIGN_IN_CODE = 777;
-    private ImageView signInButton;
-    private ImageView imagen;
-    private TextView texto;
-    private LinearLayout redes;
-    private CardView tarjetaApp;
-    private LinearLayout linea;
-
-    private Animation animation_rigth;
-    private Animation animation_left;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +39,11 @@ public class InfoAppActivity extends AppCompatActivity implements GoogleApiClien
         setContentView(R.layout.activity_info_app_activity);
         changeStatusBarColor();
 
-        imagen = (ImageView) findViewById(R.id.imagen);
-        texto = (TextView) findViewById(R.id.texto);
-        redes = (LinearLayout) findViewById(R.id.redes);
-        linea = (LinearLayout) findViewById(R.id.linea);
-        tarjetaApp = (CardView) findViewById(R.id.tarjetaApp);
+        ImageView imagen = (ImageView) findViewById(R.id.imagen);
+        TextView texto = (TextView) findViewById(R.id.texto);
+        LinearLayout redes = (LinearLayout) findViewById(R.id.redes);
+        LinearLayout linea = (LinearLayout) findViewById(R.id.linea);
+        CardView tarjetaApp = (CardView) findViewById(R.id.tarjetaApp);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -65,14 +56,14 @@ public class InfoAppActivity extends AppCompatActivity implements GoogleApiClien
                 .build();
 
         // configuracion para el boton de inicio de sesión
-        signInButton = (ImageView) findViewById(R.id.signInButton);
+        ImageView signInButton = (ImageView) findViewById(R.id.signInButton);
         signInButton.setOnClickListener(v -> {
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
             startActivityForResult(signInIntent, SIGN_IN_CODE);
         });
 
-        animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
-        animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
+        Animation animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
+        Animation animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
         imagen.startAnimation(animation_rigth);
         texto.startAnimation(animation_left);
         redes.startAnimation(animation_left);

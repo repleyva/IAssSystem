@@ -6,7 +6,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -25,7 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -35,28 +33,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
 import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
 import org.environmentronic.iasssystem.adapters.AdaptadorClasesEstudiante;
 import org.environmentronic.iasssystem.adapters.RecyclerItemTouchHelper;
 import org.environmentronic.iasssystem.modulos.ClasesEstudiante;
 import org.environmentronic.iasssystem.modulos.Genericos;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class VerClasesEstudiantesActivity extends AppCompatActivity implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener{
 
-    private ConstraintLayout barraFoto;
-    private LinearLayout fotoUsuarioVerClases;
-    private TextView tvNombreVerClases;
-
-    //Animaciones
-    private Animation animation_rigth;
-    private Animation animation_left;
     private Animation animation_down;
-
     private LinearLayout lyprogreso;
     private TextView tvCargandoClases;
     private ProgressBar cprogress;
@@ -88,16 +76,17 @@ public class VerClasesEstudiantesActivity extends AppCompatActivity implements R
         idUsuario = getIntent().getStringExtra("idusuario");
         nombreUsuario = getIntent().getStringExtra("nomusuario");
 
-        barraFoto = (ConstraintLayout) findViewById(R.id.barraFoto);
-        fotoUsuarioVerClases = (LinearLayout) findViewById(R.id.fotoUsuarioVerClases);
-        tvNombreVerClases = (TextView) findViewById(R.id.tvNombreVerClases);
+        ConstraintLayout barraFoto = (ConstraintLayout) findViewById(R.id.barraFoto);
+        LinearLayout fotoUsuarioVerClases = (LinearLayout) findViewById(R.id.fotoUsuarioVerClases);
+        TextView tvNombreVerClases = (TextView) findViewById(R.id.tvNombreVerClases);
 
         clasesEstudiantes = new ArrayList<>();
         rvClasesEstudiante = (RecyclerView) findViewById(R.id.rvClasesEstudiante);
         listaClases = new AdaptadorClasesEstudiante(clasesEstudiantes, this);
 
-        animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
-        animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
+        Animation animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
+        //Animaciones
+        Animation animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
         animation_down = AnimationUtils.loadAnimation(this, R.anim.animation_down);
 
         barraFoto.startAnimation(animation_left);
@@ -118,7 +107,6 @@ public class VerClasesEstudiantesActivity extends AppCompatActivity implements R
             lyprogreso.setVisibility(View.VISIBLE);
             tvCargandoClases = (TextView) findViewById(R.id.tvCargandoClases);
             cprogress = (ProgressBar) findViewById(R.id.cprogress);
-
 
             new Handler().postDelayed(() -> {
                 ponerDatos();
@@ -306,37 +294,25 @@ public class VerClasesEstudiantesActivity extends AppCompatActivity implements R
                     // eliminamos la foto de la carpeta de la clase
                     storageReference.child("DOCENTES/" + iddocente + "/" + iddocente + "_" + docente + "_" + materia + "." + codigo + "/ESTUDIANTES/" + idUsuario + "_" + nombreUsuario + "/" + nombreCorto + ".png")
                             .delete()
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // File deleted successfully
-                                    // eliminamos la marca de realtime database
-                                    myRef.child(idUsuario).child("CLASES").child(codigo)
-                                            .removeValue()
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
-                                                    clasesEstudiantes.clear();
-                                                    finishProgressBar();
-                                                    buscarClasesDataBase();
-                                                    Toast.makeText(VerClasesEstudiantesActivity.this, "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
+                            .addOnSuccessListener(aVoid -> {
+                                // File deleted successfully
+                                // eliminamos la marca de realtime database
+                                myRef.child(idUsuario).child("CLASES").child(codigo)
+                                        .removeValue()
+                                        .addOnSuccessListener(unused -> {
+                                            clasesEstudiantes.clear();
+                                            finishProgressBar();
+                                            buscarClasesDataBase();
+                                            Toast.makeText(VerClasesEstudiantesActivity.this, "¡Clase eliminada con exito!", Toast.LENGTH_SHORT).show();
+                                        }).addOnFailureListener(e -> {
                                             finishProgressBar();
                                             Toast.makeText(getApplicationContext(), "Ha ocurrido un error, intente mas tarde", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Uh-oh, an error occurred
-                            finishProgressBar();
-                            Toast.makeText(getApplicationContext(), "Ocurrió un error al eliminar la clase", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                                        });
+                            }).addOnFailureListener(exception -> {
+                                // Uh-oh, an error occurred
+                                finishProgressBar();
+                                Toast.makeText(getApplicationContext(), "Ocurrió un error al eliminar la clase", Toast.LENGTH_SHORT).show();
+                            });
                 });
                 dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogo1, int id) {

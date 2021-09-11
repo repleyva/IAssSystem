@@ -4,21 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -29,9 +25,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;
@@ -43,17 +37,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
 import org.environmentronic.iasssystem.modulos.Genericos;
-
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -62,12 +49,6 @@ import java.util.Set;
 
 public class IngresarAClaseActivity extends AppCompatActivity {
 
-    private ConstraintLayout barraFoto;
-    private LinearLayout fotoUsuarioBBDD;
-    private TextView tvNombreIngClases;
-    private TextInputLayout etCodigo;
-    private Button btnIngresarAclase;
-
     private TextView prueba;
     private EditText editTextcodigo;
     private TextView clase;
@@ -75,15 +56,13 @@ public class IngresarAClaseActivity extends AppCompatActivity {
     private CardView datosClase;
     private ImageView photoBBDDIngClases;
 
-    private Animation animation_rigth;
-    private Animation animation_left;
     private Animation animation_down;
 
     private ProgressDialog mProgress;
     private Boolean banderaIngClases = false;
 
-    private Integer acond1 = 1340;
-    private Integer acond2 = 600;
+    private final Integer acond1 = 1340;
+    private final Integer acond2 = 600;
 
     private FirebaseDatabase database;
     private StorageReference storageReference;
@@ -109,11 +88,11 @@ public class IngresarAClaseActivity extends AppCompatActivity {
 
         mProgress = new ProgressDialog(this);
 
-        barraFoto = (ConstraintLayout) findViewById(R.id.barraFoto);
-        fotoUsuarioBBDD = (LinearLayout) findViewById(R.id.fotoUsuarioBBDD);
-        tvNombreIngClases = (TextView) findViewById(R.id.tvNombreIngClases);
-        etCodigo = (TextInputLayout) findViewById(R.id.etCodigo);
-        btnIngresarAclase = (Button) findViewById(R.id.btnIngresarAclase);
+        ConstraintLayout barraFoto = (ConstraintLayout) findViewById(R.id.barraFoto);
+        LinearLayout fotoUsuarioBBDD = (LinearLayout) findViewById(R.id.fotoUsuarioBBDD);
+        TextView tvNombreIngClases = (TextView) findViewById(R.id.tvNombreIngClases);
+        TextInputLayout etCodigo = (TextInputLayout) findViewById(R.id.etCodigo);
+        Button btnIngresarAclase = (Button) findViewById(R.id.btnIngresarAclase);
         prueba = (TextView) findViewById(R.id.prueba);
         editTextcodigo = (EditText) findViewById(R.id.editTextcodigo);
         clase = (TextView) findViewById(R.id.clase);
@@ -121,8 +100,8 @@ public class IngresarAClaseActivity extends AppCompatActivity {
         datosClase = (CardView) findViewById(R.id.datosClase);
         photoBBDDIngClases = (ImageView) findViewById(R.id.photoBBDDIngClases);
 
-        animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
-        animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
+        Animation animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
+        Animation animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
         animation_down = AnimationUtils.loadAnimation(this, R.anim.animation_down);
 
         database = FirebaseDatabase.getInstance();

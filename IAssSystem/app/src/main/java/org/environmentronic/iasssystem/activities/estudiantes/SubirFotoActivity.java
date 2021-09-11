@@ -1,12 +1,10 @@
 package org.environmentronic.iasssystem.activities.estudiantes;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -34,17 +32,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import org.environmentronic.iasssystem.R;
 import org.environmentronic.iasssystem.activities.principales.MainActivity;
 import org.environmentronic.iasssystem.modulos.Genericos;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -253,20 +247,15 @@ public class SubirFotoActivity extends AppCompatActivity {
             dialogo1.setTitle("Importante");
             dialogo1.setMessage("¿Realmente deseas eliminar la foto?");
             dialogo1.setCancelable(false);
-            dialogo1.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
-
-                    boolean borrado = Genericos.borrarCache();
-                    if (borrado) {
-                        fotoTomada.setImageResource(R.drawable.ic_register_hero);
-                        imageBitmap = null;
-                    }
+            dialogo1.setPositiveButton("Confirmar", (dialogo11, id) -> {
+                boolean borrado = Genericos.borrarCache();
+                if (borrado) {
+                    fotoTomada.setImageResource(R.drawable.ic_register_hero);
+                    imageBitmap = null;
                 }
             });
-            dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
+            dialogo1.setNegativeButton("Cancelar", (dialogo112, id) -> {
 
-                }
             });
             dialogo1.show();
         } else {
@@ -298,20 +287,15 @@ public class SubirFotoActivity extends AppCompatActivity {
                             finishProgressBar();
                             Toast.makeText(getApplicationContext(), "La foto fué borrada con éxito", Toast.LENGTH_SHORT).show();
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Uh-oh, an error occurred
-                            finishProgressBar();
-                            Toast.makeText(getApplicationContext(), "Si no cuentas con una foto, no tienes nada que borrar.", Toast.LENGTH_SHORT).show();
-                        }
+                    }).addOnFailureListener(exception -> {
+                        // Uh-oh, an error occurred
+                        finishProgressBar();
+                        Toast.makeText(getApplicationContext(), "Si no cuentas con una foto, no tienes nada que borrar.", Toast.LENGTH_SHORT).show();
                     });
                 }
             });
-            dialogo1.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialogo1, int id) {
+            dialogo1.setNegativeButton("Cancelar", (dialogo11, id) -> {
 
-                }
             });
             dialogo1.show();
         } else {
@@ -365,24 +349,18 @@ public class SubirFotoActivity extends AppCompatActivity {
                 }
 
                 UploadTask uploadTask = storageReference.child("ESTUDIANTES/" + idUsuario + "/" + nombreCorto + ".png").putFile(imagen);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle unsuccessful uploads
-                        puedeSubirFoto = false;
-                        finishProgressBar();
-                        Toast.makeText(getApplicationContext(), "Hubo un error intentando subir la foto", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                        puedeSubirFoto = false;
-                        finishProgressBar();
-                        fotoTomada.setImageResource(R.drawable.ic_register_hero);
-                        imageBitmap = null;
-                        Toast.makeText(getApplicationContext(), "La foto se subió con exito", Toast.LENGTH_SHORT).show();
-                    }
+                uploadTask.addOnFailureListener(exception -> {
+                    // Handle unsuccessful uploads
+                    puedeSubirFoto = false;
+                    finishProgressBar();
+                    Toast.makeText(getApplicationContext(), "Hubo un error intentando subir la foto", Toast.LENGTH_SHORT).show();
+                }).addOnSuccessListener(taskSnapshot -> {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    puedeSubirFoto = false;
+                    finishProgressBar();
+                    fotoTomada.setImageResource(R.drawable.ic_register_hero);
+                    imageBitmap = null;
+                    Toast.makeText(getApplicationContext(), "La foto se subió con exito", Toast.LENGTH_SHORT).show();
                 });
 
             } else {

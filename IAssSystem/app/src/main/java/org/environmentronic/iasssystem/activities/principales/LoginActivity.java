@@ -3,7 +3,6 @@ package org.environmentronic.iasssystem.activities.principales;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -12,45 +11,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 import org.environmentronic.iasssystem.R;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleApiClient googleApiClient;
     public static final int SIGN_IN_CODE = 777;
-    private ImageView signInButton;
-    private ImageView imagen;
-    private ImageView barra;
-    private TextView texto;
-
-    private Animation animation_down;
-    private Animation animation_up;
-    private Animation animation_rigth;
-    private Animation animation_left;
-
-    private LinearLayout linearLayout4;
-    private String facebook = "https://www.facebook.com/roosevelt.leyva";
-    private ImageView btnFacebook;
-    private String twitter = "https://twitter.com/EnvironTronic?s=08";
-    private ImageView btnTwitter;
-    private String instagram = "https://www.instagram.com/repleyva/?hl=es-la";
-    private ImageView btnInsta;
-    private String github = "https://github.com/RusvelLeyva";
-    private ImageView btnGit;
-
-    private LinearLayout iniG;
-    private LinearLayout redes;
+    private final String facebook = "https://www.facebook.com/roosevelt.leyva";
+    private final String twitter = "https://twitter.com/EnvironTronic?s=08";
+    private final String instagram = "https://www.instagram.com/repleyva/?hl=es-la";
+    private final String github = "https://github.com/RusvelLeyva";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,18 +39,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         }
         setContentView(R.layout.activity_login);
 
-        imagen = (ImageView) findViewById(R.id.imagen);
-        barra = (ImageView) findViewById(R.id.barra);
-        texto = (TextView) findViewById(R.id.texto);
-        linearLayout4 = (LinearLayout) findViewById(R.id.linearLayout4);
-
-        iniG = (LinearLayout) findViewById(R.id.linearLayout);
-        redes = (LinearLayout) findViewById(R.id.linearLayout3);
-
-        btnFacebook = (ImageView) findViewById(R.id.btnFacebook);
-        btnTwitter = (ImageView) findViewById(R.id.btnTwitter);
-        btnInsta = (ImageView) findViewById(R.id.btnInsta);
-        btnGit = (ImageView) findViewById(R.id.btnGit);
+        ImageView imagen = (ImageView) findViewById(R.id.imagen);
+        TextView texto = (TextView) findViewById(R.id.texto);
+        LinearLayout linearLayout4 = (LinearLayout) findViewById(R.id.linearLayout4);
+        LinearLayout iniG = (LinearLayout) findViewById(R.id.linearLayout);
+        LinearLayout redes = (LinearLayout) findViewById(R.id.linearLayout3);
+        ImageView btnFacebook = (ImageView) findViewById(R.id.btnFacebook);
+        ImageView btnTwitter = (ImageView) findViewById(R.id.btnTwitter);
+        ImageView btnInsta = (ImageView) findViewById(R.id.btnInsta);
+        ImageView btnGit = (ImageView) findViewById(R.id.btnGit);
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -84,16 +59,14 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 .build();
 
         // configuracion para el boton de inicio de sesión
-        signInButton = (ImageView) findViewById(R.id.signInButton);
+        ImageView signInButton = (ImageView) findViewById(R.id.signInButton);
         signInButton.setOnClickListener(v -> {
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
             startActivityForResult(signInIntent, SIGN_IN_CODE);
         });
 
-        animation_down = AnimationUtils.loadAnimation(this, R.anim.animation_down);
-        animation_up = AnimationUtils.loadAnimation(this, R.anim.animation_up);
-        animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
-        animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
+        Animation animation_rigth = AnimationUtils.loadAnimation(this, R.anim.animation_rigth);
+        Animation animation_left = AnimationUtils.loadAnimation(this, R.anim.animation_left);
         imagen.startAnimation(animation_rigth);
         texto.startAnimation(animation_left);
         linearLayout4.startAnimation(animation_left);
@@ -101,40 +74,28 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         iniG.startAnimation(animation_rigth);
         redes.startAnimation(animation_rigth);
 
-        btnFacebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri link = Uri.parse(facebook);
-                Intent intent = new Intent(Intent.ACTION_VIEW, link);
-                startActivity(intent);
-            }
+        btnFacebook.setOnClickListener(v -> {
+            Uri link = Uri.parse(facebook);
+            Intent intent = new Intent(Intent.ACTION_VIEW, link);
+            startActivity(intent);
         });
 
-        btnTwitter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri link = Uri.parse(twitter);
-                Intent intent = new Intent(Intent.ACTION_VIEW, link);
-                startActivity(intent);
-            }
+        btnTwitter.setOnClickListener(v -> {
+            Uri link = Uri.parse(twitter);
+            Intent intent = new Intent(Intent.ACTION_VIEW, link);
+            startActivity(intent);
         });
 
-        btnInsta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri link = Uri.parse(instagram);
-                Intent intent = new Intent(Intent.ACTION_VIEW, link);
-                startActivity(intent);
-            }
+        btnInsta.setOnClickListener(v -> {
+            Uri link = Uri.parse(instagram);
+            Intent intent = new Intent(Intent.ACTION_VIEW, link);
+            startActivity(intent);
         });
 
-        btnGit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri link = Uri.parse(github);
-                Intent intent = new Intent(Intent.ACTION_VIEW, link);
-                startActivity(intent);
-            }
+        btnGit.setOnClickListener(v -> {
+            Uri link = Uri.parse(github);
+            Intent intent = new Intent(Intent.ACTION_VIEW, link);
+            startActivity(intent);
         });
 
     }
@@ -145,7 +106,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == SIGN_IN_CODE) {
+            assert data != null;
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            assert result != null;
             handleSignInResult(result);
         }
     }
