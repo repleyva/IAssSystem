@@ -129,7 +129,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         finish();
     }
 
-    public void onLoginClick(View View) {
+    public void onInfoClick(View View) {
         startActivity(new Intent(this, InfoAppActivity.class));
         overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
         finish();

@@ -346,7 +346,6 @@ public class IngresarAClaseActivity extends AppCompatActivity {
         }
     }
 
-
     public static boolean compruebaConexion(Context context) {
         boolean connected = false;
         ConnectivityManager connec = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

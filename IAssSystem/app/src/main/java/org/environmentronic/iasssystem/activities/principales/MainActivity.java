@@ -237,7 +237,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void subirFoto(View view) {
-
         Intent intent = new Intent(this, SubirFotoActivity.class);
         intent.putExtra("idusuario", idUsuario);
         intent.putExtra("nomusuario", nombreUsuario);
@@ -245,11 +244,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.stay);
         finish();
-
     }
 
     public void verMisClases(View view) {
-
         Intent intent = new Intent(this, VerClasesEstudiantesActivity.class);
         intent.putExtra("idusuario", idUsuario);
         intent.putExtra("nomusuario", nombreUsuario);
