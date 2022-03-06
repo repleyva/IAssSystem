@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "279204958241",
+    "firebase_url": "https://iasssystem-default-rtdb.firebaseio.com",
     "project_id": "iasssystem",
     "storage_bucket": "iasssystem.appspot.com"
   },

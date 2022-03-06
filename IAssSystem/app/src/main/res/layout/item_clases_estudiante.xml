@@ -26,44 +26,40 @@
                 android:id="@+id/foto_docente"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/ic_login_hero">
-            </ImageView>
+                android:src="@drawable/ic_login_hero"></ImageView>
 
             <LinearLayout
-                android:paddingLeft="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="10dp">
 
                 <TextView
                     android:id="@+id/tvnombreMateria"
+                    style="@style/viewParent.headerText.NoMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nombre de la Materia"
-                    android:textSize="14sp"
-                    style="@style/viewParent.headerText.NoMode"
-                    android:textColor="@color/colorPrimary">
-                </TextView>
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp"></TextView>
 
                 <TextView
                     android:id="@+id/tvNombreDocente"
+                    style="@style/viewParent.headerText.NoMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nombre del docente"
-                    android:textSize="12sp"
-                    style="@style/viewParent.headerText.NoMode"
-                    android:textColor="@color/colorPrimary">
-                </TextView>
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"></TextView>
 
                 <TextView
                     android:id="@+id/tvNombreCodigo"
+                    style="@style/viewParent.headerText.NoMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nombre del codigo"
-                    android:textSize="12sp"
-                    style="@style/viewParent.headerText.NoMode"
-                    android:textColor="@color/colorPrimary">
-                </TextView>
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="12sp"></TextView>
 
             </LinearLayout>
         </LinearLayout>

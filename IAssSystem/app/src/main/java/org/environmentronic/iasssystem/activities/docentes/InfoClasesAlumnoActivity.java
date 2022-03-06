@@ -62,7 +62,6 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
     private Integer normal = 1000;
 
     // crear tarjetas de clases
-    private List<EstudianteEnClase> estudiantesEnClases;
 
     // recycler
     private RecyclerView rvAlumnosEnClase;
@@ -83,7 +82,6 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
     private LinearLayout lyprogresoAlum;
 
     // base de datos
-    private FirebaseDatabase database;
 
     // datos de la tarjeta
     private String materia;
@@ -92,6 +90,8 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
     private String nombreUsuario;
 
     private ProgressDialog mProgress;
+    private List<EstudianteEnClase> estudiantesEnClases;
+    private FirebaseDatabase database;
     private StorageReference storageReference;
 
     @Override
@@ -127,18 +127,18 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
         btnTomarAsistencia.setAnimation(animation_left);
 
         // inicializamos las listas
-        estudiantesEnClases = new ArrayList<>();
 
         // recicladores
         rvAlumnosEnClase = (RecyclerView) findViewById(R.id.rvAlumnosEnClase);
         estudiantesAdapter = new AdaptadorEstudiantesEnClases(estudiantesEnClases, this);
 
         // base de datos
-        database = FirebaseDatabase.getInstance();
 
         buscarAlumnos();
         mProgress = new ProgressDialog(this);
+        estudiantesEnClases = new ArrayList<>();
         storageReference = FirebaseStorage.getInstance().getReference();
+        database = FirebaseDatabase.getInstance();
 
         // eliminar clases estudiante
         ItemTouchHelper.SimpleCallback simpleCallbackEstudiantes = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, InfoClasesAlumnoActivity.this, 0, 0, 1);
@@ -176,51 +176,53 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
         // Create a Cloud Storage reference from the app
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
         storageReference
-                .child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/ESTUDIANTES/")
-                .listAll()
-                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
-                    @Override
-                    public void onSuccess(ListResult listResult) {
+                .child(
+                        "DOCENTES/" + idUsuario
+                                + "/" + idUsuario
+                                + "_" + nombreUsuario
+                                + "_" + materia + "."
+                                + codigo
+                                + "/ESTUDIANTES/"
+                ).listAll()
+                .addOnSuccessListener(listResult -> {
+                    for (StorageReference item : listResult.getPrefixes()) {
+                        // All the items under listRef.
+                        estudiantes.add(item.getName());
+                    }
 
-                        for (StorageReference item : listResult.getPrefixes()) {
-                            // All the items under listRef.
-                            estudiantes.add(item.getName());
-                        }
+                    estudiantes.remove("clase.png");
+                    estudiantes.remove("FOTO_CLASE");
 
-                        estudiantes.remove("clase.png");
-                        estudiantes.remove("FOTO_CLASE");
+                    if (!estudiantes.isEmpty()) {
 
-                        if (!estudiantes.isEmpty()) {
+                        lyprogresoAlum.setVisibility(View.GONE);
+                        String nombreEstudiante = "";
+                        String idEstudiante = "";
 
-                            lyprogresoAlum.setVisibility(View.GONE);
-                            String nombreEstudiante = "";
-                            String idEstudiante = "";
-
-                            estudiantesEnClases.clear();
-                            for (int i = 0; i < estudiantes.size(); i++) {
-                                if ((!estudiantes.get(i).equals("clase.png"))) {
-                                    nombreEstudiante = estudiantes.get(i).replaceAll(".*_", "");
-                                    idEstudiante = estudiantes.get(i).replaceAll("_" + nombreEstudiante, "");
-                                    //nombreEstudiante = estudiantes.get(i).replace(".png", "");
-                                    // sacamos el id del estudiante y el nombre
-                                    estudiantesEnClases.add(new EstudianteEnClase(nombreEstudiante, idEstudiante));
-                                }
+                        estudiantesEnClases.clear();
+                        for (int i = 0; i < estudiantes.size(); i++) {
+                            if ((!estudiantes.get(i).equals("clase.png"))) {
+                                nombreEstudiante = estudiantes.get(i).replaceAll(".*_", "");
+                                idEstudiante = estudiantes.get(i).replaceAll("_" + nombreEstudiante, "");
+                                //nombreEstudiante = estudiantes.get(i).replace(".png", "");
+                                // sacamos el id del estudiante y el nombre
+                                estudiantesEnClases.add(new EstudianteEnClase(nombreEstudiante, idEstudiante));
                             }
-
-                            rvAlumnosEnClase.setHasFixedSize(true);
-                            rvAlumnosEnClase.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                            rvAlumnosEnClase.setAdapter(estudiantesAdapter);
-
-                            new Handler().postDelayed(() -> {
-                                rvAlumnosEnClase.setVisibility(View.VISIBLE);
-                                rvAlumnosEnClase.setAnimation(animation_down);
-                            }, normal);
-
-                        } else {
-                            lyprogresoAlum.setVisibility(View.GONE);
-                            pruebaAlumnos.setVisibility(View.VISIBLE);
-                            pruebaAlumnos.setText("No existen estudiantes registrados en la clase");
                         }
+
+                        rvAlumnosEnClase.setHasFixedSize(true);
+                        rvAlumnosEnClase.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        rvAlumnosEnClase.setAdapter(estudiantesAdapter);
+
+                        new Handler().postDelayed(() -> {
+                            rvAlumnosEnClase.setVisibility(View.VISIBLE);
+                            rvAlumnosEnClase.setAnimation(animation_down);
+                        }, normal);
+
+                    } else {
+                        lyprogresoAlum.setVisibility(View.GONE);
+                        pruebaAlumnos.setVisibility(View.VISIBLE);
+                        pruebaAlumnos.setText("No existen estudiantes registrados en la clase");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -333,42 +335,52 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
 
     private void borrarCarpetaEstudiante(String idEstudiante, String nombreEstudiante, String nombreCortoEstudiante) {
         storageReference
-                .child("DOCENTES/" + idUsuario + "/" + idUsuario + "_" + nombreUsuario + "_" + materia + "." + codigo + "/ESTUDIANTES/" + idEstudiante + "_" + nombreEstudiante + "/" + nombreCortoEstudiante + ".png")
-                .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // File deleted successfully
-                // borrar la marca del docente de la clase
-                borrarMarcaEstudiante(idEstudiante);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Uh-oh, an error occurred!
-                finishProgressBar();
-                Toast.makeText(getApplicationContext(), "Ha ocurrido un error, intente mas tarde", Toast.LENGTH_SHORT).show();
-            }
+                .child("DOCENTES/"
+                        + idUsuario + "/"
+                        + idUsuario + "_"
+                        + nombreUsuario + "_"
+                        + materia + "."
+                        + codigo
+                        + "/ESTUDIANTES/"
+                        + idEstudiante + "_"
+                        + nombreEstudiante + "/"
+                        + nombreCortoEstudiante
+                        + ".png"
+                ).delete()
+                .addOnSuccessListener(aVoid -> {
+                    borrarMarcaEstudiante(idEstudiante);
+                }).addOnFailureListener(exception -> {
+            finishProgressBar();
+            Toast.makeText(
+                    getApplicationContext()
+                    , "Ha ocurrido un error, intente mas tarde"
+                    , Toast.LENGTH_SHORT).show();
         });
     }
 
     private void borrarMarcaEstudiante(String idEstudiante) {
-        DatabaseReference marcaEstudiante = database.getReference().child("ESTUDIANTES").child(idEstudiante).child("CLASES").child(codigo);
+        DatabaseReference marcaEstudiante = database
+                .getReference()
+                .child("ESTUDIANTES")
+                .child(idEstudiante)
+                .child("CLASES")
+                .child(codigo);
 
         marcaEstudiante.removeValue()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        finishProgressBar();
-                        estudiantesEnClases.clear();
-                        buscarAlumnosDataBase();
-                        Toast.makeText(InfoClasesAlumnoActivity.this, "¡Alumno eliminado con exito!", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                finishProgressBar();
-                Toast.makeText(getApplicationContext(), "Ha ocurrido un error, intente mas tarde", Toast.LENGTH_SHORT).show();
-            }
+                .addOnSuccessListener(unused -> {
+                    finishProgressBar();
+                    estudiantesEnClases.clear();
+                    buscarAlumnosDataBase();
+                    Toast.makeText(
+                            InfoClasesAlumnoActivity.this,
+                            "¡Alumno eliminado con exito!",
+                            Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(e -> {
+            finishProgressBar();
+            Toast.makeText(
+                    getApplicationContext(),
+                    "Ha ocurrido un error, intente mas tarde",
+                    Toast.LENGTH_SHORT).show();
         });
     }
 }

@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Documentos/GitHub/IAssSystem/IAssSystem/app/src/main/res/drawable-v24/button_background_blue.xml" value="0.2203125" />
         <entry key="..\:/Documentos/GitHub/IAssSystem/IAssSystem/app/src/main/res/drawable-v24/button_background_white.xml" value="0.2203125" />
         <entry key="..\:/Documentos/GitHub/IAssSystem/IAssSystem/app/src/main/res/drawable/button_background_gen.xml" value="0.2203125" />
+        <entry key="..\:/Documentos/GitHub/IAssSystem/IAssSystem/app/src/main/res/drawable/circular_bar.xml" value="0.2203125" />
         <entry key="..\:/Documentos/GitHub/IAssSystem/IAssSystem/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2203125" />
         <entry key="..\:/Documentos/GitHub/IAssSystem/IAssSystem/app/src/main/res/layout/activity_crear_clase.xml" value="0.20416666666666666" />
         <entry key="..\:/Documentos/GitHub/IAssSystem/IAssSystem/app/src/main/res/layout/activity_foto_asistencia.xml" value="0.20416666666666666" />

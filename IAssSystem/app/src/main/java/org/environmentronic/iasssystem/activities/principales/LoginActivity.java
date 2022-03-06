@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void downloadManual(View view) {
-        Uri link = Uri.parse("https://firebasestorage.googleapis.com/v0/b/iasssystem.appspot.com/o/MANUAL%2FMANUAL%20DE%20USUARIO%20DE%20LA%20APLICACI%C3%93N%20M%C3%93VIL%20IASSSYSTEM.pdf?alt=media&token=ca2ad8b7-4d3a-4dc6-8332-cf68c3e9beb1");
+        Uri link = Uri.parse("https://repleyva.netlify.app/assets/MANUAL_DE_USUARIO_DE_LA_APLICACI%C3%93N_M%C3%93VIL_IASSSYSTEM.pdf");
         Intent intent = new Intent(Intent.ACTION_VIEW, link);
         startActivity(intent);
     }
