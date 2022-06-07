@@ -127,6 +127,7 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
         btnTomarAsistencia.setAnimation(animation_left);
 
         // inicializamos las listas
+        estudiantesEnClases = new ArrayList<>();
 
         // recicladores
         rvAlumnosEnClase = (RecyclerView) findViewById(R.id.rvAlumnosEnClase);
@@ -136,7 +137,6 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
 
         buscarAlumnos();
         mProgress = new ProgressDialog(this);
-        estudiantesEnClases = new ArrayList<>();
         storageReference = FirebaseStorage.getInstance().getReference();
         database = FirebaseDatabase.getInstance();
 
@@ -186,7 +186,6 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
                 ).listAll()
                 .addOnSuccessListener(listResult -> {
                     for (StorageReference item : listResult.getPrefixes()) {
-                        // All the items under listRef.
                         estudiantes.add(item.getName());
                     }
 
@@ -204,8 +203,6 @@ public class InfoClasesAlumnoActivity extends AppCompatActivity implements Recyc
                             if ((!estudiantes.get(i).equals("clase.png"))) {
                                 nombreEstudiante = estudiantes.get(i).replaceAll(".*_", "");
                                 idEstudiante = estudiantes.get(i).replaceAll("_" + nombreEstudiante, "");
-                                //nombreEstudiante = estudiantes.get(i).replace(".png", "");
-                                // sacamos el id del estudiante y el nombre
                                 estudiantesEnClases.add(new EstudianteEnClase(nombreEstudiante, idEstudiante));
                             }
                         }

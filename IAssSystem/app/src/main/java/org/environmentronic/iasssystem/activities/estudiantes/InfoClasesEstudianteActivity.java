@@ -150,48 +150,43 @@ public class InfoClasesEstudianteActivity extends AppCompatActivity {
         storageReference
                 .child("DOCENTES/" + idDocente + "/" + idDocente + "_" + docente + "_" + materia + "." + codigo + "/ESTUDIANTES/")
                 .listAll()
-                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
-                    @Override
-                    public void onSuccess(ListResult listResult) {
+                .addOnSuccessListener(listResult -> {
 
-                        for (StorageReference item : listResult.getPrefixes()) {
-                            // All the items under listRef.
-                            estudiantes.add(item.getName());
-                        }
+                    for (StorageReference item : listResult.getPrefixes()) {
+                        // All the items under listRef.
+                        estudiantes.add(item.getName());
+                    }
 
-                        estudiantes.remove("clase.png");
-                        estudiantes.remove("FOTO_CLASE");
+                    estudiantes.remove("clase.png");
+                    estudiantes.remove("FOTO_CLASE");
 
-                        if (!estudiantes.isEmpty()) {
+                    if (!estudiantes.isEmpty()) {
 
-                            lyprogresoEst.setVisibility(View.GONE);
-                            String nombreEstudiante = "";
-                            String idEstudiante = "";
+                        lyprogresoEst.setVisibility(View.GONE);
+                        String nombreEstudiante = "";
+                        String idEstudiante = "";
 
-                            estudiantesEnClases.clear();
-                            for (int i = 0; i < estudiantes.size() ; i++) {
-                                if ((!estudiantes.get(i).equals("clase.png"))){
-                                    nombreEstudiante = estudiantes.get(i).replaceAll(".*_", "");
-                                    idEstudiante = estudiantes.get(i).replaceAll("_" + nombreEstudiante, "");
-                                    //nombreEstudiante = estudiantes.get(i).replace(".png", "");
-                                    // sacamos el id del estudiante y el nombre
-                                    estudiantesEnClases.add(new EstudianteEnClase(nombreEstudiante, idEstudiante));
-                                }
+                        estudiantesEnClases.clear();
+                        for (int i = 0; i < estudiantes.size() ; i++) {
+                            if ((!estudiantes.get(i).equals("clase.png"))){
+                                nombreEstudiante = estudiantes.get(i).replaceAll(".*_", "");
+                                idEstudiante = estudiantes.get(i).replaceAll("_" + nombreEstudiante, "");
+                                estudiantesEnClases.add(new EstudianteEnClase(nombreEstudiante, idEstudiante));
                             }
-
-                            rvEstudiantesEnClase.setHasFixedSize(true);
-                            rvEstudiantesEnClase.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                            rvEstudiantesEnClase.setAdapter(estudiantesAdapter);
-
-                            new Handler().postDelayed(() -> {
-                                rvEstudiantesEnClase.setVisibility(View.VISIBLE);
-                                rvEstudiantesEnClase.setAnimation(animation_down);
-                            }, normal);
-
-                        } else {
-                            pruebaEstudiantes.setVisibility(View.VISIBLE);
-                            pruebaEstudiantes.setText("No existen estudiantes registrados en la clase");
                         }
+
+                        rvEstudiantesEnClase.setHasFixedSize(true);
+                        rvEstudiantesEnClase.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        rvEstudiantesEnClase.setAdapter(estudiantesAdapter);
+
+                        new Handler().postDelayed(() -> {
+                            rvEstudiantesEnClase.setVisibility(View.VISIBLE);
+                            rvEstudiantesEnClase.setAnimation(animation_down);
+                        }, normal);
+
+                    } else {
+                        pruebaEstudiantes.setVisibility(View.VISIBLE);
+                        pruebaEstudiantes.setText("No existen estudiantes registrados en la clase");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
