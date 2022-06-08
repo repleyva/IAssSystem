@@ -255,7 +255,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements Elimina
                     Bitmap original = BitmapFactory.decodeStream(imageStream);
                     //Bitmap bmp = getResizedBitmap(original, 500);
                     Bitmap rotateBitmap = rotateImageIfRequired(getApplicationContext(), original, file);
-                    Bitmap bmp = getResizedBitmap(rotateBitmap, 1000);
+                    Bitmap bmp = getResizedBitmap(rotateBitmap, 2500);
 
                     String path = MediaStore.Images.Media.insertImage(getApplication().getContentResolver(), bmp, String.valueOf(System.currentTimeMillis()), null);
                     imagen = Uri.parse(path);
@@ -277,7 +277,7 @@ public class FotoAsistenciaActivity extends AppCompatActivity implements Elimina
                     Bitmap original = BitmapFactory.decodeStream(imageStream);
                     //Bitmap bmp = getResizedBitmap(original, 500);
                     Bitmap rotateBitmap = rotateImageIfRequired(getApplicationContext(), original, file);
-                    Bitmap bmp = getResizedBitmap(rotateBitmap, 1000);
+                    Bitmap bmp = getResizedBitmap(rotateBitmap, 2500);
 
                     String path = MediaStore.Images.Media.insertImage(getApplication().getContentResolver(), bmp, String.valueOf(System.currentTimeMillis()), null);
                     imagen = Uri.parse(path);
